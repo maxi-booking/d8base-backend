@@ -1,0 +1,5 @@
+.idea
+comments.txt
+docker/pgsql-variables.env
+docker/rmq/rmq_variables.env
+__pycache__/

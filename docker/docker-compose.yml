@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    env_file:
+      - pgsql-variables.env
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  adminer:
+    image: adminer
+    hostname: adminer
+    ports:
+      - 8080:8080
+
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    env_file:
+      - rmq/rmq_variables.env
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    volumes:
+      - ./rmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+
+  memcached:
+    image: memcached:alpine
+
+  web:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    command: python /usr/src/app/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ..:/usr/src/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - memcached
+
+volumes:
+  pgdata:
