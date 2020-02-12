@@ -109,6 +109,7 @@ GTAGS
 .#*
 rest_client.txt
 .python-version
+.venv
 
 #coveralls
 .coveralls.yml

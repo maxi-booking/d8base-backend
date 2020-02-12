@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env
+.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test
 
 dockerc := docker-compose -f docker/docker-compose.yml
 pgsql_env := pgsql-variables.env
@@ -32,3 +32,6 @@ django_migration:
 	@echo 'Do migrations'
 	$(dockerc) exec web python ${manage} migrate
 
+test:
+	@echo 'Start tests'
+	tox

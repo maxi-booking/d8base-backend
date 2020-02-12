@@ -6,10 +6,9 @@ Django settings for billing project.
 import os
 
 import raven
+from kombu import Queue
 
 from .env import ENV, ROOT
-
-# from kombu import Queue
 
 SITE_ROOT = ROOT()
 BASE_DIR = SITE_ROOT
@@ -49,7 +48,8 @@ for domain in ENV.list('CORS_ORIGIN_REGEX_WHITELIST', default=[]):
 
 # Application definition
 INSTALLED_APPS = [
-    'raven.contrib.django.raven_compat',
+    'corsheaders',
+    'raven.contrib.django.raven_compat',  # !
     'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.humanize',
@@ -60,7 +60,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_extensions',
+    'django_filters',
     'rest_framework',
+    'debug_toolbar',
+    'reversion',  # !
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',  # !
 
     # d8base apps
     'd8b',
@@ -69,6 +76,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,8 +84,13 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'd8b.middleware.DisableAdminI18nMiddleware',
+    # 'd8b.middleware.WhodidMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 ROOT_URLCONF = 'd8b.urls'
@@ -216,18 +229,18 @@ if not ENV.list('LOGGING', default=False):
     del LOGGING['handlers']['sentry']
 
 # Celery
-# CELERY_SEND_TASK_ERROR_EMAILS = True
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'UTC'
-# CELERY_APP = 'd8b'
-# CELERY_QUEUES = (
-#     Queue('default'),
-#     Queue('priority_high'),
-# )
-# CELERY_DEFAULT_QUEUE = 'default'
-# CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
+CELERY_SEND_TASK_ERROR_EMAILS = True
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_APP = 'd8b'
+CELERY_QUEUES = (
+    Queue('default'),
+    Queue('priority_high'),
+)
+CELERY_DEFAULT_QUEUE = 'default'
+CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 # Django restframework
 REST_FRAMEWORK = {

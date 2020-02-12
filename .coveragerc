@@ -1,6 +1,7 @@
 [run]
 omit =
     d8b/wsgi.py
+    d8b/celery.py
     */apps.py
     */migrations/*
     */test/*
@@ -9,7 +10,7 @@ omit =
     manage.py
 
 [report]
-fail_under=95
+fail_under=85
 exclude_lines =
     pragma: no cover
 
