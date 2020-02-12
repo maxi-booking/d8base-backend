@@ -5,7 +5,6 @@ The settings module
 # import datetime
 import os
 
-import raven
 from kombu import Queue
 
 from .env import ENV, ROOT
@@ -49,7 +48,6 @@ for domain in ENV.list('CORS_ORIGIN_REGEX_WHITELIST', default=[]):
 # Application definition
 INSTALLED_APPS = [
     'corsheaders',
-    'raven.contrib.django.raven_compat',  # !
     'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.humanize',
@@ -173,10 +171,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ENV.list('LOGGING', default=[])
-    },
     'formatters': {
         'verbose': {
             'format':
@@ -205,28 +199,14 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'formatter': 'verbose'
         },
-        'sentry': {
-            'level': 'ERROR',
-            'class':
-            'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'filters': ['require_debug_false'],
-            'tags': {
-                'custom-tag': 'x'
-            },
-        },
     },
     'loggers': {
-        'nativecards': {
-            'handlers': ['file', 'mail_admins', 'sentry'],
+        'd8b': {
+            'handlers': ['file', 'mail_admins'],
             'level': 'DEBUG',
         },
     }
 }
-
-if not ENV.list('LOGGING', default=False):
-    LOGGING.pop('root', None)
-    LOGGING['loggers']['nativecards']['handlers'].remove('sentry')
-    del LOGGING['handlers']['sentry']
 
 # Celery
 CELERY_SEND_TASK_ERROR_EMAILS = True
@@ -264,13 +244,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication', )
 }
 
-if not DEBUG and ENV.list('LOGGING', default=False):  # pragma: no cover
-    # Sentry raven
-    RAVEN_CONFIG = {
-        'dsn': 'https://52126dbda9494c668b7b9dff7722c901:\
-31b56314232c436fb812b98568a5f589@sentry.io/200649',
-        'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-    }
+# Sentry
+if not DEBUG and not TESTS:  # pragma: no cover
+    from sentry_sdk.integrations.django import DjangoIntegration
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=ENV.str('SENTRY'),
+        integrations=[DjangoIntegration()],
+        send_default_pii=True,
+    )
 
 # Cache
 CACHES = {'default': ENV.cache()}
