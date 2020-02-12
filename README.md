@@ -1,2 +1,2 @@
 # d8base-backend
-REST backend for the d8base.com
+The REST backend for the d8base project ![tests](https://github.com/maxi-booking/d8base-backend/workflows/tests/badge.svg)
