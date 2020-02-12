@@ -1,5 +1,5 @@
 """
-Django settings for billing project.
+The settings module
 """
 
 # import datetime
@@ -64,6 +64,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'reversion',  # !
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_hotp',
+    'django_otp.plugins.otp_static',
 
     # d8base apps
     'd8b',
@@ -272,12 +276,15 @@ if not DEBUG and ENV.list('LOGGING', default=False):  # pragma: no cover
 CACHES = {'default': ENV.cache()}
 CACHES['default']['TIMEOUT'] = 60 * 60 * 24 * 7
 
-# # DRM estensions
+# DRM estensions
 REST_FRAMEWORK_EXTENSIONS = {
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60 * 24 * 7,
     'DEFAULT_CACHE_ERRORS': False,
     'DEFAULT_USE_CACHE': 'default'
 }
+
+# Django OTP
+OTP_TOTP_ISSUER = "d8base.com"
 
 # # Simplejwt
 # SIMPLE_JWT = {
