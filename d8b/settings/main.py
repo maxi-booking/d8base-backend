@@ -64,10 +64,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'reversion',  # !
-    'django_otp',
-    'django_otp.plugins.otp_static',
-    'django_otp.plugins.otp_totp',
-    'two_factor',  # !
 
     # d8base apps
     'd8b',

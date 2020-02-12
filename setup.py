@@ -37,7 +37,7 @@ setup(
         'django-debug-toolbar==2.2',
         'django-reversion==3.0.5',
         'django-filter==2.2.0',
-        'django-two-factor-auth==1.10.0',
+        # 'django-two-factor-auth==1.10.0',
         'celery==4.4.0',
         'raven==6.10.0',
         'Werkzeug==1.0.0',

@@ -17,11 +17,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from two_factor.urls import urlpatterns as two_factor_urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path(r'', include(two_factor_urls)),
+    path('mb8m/', admin.site.urls),
 ]
 
 if settings.DEBUG or settings.TESTS:
