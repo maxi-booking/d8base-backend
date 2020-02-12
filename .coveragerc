@@ -1,0 +1,27 @@
+[run]
+omit =
+    d8b/wsgi.py
+    */apps.py
+    */migrations/*
+    */test/*
+    .tox/*
+    setup.py
+    manage.py
+
+[report]
+fail_under=95
+exclude_lines =
+    pragma: no cover
+
+    def __repr__
+    def __str__
+    if DEBUG
+    if TYPE_CHECKING
+
+    raise AssertionError
+    raise NotImplementedError
+
+    if 0:
+    if __name__ == .__main__.:
+
+ignore_errors = True
