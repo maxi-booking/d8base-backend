@@ -27,4 +27,7 @@ pytest-pylint
 ipython
 tox
 bandit
+importmagic
+epc
 ptpython>=2.0,<3.0
+virtualfish

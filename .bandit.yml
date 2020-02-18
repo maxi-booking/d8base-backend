@@ -395,5 +395,6 @@ weak_cryptographic_key:
   weak_key_size_rsa_medium: 2048
 
 exclude_dirs:
-- d8b/test
+- d8b/tests
+- users/tests
 - .tox

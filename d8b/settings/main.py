@@ -28,6 +28,8 @@ DEBUG = ENV.bool('DEBUG')
 TEMPLATE_DEBUG = ENV.bool('TEMPLATE_DEBUG')
 TESTS = ENV.bool('TESTS', default=False)
 
+AUTH_USER_MODEL = 'users.User'
+
 # Celery
 CELERY_LOGLEVEL = ENV.str('CELERY_LOGLEVEL')
 BROKER_URL = ENV.str('BROKER_URL')
@@ -61,7 +63,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'debug_toolbar',
-    'reversion',  # !
+    'reversion',
     'django_otp',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_hotp',
@@ -69,6 +71,7 @@ INSTALLED_APPS = [
 
     # d8base apps
     'd8b',
+    'users',
 ]
 
 SITE_ID = 1
