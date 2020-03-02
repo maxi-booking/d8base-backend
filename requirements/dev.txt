@@ -12,6 +12,7 @@ pytest-cov
 pytest-flakes
 pytest-mypy
 pytest-xdist
+pytest-pydocstyle
 yapf
 twine
 jedi
@@ -31,3 +32,5 @@ importmagic
 epc
 ptpython>=2.0,<3.0
 virtualfish
+autopep8
+pydocstyle

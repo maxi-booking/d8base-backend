@@ -18,6 +18,7 @@ exclude_lines =
     def __str__
     if DEBUG
     if TYPE_CHECKING
+    if not settings.TESTS
 
     raise AssertionError
     raise NotImplementedError

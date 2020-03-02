@@ -1,11 +1,10 @@
-# The celery configuration module
+"""The celery configuration module."""
 from __future__ import absolute_import
 
 import os
 
-from django.conf import settings
-
 from celery import Celery
+from django.conf import settings
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'd8b.settings')

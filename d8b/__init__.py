@@ -1,3 +1,1 @@
-"""
-The d8b initialization module
-"""
+"""The d8b initialization module."""

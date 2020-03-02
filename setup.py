@@ -1,4 +1,4 @@
-"""The setup module for the d8base-backend"""
+"""The setup module for the d8base-backend."""
 import pathlib
 
 from setuptools import find_packages, setup

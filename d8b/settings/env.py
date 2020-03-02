@@ -1,6 +1,4 @@
-"""
-The environment module
-"""
+"""The environment module."""
 import os
 
 import environ

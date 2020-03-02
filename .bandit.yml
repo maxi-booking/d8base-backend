@@ -398,3 +398,4 @@ exclude_dirs:
 - d8b/tests
 - users/tests
 - .tox
+- conftest.py

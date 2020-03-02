@@ -1,6 +1,4 @@
-"""
-The users models module
-"""
+"""The users models module."""
 from typing import List
 
 from django.contrib.auth.models import AbstractUser
@@ -11,9 +9,8 @@ from .managers import UserManager
 
 
 class User(AbstractUser):
-    """
-    The user class
-    """
+    """The user class."""
+
     username = None
     email = models.EmailField(_('email address'), unique=True)
 
@@ -23,4 +20,5 @@ class User(AbstractUser):
     objects: UserManager = UserManager()
 
     def __str__(self):
+        """Return a string representation of the object."""
         return self.email

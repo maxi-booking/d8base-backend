@@ -1,6 +1,4 @@
-"""
-The settings module
-"""
+"""The settings module."""
 
 # import datetime
 import os
@@ -89,8 +87,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # 'd8b.middleware.DisableAdminI18nMiddleware',
-    # 'd8b.middleware.WhodidMiddleware',
+    'd8b.middleware.DisableAdminI18nMiddleware',
+    'd8b.middleware.ThreadSafeUserMiddleware',
     'reversion.middleware.RevisionMiddleware',
 ]
 

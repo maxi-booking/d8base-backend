@@ -1,6 +1,4 @@
-"""
-The language settings module
-"""
+"""The language settings module."""
 from django.utils.translation import ugettext_lazy as _
 
 LANGUAGES = (

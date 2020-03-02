@@ -1,3 +1,1 @@
-"""
-The users initialization module
-"""
+"""The users initialization module."""

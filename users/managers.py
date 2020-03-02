@@ -1,6 +1,4 @@
-"""
-The users managers module
-"""
+"""The users managers module."""
 from typing import TYPE_CHECKING
 
 from django.contrib.auth.base_user import BaseUserManager
@@ -12,18 +10,19 @@ if TYPE_CHECKING:
 
 class UserManager(BaseUserManager):
     """
+    The user model manager.
+
     The user model manager where email is the unique identifiers
     for authentication instead of usernames.
     """
+
     def create_user(
             self,
             email: str,
             password: str,
             **extra_fields,
     ) -> 'User':
-        """
-        Create and save a User with the given email and password.
-        """
+        """Create and save a User with the given email and password."""
         if not email:
             raise ValueError(_('The email must be set'))
         email = self.normalize_email(email)
@@ -39,9 +38,7 @@ class UserManager(BaseUserManager):
             password: str,
             **extra_fields,
     ) -> 'User':
-        """
-        Create and save a superuser with the given email and password.
-        """
+        """Create and save a superuser with the given email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)

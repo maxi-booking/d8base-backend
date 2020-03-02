@@ -1,6 +1,4 @@
-"""
-The users admin module
-"""
+"""The users admin module."""
 
 from typing import Any, List, Tuple, Type
 
@@ -20,16 +18,13 @@ admin.site.unregister(Group)
 
 @admin.register(Group)
 class GroupAdmin(VersionAdmin, BaseGroupAdmin):
-    """
-    The groups admin class
-    """
+    """The groups admin class."""
 
 
 @admin.register(User)
 class UserAdmin(VersionAdmin, BaseUserAdmin):
-    """
-    The users admin class
-    """
+    """The users admin class."""
+
     add_form: Type = UserCreationForm
     form: Type = UserChangeForm
     model: Type = User
@@ -57,17 +52,13 @@ class UserAdmin(VersionAdmin, BaseUserAdmin):
     ordering = ('email', )
 
     def get_list_display(self, request: HttpRequest) -> List[Any]:
-        """
-        Admin list display
-        """
+        """Admin list display."""
         list_display = list(super().get_list_display(request))
         list_display.remove('username')
         return list_display
 
     def get_search_fields(self, request: HttpRequest) -> List[Any]:
-        """
-        Admin search fields
-        """
+        """Admin search fields."""
         search_fields = list(super().get_search_fields(request))
         search_fields.remove('username')
         return search_fields
