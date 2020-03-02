@@ -13,7 +13,7 @@ from users.models import User
 class DisableAdminI18nMiddleware(MiddlewareMixin):
     """Disable the translation in the admin interface."""
 
-    def process_request(self, request):
+    def process_request(self, request) -> None:
         """Set the locale to en in the admin interface."""
         # pylint: disable=unused-argument, no-self-use
         resolver_match = resolve(request.path)
@@ -32,7 +32,7 @@ class ThreadSafeUserMiddleware(MiddlewareMixin):
     `django.contrib.auth.middleware.AuthenticationMiddleware`.
     """
 
-    def process_request(self, request: HttpRequest):
+    def process_request(self, request: HttpRequest) -> None:
         """Set user."""
         # pylint: disable=unused-argument, no-self-use
         _USER.value = request.user
