@@ -4,20 +4,19 @@ on: [push]
 
 jobs:
   build:
-    
     runs-on: ubuntu-latest
-    
-    services: 
+
+    services:
       postgres:
         image: postgres
         ports: ["5432:5432"]
         env:
-          POSTGRES_DB: d8b 
-          POSTGRES_USER: postgres 
+          POSTGRES_DB: d8b
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-      redis: 
+      redis:
         image: redis
-      memcached: 
+      memcached:
         image: memcached
 
     steps:
@@ -54,3 +53,7 @@ jobs:
     - name: Test the app
       run: |
         tox
+
+    - name: Codecov
+      run: |
+        codecov --token=${{ secrets.CODECOV_TOKEN }}
