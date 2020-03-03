@@ -1,5 +1,7 @@
 """The models tests module."""
 import pytest
+from django.db import connection
+from django.db.utils import ProgrammingError
 from django.test.client import Client
 from django.urls import reverse
 
@@ -10,18 +12,37 @@ from users.models import User
 pytestmark = pytest.mark.django_db
 
 
-class MockCommonInfo(CommonInfo):
-    """The CommonInfo mock class."""
+@pytest.fixture(scope="module")
+def mock_common_info_class(django_db_blocker):
+    """Get the mock of the CommomInfo class."""
+    class MockCommonInfo(CommonInfo):
+        """The CommonInfo mock class."""
 
-    @staticmethod
-    def reset_user() -> None:
-        """Reset the request user."""
-        d8b.middleware._USER.value = None
+        @staticmethod
+        def reset_user() -> None:
+            """Reset the request user."""
+            d8b.middleware._USER.value = None
+
+    with django_db_blocker.unblock():
+        try:
+            with connection.schema_editor() as schema_editor:
+                schema_editor.create_model(MockCommonInfo)
+        except ProgrammingError:
+            pass
+    return MockCommonInfo
 
 
-def test_common_info_get_current_user(admin: User, admin_client: Client):
+@pytest.fixture(scope="function")
+def mock_common_info(mock_common_info_class):
+    """Get the instance of mock of the CommomInfo class."""
+    return mock_common_info_class()
+
+
+def test_common_info_get_current_user(
+    admin: User, admin_client: Client, mock_common_info
+):
     """Should get the current user."""
-    MockCommonInfo.reset_user()
+    mock_common_info.reset_user()
     response = admin_client.get(reverse('admin:users_user_changelist'))
 
     assert response.status_code == 200
@@ -29,54 +50,50 @@ def test_common_info_get_current_user(admin: User, admin_client: Client):
 
 
 def test_common_info_set_user_fields_new_user(
-    admin: User, admin_client: Client
+    admin: User, admin_client: Client, mock_common_info
 ):
     """Should set user fields for a new user."""
-    MockCommonInfo.reset_user()
-    commonInfo = MockCommonInfo()
-    commonInfo.pk = None
-    commonInfo._set_user_fields(admin)
+    mock_common_info.reset_user()
+    mock_common_info.pk = None
+    mock_common_info._set_user_fields(admin)
 
-    assert commonInfo.created_by == admin
-    assert commonInfo.modified_by == admin
+    assert mock_common_info.created_by == admin
+    assert mock_common_info.modified_by == admin
 
 
 def test_common_info_set_user_fields_existing_user(
-    admin: User, admin_client: Client
+    admin: User, admin_client: Client, mock_common_info
 ):
     """Should update user fields for an existing new user."""
-    MockCommonInfo.reset_user()
-    commonInfo = MockCommonInfo()
-    commonInfo.pk = 12
-    commonInfo._set_user_fields(admin)
+    mock_common_info.reset_user()
+    mock_common_info.pk = 12
+    mock_common_info._set_user_fields(admin)
 
-    assert commonInfo.created_by is None
-    assert commonInfo.modified_by == admin
+    assert mock_common_info.created_by is None
+    assert mock_common_info.modified_by == admin
 
 
 def test_common_info_set_user_fields_on_save(
-    admin: User, admin_client: Client
+    admin: User, admin_client: Client, mock_common_info
 ):
     """Should set user fields for an user when saving."""
-    MockCommonInfo.reset_user()
+    mock_common_info.reset_user()
     response = admin_client.get(reverse('admin:users_user_changelist'))
-    commonInfo = MockCommonInfo()
-    commonInfo.pk = None
-    commonInfo.save()
+    mock_common_info.pk = None
+    mock_common_info.save()
 
     assert response.status_code == 200
-    assert commonInfo.created_by == admin
-    assert commonInfo.modified_by == admin
+    assert mock_common_info.created_by == admin
+    assert mock_common_info.modified_by == admin
 
 
 def test_common_info_set_user_fields_on_save_without_user(
-    admin: User, admin_client: Client
+    admin: User, admin_client: Client, mock_common_info
 ):
     """Should skip the setting user fields."""
-    MockCommonInfo.reset_user()
-    commonInfo = MockCommonInfo()
-    commonInfo.pk = None
-    commonInfo.save()
+    mock_common_info.reset_user()
+    mock_common_info.pk = None
+    mock_common_info.save()
 
-    assert commonInfo.created_by is None
-    assert commonInfo.modified_by is None
+    assert mock_common_info.created_by is None
+    assert mock_common_info.modified_by is None
