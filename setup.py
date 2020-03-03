@@ -39,6 +39,7 @@ setup(
         'django-filter==2.2.0',
         'django-otp==0.8.1',
         'django-adminactions==1.8.1',
+        'django-phonenumber-field==3.0.1',
         'celery==4.4.0',
         'Werkzeug==1.0.0',
         'phonenumbers==8.11.3',
