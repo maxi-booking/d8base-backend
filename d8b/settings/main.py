@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_hotp',
     'django_otp.plugins.otp_static',
+    'phonenumber_field',
+    'adminactions',
 
     # d8base apps
     'd8b',
@@ -277,3 +279,6 @@ OTP_TOTP_ISSUER = "d8base.com"
 #     'BLACKLIST_AFTER_ROTATION': True,
 #     'AUTH_HEADER_TYPES': ('Bearer', 'JWT')
 # }
+
+# Django phonenumber
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'

@@ -32,6 +32,5 @@ importmagic
 epc
 ptpython>=2.0,<3.0
 virtualfish
-autopep8
 pydocstyle
 codecov

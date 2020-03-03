@@ -6,6 +6,7 @@ from django.urls import include, path, re_path
 
 urlpatterns = [
     path(settings.ADMIN_URL + '/', admin.site.urls),
+    re_path(r'^adminactions/', include('adminactions.urls')),
 ]
 
 if settings.DEBUG or settings.TESTS:

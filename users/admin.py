@@ -31,16 +31,17 @@ class UserAdmin(VersionAdmin, BaseUserAdmin):
 
     fieldsets: Tuple = (
         (None, {
-            'fields': ('email', 'password')
+            'fields': ('email', 'password', 'account_type')
         }),
         (_('Personal info'), {
-            'fields': ('first_name', 'last_name')
+            'fields': ('first_name', 'last_name', 'patronymic', 'gender',
+                       'birthday', 'phone')
         }),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups',
                        'user_permissions'),
         }),
-        (_('Important dates'), {
+        (_('Dates'), {
             'fields': ('last_login', 'date_joined')
         }),
     )
@@ -51,14 +52,24 @@ class UserAdmin(VersionAdmin, BaseUserAdmin):
 
     ordering = ('email', )
 
+    def get_list_filter(self, request: HttpRequest) -> List[Any]:
+        """Admin list filter."""
+        list_display = list(super().get_list_filter(request))
+        list_display.append('account_type')
+        list_display.append('gender')
+        return list_display
+
     def get_list_display(self, request: HttpRequest) -> List[Any]:
         """Admin list display."""
         list_display = list(super().get_list_display(request))
         list_display.remove('username')
+        list_display.append('account_type')
         return list_display
 
     def get_search_fields(self, request: HttpRequest) -> List[Any]:
         """Admin search fields."""
         search_fields = list(super().get_search_fields(request))
         search_fields.remove('username')
+        search_fields.append('patronymic')
+        search_fields.append('phone')
         return search_fields
