@@ -122,6 +122,7 @@ node_modules
 .tern-port
 
 #Project
+.history
 /d8b/settings/.env
 /d8b/settings/.env_test
 logs/*
