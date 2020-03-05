@@ -7,20 +7,20 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      postgis:
+        image: postgres
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_DB: d8b
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
       redis:
         image: redis
       memcached:
         image: memcached
 
     steps:
-      - uses: huaxk/postgis-action@v1
-        with:
-          postgresql version: '10'
-          postgresql password: 'postgres'
-          postgresql user: 'postgres'
-          postgresql db: 'd8b'
       - uses: actions/checkout@v1
-
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
