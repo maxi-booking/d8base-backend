@@ -1,0 +1,1 @@
+"""The location views module."""

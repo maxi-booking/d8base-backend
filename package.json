@@ -1,0 +1,23 @@
+{
+  "name": "d8base-backend",
+  "version": "1.0.0",
+  "description": "d8base-backend",
+  "dependencies": {
+    "inputmask": "^5.0.3",
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxi-booking/d8base-backend.git"
+  },
+  "author": "m@webmalc.pw",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/maxi-booking/d8base-backend/issues"
+  },
+  "homepage": "https://github.com/maxi-booking/d8base-backend#readme"
+}

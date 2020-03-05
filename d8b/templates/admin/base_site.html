@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+{% load admin_static %}
+{% block extrastyle %}
+    {{ block.super }}
+
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'inputmask/dist/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'js/admin/main.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin/main.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin/main.css' %}">
+{% endblock %}

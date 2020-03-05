@@ -1,14 +1,16 @@
 """The users admin module."""
 
-from typing import Any, List, Tuple, Type
+from typing import Tuple, Type
 
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from reversion.admin import VersionAdmin
+
+from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
+                       SearchFieldsUpdateMixin)
 
 from .forms import UserChangeForm, UserCreationForm
 from .models import User
@@ -22,7 +24,13 @@ class GroupAdmin(VersionAdmin, BaseGroupAdmin):
 
 
 @admin.register(User)
-class UserAdmin(VersionAdmin, BaseUserAdmin):
+class UserAdmin(
+        VersionAdmin,
+        BaseUserAdmin,
+        SearchFieldsUpdateMixin,
+        ListFilterUpdateMixin,
+        ListDisplayUpdateMixin,
+):
     """The users admin class."""
 
     add_form: Type = UserCreationForm
@@ -52,24 +60,10 @@ class UserAdmin(VersionAdmin, BaseUserAdmin):
 
     ordering = ('email', )
 
-    def get_list_filter(self, request: HttpRequest) -> List[Any]:
-        """Admin list filter."""
-        list_display = list(super().get_list_filter(request))
-        list_display.append('account_type')
-        list_display.append('gender')
-        return list_display
+    search_fields_extend = ['patronymic', 'phone']
+    search_fields_remove = ['username']
 
-    def get_list_display(self, request: HttpRequest) -> List[Any]:
-        """Admin list display."""
-        list_display = list(super().get_list_display(request))
-        list_display.remove('username')
-        list_display.append('account_type')
-        return list_display
+    list_filter_extend = ['account_type', 'gender']
 
-    def get_search_fields(self, request: HttpRequest) -> List[Any]:
-        """Admin search fields."""
-        search_fields = list(super().get_search_fields(request))
-        search_fields.remove('username')
-        search_fields.append('patronymic')
-        search_fields.append('phone')
-        return search_fields
+    list_display_extend = ['account_type']
+    list_display_remove = ['username']

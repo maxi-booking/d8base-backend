@@ -61,6 +61,7 @@ class User(AbstractUser):
     # country
     # region
     # city
+    # language
 
     def __str__(self):
         """Return a string representation of the object."""

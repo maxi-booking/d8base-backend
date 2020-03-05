@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.gis',
     'django_extensions',
     'django_filters',
     'rest_framework',
@@ -68,10 +69,12 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'phonenumber_field',
     'adminactions',
+    'cities',
 
     # d8base apps
     'd8b',
     'users',
+    'location',
 ]
 
 SITE_ID = 1
@@ -231,10 +234,10 @@ REST_FRAMEWORK = {
     '1.0',
     'DEFAULT_VERSIONING_CLASS':
     'rest_framework.versioning.AcceptHeaderVersioning',
-    'DEFAULT_PAGINATION_CLASS':
-    'nativecards.pagination.StandardPagination',
+    # 'DEFAULT_PAGINATION_CLASS':
+    # 'd8b.pagination.StandardPagination',
     'DEFAULT_PERMISSION_CLASSES': [
-        'nativecards.permissions.DjangoModelPermissionsGet',
+        # 'd8b.permissions.DjangoModelPermissionsGet',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_FILTER_BACKENDS': (
@@ -279,6 +282,19 @@ OTP_TOTP_ISSUER = "d8base.com"
 #     'BLACKLIST_AFTER_ROTATION': True,
 #     'AUTH_HEADER_TYPES': ('Bearer', 'JWT')
 # }
+
+# Django cities
+CITIES_FILES = {
+    'city': {
+        'filename': ENV.str('CITIES_FILES', default='allCountries.zip'),
+        'urls': ['http://download.geonames.org/export/dump/' + '{filename}']
+    },
+}
+CITIES_POSTAL_CODES = ENV.list('CITIES_POSTAL_CODES', default=['ALL'])
+CITIES_PLUGINS = [
+    'cities.plugin.postal_code_ca.Plugin',
+    'cities.plugin.reset_queries.Plugin',
+]
 
 # Django phonenumber
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'

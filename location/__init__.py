@@ -1,0 +1,1 @@
+"""The location initialization module."""

@@ -7,53 +7,53 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres
-        ports: ["5432:5432"]
-        env:
-          POSTGRES_DB: d8b
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
       redis:
         image: redis
       memcached:
         image: memcached
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
+      - uses: huaxk/postgis-action@v1
+          with:
+            postgresql version: '10'
+            postgresql password: 'postgres'
+            postgresql user: 'postgres'
+            postgresql db: 'd8b'
+      - uses: actions/checkout@v1
 
-    - name: Install environments
-      run: |
-          sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
-          sudo apt-get update
-          sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
 
-    - name: Copy configs
-      run: |
-          cp -n d8b/settings/.env_dist d8b/settings/.env
-          cp -n d8b/settings/.env_test_dist d8b/settings/.env_test
+      - name: Install environments
+        run: |
+            sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
+            sudo apt-get update
+            sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev
 
-    - name: Install dependencies
-      run: |
-        pip install -e .
+      - name: Copy configs
+        run: |
+            cp -n d8b/settings/.env_dist d8b/settings/.env
+            cp -n d8b/settings/.env_test_dist d8b/settings/.env_test
 
-    - name: Install dev dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements/dev.txt
+      - name: Install dependencies
+        run: |
+          pip install -e .
 
-    - name: Run the database migration
-      run: |
-        python manage.py migrate --no-input
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/dev.txt
 
-    - name: Test the app
-      run: |
-        tox
+      - name: Run the database migration
+        run: |
+          python manage.py migrate --no-input
 
-    - name: Codecov
-      run: |
-        codecov --token=${{ secrets.CODECOV_TOKEN }}
+      - name: Test the app
+        run: |
+          tox
+
+      - name: Codecov
+        run: |
+          codecov --token=${{ secrets.CODECOV_TOKEN }}
