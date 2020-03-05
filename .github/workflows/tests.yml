@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgis:
-        image: postgres
+        image: postgis
         ports: ["5432:5432"]
         volumes: 
           - /usr/share/postgresql:/usr/share/postgresql
