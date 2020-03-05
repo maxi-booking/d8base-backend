@@ -10,6 +10,8 @@ jobs:
       postgis:
         image: postgres
         ports: ["5432:5432"]
+        volumes: 
+          - /usr/share/postgresql:/usr/share/postgresql
         env:
           POSTGRES_DB: d8b
           POSTGRES_USER: postgres
