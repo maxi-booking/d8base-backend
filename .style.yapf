@@ -1,2 +1,5 @@
 [style]
-blank_line_before_nested_class_or_def=true
+based_on_style = pep8
+column_limit = 79
+indent_dictionary_value = true
+blank_line_before_nested_class_or_def = true

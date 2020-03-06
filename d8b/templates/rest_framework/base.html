@@ -1,0 +1,30 @@
+{% extends "rest_framework/base.html" %}
+{% load static %}
+
+{% block bootstrap_theme %}
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/3.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-pKJMCXwCXq3HwRBt27cwwSmc0/DAo2BjRxGd7nEESEStk++p6LffHmhX9oqzVDUk" crossorigin="anonymous">
+{% endblock %}
+
+{% block branding %}
+    <a class="navbar-brand" href="{% url 'api-root' %}">
+        D8Base API
+    </a>
+{% endblock %}
+
+{% block bootstrap_navbar_variant %}navbar-default{% endblock %}
+
+{% block userlinks %}
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="documentation">
+            documentation <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="themes">
+            <li><a href="{% url 'schema-swagger-ui' %}">swagger</a></li>
+            <li><a href="{% url 'schema-redoc' %}">redoc</a></li>
+            <li class="divider"></li>
+            <li><a href="{% url 'schema-json' '.json' %}">json</a></li>
+            <li><a href="{% url 'schema-json' '.yaml' %}">yaml</a></li>
+        </ul>
+    </li>
+    {{ block.super }}
+{% endblock %}

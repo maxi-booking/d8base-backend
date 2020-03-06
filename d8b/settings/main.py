@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'adminactions',
     'cities',
+    'drf_yasg',
 
     # d8base apps
     'd8b',
@@ -102,9 +103,7 @@ ROOT_URLCONF = 'd8b.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'd8b/templates'),
-        ],
+        'DIRS': [os.path.join(BASE_DIR, 'd8b/templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,15 +125,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -177,10 +176,14 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['file', 'mail_admins']
+    },
     'formatters': {
         'verbose': {
-            'format':
-            "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'format': ("[%(asctime)s] %(levelname)s "
+                       "[%(name)s:%(lineno)s] %(message)s"),
             'datefmt': "%d/%b/%Y %H:%M:%S"
         },
         'simple': {
@@ -231,13 +234,13 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 # Django restframework
 REST_FRAMEWORK = {
     'DEFAULT_VERSION':
-    '1.0',
+        '1.0',
     'DEFAULT_VERSIONING_CLASS':
-    'rest_framework.versioning.AcceptHeaderVersioning',
-    # 'DEFAULT_PAGINATION_CLASS':
-    # 'd8b.pagination.StandardPagination',
+        'rest_framework.versioning.AcceptHeaderVersioning',
+    'DEFAULT_PAGINATION_CLASS':
+        'd8b.pagination.StandardPagination',
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'd8b.permissions.DjangoModelPermissionsGet',
+        'd8b.permissions.DjangoModelPermissionsGet',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_FILTER_BACKENDS': (

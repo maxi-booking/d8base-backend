@@ -2,7 +2,7 @@
 import pytest
 from django.urls import reverse
 
-pytestmark = pytest.mark.django_db  # pylint: disable=invalid-name
+pytestmark = pytest.mark.django_db
 
 
 def test_admin_redirect(client):

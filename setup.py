@@ -41,6 +41,7 @@ setup(
         'django-adminactions==1.8.1',
         'django-phonenumber-field==3.0.1',
         "django-cities==0.6",
+        "drf-yasg==1.17.1",
         'celery==4.4.0',
         'Werkzeug==1.0.0',
         'phonenumbers==8.11.3',

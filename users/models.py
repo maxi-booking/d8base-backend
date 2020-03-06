@@ -61,6 +61,9 @@ class User(AbstractUser):
     # country
     # region
     # city
+    # postal code
+    # address
+    # coordinates
     # language
 
     def __str__(self):
