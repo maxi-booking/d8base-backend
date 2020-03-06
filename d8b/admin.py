@@ -25,8 +25,7 @@ class SearchFieldsUpdateMixin(admin.ModelAdmin):
         """Admin search fields."""
         search_fields = list(super().get_search_fields(request))
         search_fields.extend(self.search_fields_extend)
-        new_fields = set(search_fields) - set(self.search_fields_remove)
-        return list(new_fields)
+        return [f for f in search_fields if f not in self.search_fields_remove]
 
 
 class ListFilterUpdateMixin(admin.ModelAdmin):
@@ -39,8 +38,7 @@ class ListFilterUpdateMixin(admin.ModelAdmin):
         """Admin list filter."""
         list_filter = list(super().get_list_filter(request))
         list_filter.extend(self.list_filter_extend)
-        new_fields = set(list_filter) - set(self.list_filter_remove)
-        return list(new_fields)
+        return [f for f in list_filter if f not in self.list_filter_remove]
 
 
 class ListDisplayUpdateMixin(admin.ModelAdmin):
@@ -49,9 +47,8 @@ class ListDisplayUpdateMixin(admin.ModelAdmin):
     list_display_extend: List[Any] = []
     list_display_remove: List[Any] = []
 
-    def get_list_filter(self, request: HttpRequest) -> List[Any]:
+    def get_list_display(self, request):
         """Admin list filter."""
         list_display = list(super().get_list_display(request))
         list_display.extend(self.list_display_extend)
-        new_fields = set(list_display) - set(self.list_display_remove)
-        return list(new_fields)
+        return [f for f in list_display if f not in self.list_display_remove]
