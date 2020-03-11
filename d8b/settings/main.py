@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_filters',
     'rest_framework',
+    'rest_framework_gis',
     'debug_toolbar',
     'reversion',
     'django_otp',
@@ -71,6 +72,7 @@ INSTALLED_APPS = [
     'adminactions',
     'cities',
     'drf_yasg',
+    'crispy_forms',
 
     # d8base apps
     'd8b',
@@ -233,6 +235,10 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 # Django restframework
 REST_FRAMEWORK = {
+    # 'HTML_SELECT_CUTOFF':
+    #     10,
+    # 'HTML_SELECT_CUTOFF_TEXT':
+    #     10,
     'DEFAULT_VERSION':
         '1.0',
     'DEFAULT_VERSIONING_CLASS':

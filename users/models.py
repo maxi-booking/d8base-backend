@@ -58,13 +58,17 @@ class User(AbstractUser):
     )
 
     # avatar
+
+    # --- location
     # country
     # region
     # city
     # postal code
     # address
     # coordinates
-    # language
+    # --- location
+
+    #  multiple language model
 
     def __str__(self):
         """Return a string representation of the object."""

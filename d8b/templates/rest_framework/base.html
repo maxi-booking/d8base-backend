@@ -1,17 +1,12 @@
 {% extends "rest_framework/base.html" %}
 {% load static %}
 
-{% block bootstrap_theme %}
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/3.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-pKJMCXwCXq3HwRBt27cwwSmc0/DAo2BjRxGd7nEESEStk++p6LffHmhX9oqzVDUk" crossorigin="anonymous">
-{% endblock %}
 
 {% block branding %}
     <a class="navbar-brand" href="{% url 'api-root' %}">
         D8Base API
     </a>
 {% endblock %}
-
-{% block bootstrap_navbar_variant %}navbar-default{% endblock %}
 
 {% block userlinks %}
     <li class="dropdown">

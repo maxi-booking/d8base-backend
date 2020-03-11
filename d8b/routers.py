@@ -1,6 +1,8 @@
 """The d8b router module."""
 from rest_framework.routers import DefaultRouter as BaseRouter
 
+from location.routers import get_router as get_location_router
+
 
 class DefaultRouter(BaseRouter):
     """The default router class."""
@@ -13,4 +15,6 @@ class DefaultRouter(BaseRouter):
 
 def get_router_urls() -> list:
     """Return the default router URLs."""
-    return DefaultRouter().urls
+    router = DefaultRouter()
+    router.extend(get_location_router())
+    return router.urls
