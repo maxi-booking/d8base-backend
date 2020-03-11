@@ -11,10 +11,13 @@ from users.models import User
 
 pytestmark = pytest.mark.django_db
 
+# pylint: disable=redefined-outer-name, protected-access
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope='module')
 def mock_common_info_class(django_db_blocker):
     """Get the mock of the CommomInfo class."""
+
     class MockCommonInfo(CommonInfo):
         """The CommonInfo mock class."""
 
@@ -32,14 +35,16 @@ def mock_common_info_class(django_db_blocker):
     return MockCommonInfo
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope='function')
 def mock_common_info(mock_common_info_class):
     """Get the instance of mock of the CommomInfo class."""
     return mock_common_info_class()
 
 
 def test_common_info_get_current_user(
-    admin: User, admin_client: Client, mock_common_info
+    admin: User,
+    admin_client: Client,
+    mock_common_info,
 ):
     """Should get the current user."""
     mock_common_info.reset_user()
@@ -50,7 +55,8 @@ def test_common_info_get_current_user(
 
 
 def test_common_info_set_user_fields_new_user(
-    admin: User, admin_client: Client, mock_common_info
+    admin: User,
+    mock_common_info,
 ):
     """Should set user fields for a new user."""
     mock_common_info.reset_user()
@@ -62,7 +68,8 @@ def test_common_info_set_user_fields_new_user(
 
 
 def test_common_info_set_user_fields_existing_user(
-    admin: User, admin_client: Client, mock_common_info
+    admin: User,
+    mock_common_info,
 ):
     """Should update user fields for an existing new user."""
     mock_common_info.reset_user()
@@ -74,7 +81,9 @@ def test_common_info_set_user_fields_existing_user(
 
 
 def test_common_info_set_user_fields_on_save(
-    admin: User, admin_client: Client, mock_common_info
+    admin: User,
+    admin_client: Client,
+    mock_common_info,
 ):
     """Should set user fields for an user when saving."""
     mock_common_info.reset_user()
@@ -87,9 +96,7 @@ def test_common_info_set_user_fields_on_save(
     assert mock_common_info.modified_by == admin
 
 
-def test_common_info_set_user_fields_on_save_without_user(
-    admin: User, admin_client: Client, mock_common_info
-):
+def test_common_info_set_user_fields_on_save_without_user(mock_common_info):
     """Should skip the setting user fields."""
     mock_common_info.reset_user()
     mock_common_info.pk = None

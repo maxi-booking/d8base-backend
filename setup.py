@@ -17,7 +17,7 @@ setup(
     url='https://github.com/maxi-booking/d8base-backend',
     author='maxi-booking',
     author_email='info@maxi-booking.com',
-    license="GPL-3.0",
+    license='GPL-3.0',
     classifiers=[
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.7',

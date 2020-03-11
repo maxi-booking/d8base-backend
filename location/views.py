@@ -26,6 +26,7 @@ class CountryViewSet(
 
     serializer_class = CountrySerializer
     queryset = Country.objects.all().select_related('continent').\
+        order_by('name').\
         prefetch_related('neighbours', 'alt_names')
 
     search_fields = ('=id', 'name', 'alt_names__name', 'slug', 'code', 'code3',
@@ -42,6 +43,7 @@ class RegionViewSet(
 
     serializer_class = RegionSerializer
     queryset = Region.objects.all().select_related('country').\
+        order_by('name').\
         prefetch_related('alt_names')
 
     search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
@@ -58,6 +60,7 @@ class SubregionViewSet(
 
     serializer_class = SubregionSerializer
     queryset = Subregion.objects.all().select_related('region').\
+        order_by('name').\
         prefetch_related('alt_names')
 
     search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
@@ -75,6 +78,7 @@ class CityViewSet(
     serializer_class = CitySerializer
     queryset = City.objects.all().\
         select_related('region', 'country', 'subregion').\
+        order_by('name').\
         prefetch_related('alt_names')
 
     search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
@@ -92,6 +96,7 @@ class DistrictViewSet(
 
     serializer_class = DistrictSerializer
     queryset = District.objects.all().\
+        order_by('name').\
         select_related('city').prefetch_related('alt_names')
 
     search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
@@ -109,6 +114,7 @@ class PostalCodeViewSet(
     serializer_class = PostalCodeSerializer
     queryset = PostalCode.objects.all().order_by('id').\
         select_related('country', 'region', 'subregion', 'city', 'district').\
+        order_by('name').\
         prefetch_related('alt_names')
 
     search_fields = ('=id', 'name', 'alt_names__name', 'slug', 'region_name',
@@ -126,7 +132,7 @@ class AlternativeNameViewSet(
     """The AlternativeName viewset."""
 
     serializer_class = AlternativeNameSerializer
-    queryset = AlternativeName.objects.all()
+    queryset = AlternativeName.objects.all().order_by('name')
 
     search_fields = ('=id', 'name', 'slug')
 

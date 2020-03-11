@@ -15,7 +15,7 @@ def test_root_api_permissions(client):
     assert response.status_code == 403
 
 
-def test_root_api(admin, admin_client):
+def test_root_api(admin_client):
     """Should return a 200 HTTP response for authenticated users."""
     response = admin_client.get(reverse('api-root'))
 

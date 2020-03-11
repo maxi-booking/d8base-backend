@@ -5,6 +5,8 @@ from users.models import User
 
 pytestmark = pytest.mark.django_db
 
+# pylint: disable=no-value-for-parameter
+
 
 def test_user_manager_create_user():
     """Should create a user."""
@@ -22,7 +24,7 @@ def test_user_manager_create_user():
     with pytest.raises(TypeError):
         User.objects.create_user(email='')  # type: ignore
     with pytest.raises(ValueError):
-        User.objects.create_user(email='', password="foo")
+        User.objects.create_user(email='', password='foo')
 
 
 def test_user_manager_create_superuser():

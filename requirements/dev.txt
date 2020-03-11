@@ -25,6 +25,7 @@ pylint
 pylint-django
 pylint-plugin-utils
 pytest-pylint
+pylint-quotes
 ipython
 tox
 bandit

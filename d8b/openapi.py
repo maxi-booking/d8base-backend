@@ -10,10 +10,10 @@ def get_openapi_urls() -> list:
     """Return the OpenAPI URLs."""
     schema_view = get_schema_view(
         openapi.Info(
-            title="D8base API",
+            title='D8base API',
             default_version=settings.REST_FRAMEWORK.get('DEFAULT_VERSION'),
-            description="The d8b API documentation.",
-            license=openapi.License(name="GPL-3.0 License"),
+            description='The d8b API documentation.',
+            license=openapi.License(name='GPL-3.0 License'),
         ),
         public=True,
         permission_classes=(permissions.AllowAny, ),

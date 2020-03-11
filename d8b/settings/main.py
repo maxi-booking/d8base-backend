@@ -167,8 +167,8 @@ STATICFILES_DIRS = (
 FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'), )
 
 LOCALE_PATHS = (
-    os.path.join(os.path.dirname(__file__), "locale"),
-    os.path.join(os.path.dirname(__file__), "app_locale"),
+    os.path.join(os.path.dirname(__file__), 'locale'),
+    os.path.join(os.path.dirname(__file__), 'app_locale'),
 )
 
 EMAIL_SUBJECT_PREFIX = 'd8b: '
@@ -184,9 +184,9 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': ("[%(asctime)s] %(levelname)s "
-                       "[%(name)s:%(lineno)s] %(message)s"),
-            'datefmt': "%d/%b/%Y %H:%M:%S"
+            'format': ('[%(asctime)s] %(levelname)s '
+                       '[%(name)s:%(lineno)s] %(message)s'),
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -281,7 +281,7 @@ REST_FRAMEWORK_EXTENSIONS = {
 }
 
 # Django OTP
-OTP_TOTP_ISSUER = "d8base.com"
+OTP_TOTP_ISSUER = 'd8base.com'
 
 # # Simplejwt
 # SIMPLE_JWT = {

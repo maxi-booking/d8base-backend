@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 class LanguageField(CharField):
     """The language field for Django models."""
 
-    description = _("Language code")
+    description = _('Language code')
 
     def __init__(self, *args, **kwargs):
         """Initialize the object."""

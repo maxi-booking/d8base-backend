@@ -11,7 +11,7 @@ ignore=CVS
 
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
-ignore-patterns=.*test.*
+#ignore-patterns=.*_tests.py
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
@@ -19,7 +19,7 @@ ignore-patterns=.*test.*
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use.
-jobs=1
+jobs=0
 
 # Control the amount of potential inferred values when inferring a single
 # object. This can help the performance when dealing with large functions or
@@ -28,7 +28,7 @@ limit-inference-results=100
 
 # List of plugins (as comma separated values of python modules names) to load,
 # usually to register additional checkers.
-load-plugins=pylint_django
+load-plugins=pylint_django,pylint_quotes
 
 # Pickle collected data for later comparisons.
 persistent=yes
@@ -61,6 +61,7 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=print-statement,
+        bad-continuation,
         parameter-unpacking,
         unpacking-in-except,
         backtick,
@@ -553,3 +554,6 @@ valid-metaclass-classmethod-first-arg=cls
 # "BaseException, Exception".
 overgeneral-exceptions=BaseException,
                        Exception
+string-quote=single-avoid-escape
+triple-quote=double
+docstring-quote=double
