@@ -13,6 +13,7 @@ pytest-flakes
 pytest-mypy
 pytest-xdist
 pytest-pydocstyle
+pytest-lazy-fixture
 yapf
 twine
 jedi
