@@ -1,21 +1,21 @@
 """The d8b models module."""
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
-from users.models import User
-
 from .middleware import ThreadSafeUserMiddleware
+
+if TYPE_CHECKING:
+    from users.models import User  # noqa
 
 
 class CommonInfo(TimeStampedModel):
     """The abstract model with common info."""
 
     created_by = models.ForeignKey(
-        get_user_model(),
+        'users.User',
         null=True,
         blank=True,
         db_index=True,
@@ -24,7 +24,7 @@ class CommonInfo(TimeStampedModel):
         related_name='%(app_label)s_%(class)s_created_by')
 
     modified_by = models.ForeignKey(
-        get_user_model(),
+        'users.User',
         null=True,
         blank=True,
         db_index=True,
@@ -34,7 +34,7 @@ class CommonInfo(TimeStampedModel):
         related_name='%(app_label)s_%(class)s_modified_by')
 
     @staticmethod
-    def get_current_user() -> Optional[User]:
+    def get_current_user() -> Optional['User']:
         """
         Get the currently logged in user over middleware.
 
@@ -43,7 +43,7 @@ class CommonInfo(TimeStampedModel):
         """
         return ThreadSafeUserMiddleware.get_current_user()
 
-    def _set_user_fields(self, user: Optional[User]) -> None:
+    def _set_user_fields(self, user: Optional['User']) -> None:
         """
         Set user-related fields before saving the instance.
 

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework_gis',
+    'rest_registration',
     'debug_toolbar',
     'reversion',
     'django_otp',
@@ -100,16 +101,16 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware',
 ]
 
-SECURE_BROWSER_XSS_FILTER = True
-
-SESSION_COOKIE_SAMESITE = 'Strict'
-SESSION_COOKIE_SECURE = 'Secure'
-SESSION_COOKIE_HTTPONLY = True
-
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'Strict'
-
 if not DEBUG:  # pragma: no cover
+    SECURE_BROWSER_XSS_FILTER = True
+
+    SESSION_COOKIE_SAMESITE = 'Strict'
+    SESSION_COOKIE_SECURE = 'Secure'
+    SESSION_COOKIE_HTTPONLY = True
+
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SAMESITE = 'Strict'
+
     CSRF_COOKIE_SECURE = 'Secure'
 
 ROOT_URLCONF = 'd8b.urls'
@@ -319,3 +320,31 @@ CITIES_PLUGINS = [
 
 # Django phonenumber
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+
+# Django rest registration
+USER_FIELDS = [
+    'id', 'email', 'first_name', 'last_name', 'patronymic', 'phone', 'gender',
+    'birthday', 'account_type', 'languages'
+]
+USER_READONLY_FIELDS = ['languages']
+USER_EDITABLE_FIELDS = [
+    f for f in USER_FIELDS if f not in USER_READONLY_FIELDS
+]
+REST_REGISTRATION = {
+    'REGISTER_VERIFICATION_ENABLED':
+        False,
+    'REGISTER_EMAIL_VERIFICATION_ENABLED':
+        False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED':
+        True,
+    'RESET_PASSWORD_VERIFICATION_URL':
+        ENV.str('RESET_PASSWORD_VERIFICATION_URL'),
+    'REGISTER_OUTPUT_SERIALIZER_CLASS':
+        'users.serializers.UserSerializer',
+    'USER_PUBLIC_FIELDS':
+        USER_FIELDS,
+    'USER_EDITABLE_FIELDS':
+        USER_EDITABLE_FIELDS,
+    'VERIFICATION_FROM_EMAIL':
+        DEFAULT_FROM_EMAIL,
+}

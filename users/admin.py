@@ -13,7 +13,7 @@ from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
                        SearchFieldsUpdateMixin)
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import User
+from .models import Language, User
 
 admin.site.unregister(Group)
 
@@ -21,6 +21,16 @@ admin.site.unregister(Group)
 @admin.register(Group)
 class GroupAdmin(VersionAdmin, BaseGroupAdmin):
     """The groups admin class."""
+
+
+class LanguageInlineAdmin(admin.TabularInline):
+    """The languages inline admin."""
+
+    model = Language
+    fields = ('id', 'language', 'is_native', 'created', 'modified',
+              'created_by', 'modified_by')
+    fk_name = 'user'
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 @admin.register(User)
@@ -36,6 +46,8 @@ class UserAdmin(
     add_form: Type = UserCreationForm
     form: Type = UserChangeForm
     model: Type = User
+
+    inlines = (LanguageInlineAdmin, )
 
     fieldsets: Tuple = (
         (None, {

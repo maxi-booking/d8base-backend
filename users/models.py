@@ -6,6 +6,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+from d8b.fields import LanguageField
+from d8b.models import CommonInfo
+
 from .managers import UserManager
 from .validators import validate_birthday
 
@@ -68,8 +71,29 @@ class User(AbstractUser):
     # coordinates
     # --- location
 
-    #  multiple language model
-
     def __str__(self):
         """Return a string representation of the object."""
         return self.email
+
+
+class Language(CommonInfo):
+    """The user language class."""
+
+    language = LanguageField(verbose_name=_('language'))
+    is_native = models.BooleanField(
+        default=True,
+        help_text=_('is native language?'),
+        verbose_name=_('is native'),
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='languages',
+        verbose_name=_('user'),
+    )
+
+    class Meta:
+        """The user language class META class."""
+
+        ordering = ('language', )
+        unique_together = (('language', 'user'), )

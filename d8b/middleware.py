@@ -1,13 +1,14 @@
 """The d8b middleware module."""
 from threading import local
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from django.http.request import HttpRequest
 from django.urls import resolve
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import activate
 
-from users.models import User
+if TYPE_CHECKING:
+    from users.models import User  # noqa
 
 
 class DisableAdminI18nMiddleware(MiddlewareMixin):
@@ -38,7 +39,7 @@ class ThreadSafeUserMiddleware(MiddlewareMixin):
         _USER.value = request.user
 
     @staticmethod
-    def get_current_user() -> Optional[User]:
+    def get_current_user() -> Optional['User']:
         """Return user."""
         if hasattr(_USER, 'value') and _USER.value:
             return _USER.value

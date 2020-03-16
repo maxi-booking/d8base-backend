@@ -34,6 +34,7 @@ setup(
         'djangorestframework==3.11.0',
         'drf-extensions==0.6.0',
         'djangorestframework-gis==0.15',
+        'django-rest-registration==0.5.4'
         'django-extensions==2.2.8',
         'django-debug-toolbar==2.2',
         'django-reversion==3.0.5',
