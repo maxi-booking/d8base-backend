@@ -100,6 +100,18 @@ MIDDLEWARE = [
     'reversion.middleware.RevisionMiddleware',
 ]
 
+SECURE_BROWSER_XSS_FILTER = True
+
+SESSION_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SECURE = 'Secure'
+SESSION_COOKIE_HTTPONLY = True
+
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Strict'
+
+if not DEBUG:  # pragma: no cover
+    CSRF_COOKIE_SECURE = 'Secure'
+
 ROOT_URLCONF = 'd8b.urls'
 
 TEMPLATES = [

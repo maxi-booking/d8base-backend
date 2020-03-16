@@ -1,6 +1,7 @@
 """The location repositories module."""
 
 from abc import ABC, abstractmethod
+from typing import List, Type
 
 from cities.models import (AlternativeName, City, Continent, Country, District,
                            Place, PostalCode, Region, Subregion)
@@ -12,12 +13,23 @@ class BaseRepository(ABC):
 
     @property
     @abstractmethod
-    def model(self):
+    def model(self) -> Type:
         """Return the repository model."""
 
+    @property
     @abstractmethod
-    def get_list(self):
-        """Return a list of objects."""
+    def order_by(self) -> str:
+        """Return the default order by."""
+
+    @property
+    @abstractmethod
+    def select_related(self) -> List[str]:
+        """Return the default select_related."""
+
+    @property
+    @abstractmethod
+    def prefetch_related(self) -> List[str]:
+        """Return the default prefetch_related."""
 
     def get_or_create(self, **kwargs) -> Place:
         """Get or create an object."""
@@ -27,99 +39,87 @@ class BaseRepository(ABC):
         """Return all objects."""
         return self.model.objects.all()
 
+    def get_list(self) -> QuerySet:
+        """Return a list of objects."""
+        return self.get_all().order_by(self.order_by).\
+            select_related(*self.select_related).\
+            prefetch_related(*self.prefetch_related)
+
 
 class ContinentRepository(BaseRepository):
     """The Continent manager."""
 
     model = Continent
-
-    def get_list(self) -> QuerySet:
-        """Return a list of continents."""
-        return self.get_all().order_by('name').\
-            prefetch_related('alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = []
+    prefetch_related: List[str] = ['alt_names']
 
 
 class CountryRepository(BaseRepository):
     """The Country manager."""
 
     model = Country
-
-    def get_list(self) -> QuerySet:
-        """Return a list of countries."""
-        return self.get_all().select_related('continent').\
-            order_by('name').\
-            prefetch_related('neighbours', 'alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = ['continent']
+    prefetch_related: List[str] = ['neighbours', 'alt_names']
 
 
 class RegionRepository(BaseRepository):
     """The Region manager."""
 
     model = Region
-
-    def get_list(self) -> QuerySet:
-        """Return a list of regions."""
-        return self.get_all().select_related('country').\
-            order_by('name').\
-            prefetch_related('alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = ['country']
+    prefetch_related: List[str] = ['alt_names']
 
 
 class SubregionRepository(BaseRepository):
     """The Subregion manager."""
 
     model = Subregion
-
-    def get_list(self) -> QuerySet:
-        """Return a list of subregions."""
-        return self.get_all().select_related('region').\
-            order_by('name').\
-            prefetch_related('alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = ['region']
+    prefetch_related: List[str] = ['alt_names']
 
 
 class CityRepository(BaseRepository):
     """The City manager."""
 
     model = City
-
-    def get_list(self) -> QuerySet:
-        """Return a list of cities."""
-        return self.get_all().\
-            select_related('region', 'country', 'subregion').\
-            order_by('name').\
-            prefetch_related('alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = ['region', 'country', 'subregion']
+    prefetch_related: List[str] = ['alt_names']
 
 
 class DistrictRepository(BaseRepository):
     """The District manager."""
 
     model = District
-
-    def get_list(self) -> QuerySet:
-        """Return a list of districts."""
-        return self.get_all().order_by('name').\
-            select_related('city').prefetch_related('alt_names')
+    order_by: str = 'name'
+    select_related: List[str] = ['city']
+    prefetch_related: List[str] = ['alt_names']
 
 
 class PostalCodeRepository(BaseRepository):
     """The PostalCode manager."""
 
     model = PostalCode
-
-    def get_list(self) -> QuerySet:
-        """Return a list of postal codes."""
-        return self.get_all().order_by('id').select_related(
-            'country',
-            'region',
-            'subregion',
-            'city',
-            'district',
-        ).prefetch_related('alt_names')
+    order_by: str = 'id'
+    select_related: List[str] = [
+        'country',
+        'region',
+        'subregion',
+        'city',
+        'district',
+        'city',
+    ]
+    prefetch_related: List[str] = ['alt_names']
 
 
 class AlternativeNameRepository(BaseRepository):
     """The AlternativeName manager."""
 
     model = AlternativeName
-
-    def get_list(self) -> QuerySet:
-        """Return a list of alternative names."""
-        return self.get_all().order_by('name')
+    order_by: str = 'name'
+    select_related: List[str] = []
+    prefetch_related: List[str] = []
