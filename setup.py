@@ -34,7 +34,7 @@ setup(
         'djangorestframework==3.11.0',
         'drf-extensions==0.6.0',
         'djangorestframework-gis==0.15',
-        'django-rest-registration==0.5.4'
+        'django-rest-registration==0.5.4',
         'django-extensions==2.2.8',
         'django-debug-toolbar==2.2',
         'django-reversion==3.0.5',
@@ -44,6 +44,7 @@ setup(
         'django-phonenumber-field==3.0.1',
         'django-cities==0.6',
         'django-crispy-forms==1.9.0',
+        'django-oauth-toolkit==1.3.0',
         'drf-yasg==1.17.1',
         'celery==4.4.0',
         'Werkzeug==1.0.0',

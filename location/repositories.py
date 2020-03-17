@@ -47,7 +47,7 @@ class BaseRepository(ABC):
 
 
 class ContinentRepository(BaseRepository):
-    """The Continent manager."""
+    """The Continent repository."""
 
     model = Continent
     order_by: str = 'name'
@@ -56,7 +56,7 @@ class ContinentRepository(BaseRepository):
 
 
 class CountryRepository(BaseRepository):
-    """The Country manager."""
+    """The Country repository."""
 
     model = Country
     order_by: str = 'name'
@@ -65,7 +65,7 @@ class CountryRepository(BaseRepository):
 
 
 class RegionRepository(BaseRepository):
-    """The Region manager."""
+    """The Region repository."""
 
     model = Region
     order_by: str = 'name'
@@ -74,7 +74,7 @@ class RegionRepository(BaseRepository):
 
 
 class SubregionRepository(BaseRepository):
-    """The Subregion manager."""
+    """The Subregion repository."""
 
     model = Subregion
     order_by: str = 'name'
@@ -83,7 +83,7 @@ class SubregionRepository(BaseRepository):
 
 
 class CityRepository(BaseRepository):
-    """The City manager."""
+    """The City repository."""
 
     model = City
     order_by: str = 'name'
@@ -92,7 +92,7 @@ class CityRepository(BaseRepository):
 
 
 class DistrictRepository(BaseRepository):
-    """The District manager."""
+    """The District repository."""
 
     model = District
     order_by: str = 'name'
@@ -101,7 +101,7 @@ class DistrictRepository(BaseRepository):
 
 
 class PostalCodeRepository(BaseRepository):
-    """The PostalCode manager."""
+    """The PostalCode repository."""
 
     model = PostalCode
     order_by: str = 'id'
@@ -117,7 +117,7 @@ class PostalCodeRepository(BaseRepository):
 
 
 class AlternativeNameRepository(BaseRepository):
-    """The AlternativeName manager."""
+    """The AlternativeName repository."""
 
     model = AlternativeName
     order_by: str = 'name'

@@ -5,17 +5,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 
+from users.registration import get_registration_urls
+
 from .openapi import get_openapi_urls
-from .registration import get_registration_urls
 from .routers import get_router_urls
 
 urlpatterns = [
     path(settings.ADMIN_URL + '/', admin.site.urls),
     re_path(r'^adminactions/', include('adminactions.urls')),
+    re_path(
+        r'^api/auth/',
+        include('oauth2_provider.urls', namespace='oauth2_provider'),
+    ),
 ]
 urlpatterns += i18n_patterns(
     re_path(r'^api/', include(get_router_urls())),
-    re_path('^api/accounts/', include(get_registration_urls())),
+    re_path(r'^api/accounts/', include(get_registration_urls())),
 )
 urlpatterns += get_openapi_urls()
 

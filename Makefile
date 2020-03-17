@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test
+.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage
 
 dockerc := docker-compose -f docker/docker-compose.yml
 pgsql_env := pgsql-variables.env
@@ -32,6 +32,9 @@ django_migration:
 	@echo 'Do migrations'
 	$(dockerc) exec web python ${manage} migrate
 
+coverage:
+	pytest  --cov=./ --cov-report html
+	${BROWSER} htmlcov/index.html
 test:
 	@echo 'Start tests'
 	tox

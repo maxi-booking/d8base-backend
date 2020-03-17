@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'django_extensions',
     'django_filters',
+    'oauth2_provider',
     'rest_framework',
     'rest_framework_gis',
     'rest_registration',
@@ -268,8 +269,9 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication', )
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 # Sentry
@@ -295,15 +297,6 @@ REST_FRAMEWORK_EXTENSIONS = {
 
 # Django OTP
 OTP_TOTP_ISSUER = 'd8base.com'
-
-# # Simplejwt
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60 * 24),
-#     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
-#     'ROTATE_REFRESH_TOKENS': True,
-#     'BLACKLIST_AFTER_ROTATION': True,
-#     'AUTH_HEADER_TYPES': ('Bearer', 'JWT')
-# }
 
 # Django cities
 CITIES_FILES = {
@@ -339,12 +332,36 @@ REST_REGISTRATION = {
         True,
     'RESET_PASSWORD_VERIFICATION_URL':
         ENV.str('RESET_PASSWORD_VERIFICATION_URL'),
+    'PROFILE_SERIALIZER_CLASS':
+        'users.serializers.ProfileSerializer',
     'REGISTER_OUTPUT_SERIALIZER_CLASS':
-        'users.serializers.UserSerializer',
+        'users.serializers.RegisterTokenSerializer',
     'USER_PUBLIC_FIELDS':
         USER_FIELDS,
     'USER_EDITABLE_FIELDS':
         USER_EDITABLE_FIELDS,
     'VERIFICATION_FROM_EMAIL':
         DEFAULT_FROM_EMAIL,
+}
+
+# Django OAuth toolkit
+JWT_APPLICATION_NAME = 'JWT'
+OAUTH2_PROVIDER = {
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups'
+    }
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }

@@ -12,7 +12,7 @@ def test_root_api_permissions(client):
     """Should return a 403 HTTP response for non-authenticated users."""
     response = client.get(reverse('api-root'))
 
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 
 def test_root_api(admin_client):

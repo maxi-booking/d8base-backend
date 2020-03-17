@@ -7,6 +7,8 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
+from oauth2_provider.admin import ApplicationAdmin
+from oauth2_provider.models import Application
 from reversion.admin import VersionAdmin
 
 from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
@@ -14,6 +16,14 @@ from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
 
 from .forms import UserChangeForm, UserCreationForm
 from .models import Language, User
+
+admin.site.unregister(Application)
+
+
+@admin.register(Application)
+class OauthApplicationAdmin(VersionAdmin, ApplicationAdmin):
+    """The groups admin class."""
+
 
 admin.site.unregister(Group)
 
