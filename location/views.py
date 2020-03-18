@@ -1,15 +1,21 @@
 """The location views module."""
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from .repositories import (AlternativeNameRepository, CityRepository,
                            ContinentRepository, CountryRepository,
-                           DistrictRepository, PostalCodeRepository,
-                           RegionRepository, SubregionRepository)
+                           DistrictRepository, LanguageRepository,
+                           PostalCodeRepository, RegionRepository,
+                           SubregionRepository)
 from .serializers import (AlternativeNameSerializer, CitySerializer,
                           ContinentSerializer, CountrySerializer,
-                          DistrictSerializer, PostalCodeSerializer,
-                          RegionSerializer, SubregionSerializer)
+                          DistrictSerializer, LanguageSerializer,
+                          PostalCodeSerializer, RegionSerializer,
+                          SubregionSerializer)
 
 
 class ContinentViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
@@ -125,3 +131,25 @@ class AlternativeNameViewSet(
 
     filterset_fields = ('kind', 'language_code', 'is_preferred', 'is_short',
                         'is_colloquial', 'is_historic')
+
+
+class ListLanguagesView(CacheResponseMixin, viewsets.ViewSet):
+    """List all languages."""
+
+    serializer = LanguageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        """Return a list of all languages."""
+        langs = LanguageRepository().get_list()
+        serializer = self.serializer(langs, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        """Return a language object."""
+        try:
+            lang = LanguageRepository().get(kwargs['pk'])
+        except ObjectDoesNotExist:
+            raise NotFound
+        serializer = self.serializer(lang)
+        return Response(serializer.data)

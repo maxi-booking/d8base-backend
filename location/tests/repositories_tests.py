@@ -3,13 +3,15 @@ from typing import List
 
 import pytest
 from cities.models import Place
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 from conftest import OBJECTS_TO_CREATE
 from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    CityRepository, ContinentRepository,
                                    CountryRepository, DistrictRepository,
-                                   PostalCodeRepository, RegionRepository,
-                                   SubregionRepository)
+                                   LanguageRepository, PostalCodeRepository,
+                                   RegionRepository, SubregionRepository)
 
 pytestmark = pytest.mark.django_db
 
@@ -66,3 +68,23 @@ def test_repositories_get_list(
     query = repo.get_list()
     assert query.count() == expected_count
     assert all(e in query for e in entries)
+
+
+def test_language_repository_get_list():
+    """Should return a the list of Languages."""
+    langs = LanguageRepository().get_list()
+
+    assert len(settings.LANGUAGES) == len(langs)
+    assert langs[0].code == 'af'
+    assert langs[0].name == 'Afrikaans'
+
+
+def test_language_repository_get():
+    """Should return a Language object."""
+    lang = LanguageRepository().get('en')
+
+    assert lang.code == 'en'
+    assert lang.name == 'English'
+
+    with pytest.raises(ObjectDoesNotExist):
+        LanguageRepository().get('invalid')

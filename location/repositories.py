@@ -5,7 +5,11 @@ from typing import List, Type
 
 from cities.models import (AlternativeName, City, Continent, Country, District,
                            Place, PostalCode, Region, Subregion)
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.query import QuerySet
+
+from .models import Language
 
 
 class BaseRepository(ABC):
@@ -123,3 +127,20 @@ class AlternativeNameRepository(BaseRepository):
     order_by: str = 'name'
     select_related: List[str] = []
     prefetch_related: List[str] = []
+
+
+class LanguageRepository():
+    """The language repository."""
+
+    languages = settings.LANGUAGES
+
+    def get_list(self) -> List[Language]:
+        """Return the list of languages."""
+        return [Language(l[0], l[1]) for l in self.languages]
+
+    def get(self, code: str) -> Language:
+        """Return a languages object."""
+        for lang in self.languages:
+            if lang[0] == code:
+                return Language(lang[0], lang[1])
+        raise ObjectDoesNotExist

@@ -107,3 +107,11 @@ class AlternativeNameSerializer(serializers.ModelSerializer):
             'id', 'slug', 'name', 'kind', 'language_code', 'is_preferred',
             'is_short', 'is_colloquial', 'is_historic'
         ]
+
+
+class LanguageSerializer(serializers.Serializer):
+    """The language class serializer."""
+
+    # pylint: disable=abstract-method
+    code = serializers.CharField(max_length=2)
+    name = serializers.CharField(max_length=200)

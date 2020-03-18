@@ -2,13 +2,14 @@
 from rest_framework.routers import SimpleRouter
 
 from .views import (AlternativeNameViewSet, CityViewSet, ContinentViewSet,
-                    CountryViewSet, DistrictViewSet, PostalCodeViewSet,
-                    RegionViewSet, SubregionViewSet)
+                    CountryViewSet, DistrictViewSet, ListLanguagesView,
+                    PostalCodeViewSet, RegionViewSet, SubregionViewSet)
 
 
 def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
+    router.register(r'location/languages', ListLanguagesView, 'languages')
     router.register(r'location/continents', ContinentViewSet, 'continents')
     router.register(r'location/countries', CountryViewSet, 'countires')
     router.register(r'location/regions', RegionViewSet, 'regions')
