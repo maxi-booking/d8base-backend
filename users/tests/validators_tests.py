@@ -1,4 +1,4 @@
-"""The validators admin test module."""
+"""The validators test module."""
 import arrow
 import pytest
 from django.core.exceptions import ValidationError

@@ -36,7 +36,7 @@ class ThreadSafeUserMiddleware(MiddlewareMixin):
     def process_request(self, request: HttpRequest) -> None:
         """Set user."""
         # pylint: disable=unused-argument, no-self-use
-        _USER.value = request.user
+        _USER.value = request.user if request.user.pk else None
 
     @staticmethod
     def get_current_user() -> Optional['User']:

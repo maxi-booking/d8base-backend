@@ -4,7 +4,9 @@ from typing import List
 from urllib.parse import parse_qs, urlparse
 
 import pytest
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
 
@@ -136,5 +138,91 @@ def test_accounts_register(client: Client):
     assert response.json()['token']['refresh'] is not None
 
     user = User.objects.get(email='test@test.io')
+    groups = user.groups.all()
     assert user.first_name == 'test'
     assert user.check_password('test_pass')
+    assert groups.count() == 1
+    assert groups[0].name == settings.GROUP_USER_NAME
+
+
+def test_user_languages_list(
+    user: User,
+    client_with_token: Client,
+    user_languages: QuerySet,
+):
+    """Should return a languages list."""
+    response = client_with_token.get(reverse('user-languages-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == user_languages.filter(user=user).count()
+    assert data['results'][0]['language'] == 'fr'
+
+
+def test_user_languages_detail(
+    user: User,
+    client_with_token: Client,
+    user_languages: QuerySet,
+):
+    """Should return a user language."""
+    lang = user_languages.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-languages-detail', args=[lang.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['language'] == lang.language
+
+
+def test_user_languages_create(
+    user: User,
+    client_with_token: Client,
+    user_languages: QuerySet,
+):
+    """Should be able to create a user language."""
+    response = client_with_token.post(
+        reverse('user-languages-list'),
+        {
+            'language': 'en',
+            'is_native': False
+        },
+    )
+    lang = user_languages.get(user=user, language='en')
+    assert response.status_code == 201
+    assert lang.is_native is False
+    assert lang.user == user
+    assert lang.created_by == user
+    assert lang.modified_by == user
+
+
+def test_user_languages_update(
+    user: User,
+    client_with_token: Client,
+    user_languages: QuerySet,
+):
+    """Should be able to update a user language."""
+    lang = user_languages.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-languages-detail', args=[lang.pk]),
+        {
+            'language': 'en',
+            'is_native': True,
+        },
+    )
+    lang.refresh_from_db()
+    assert response.status_code == 200
+    assert lang.is_native is True
+    assert lang.language == 'en'
+    assert lang.user == user
+    assert lang.modified_by == user
+
+
+def test_user_languages_delete(
+    user: User,
+    client_with_token: Client,
+    user_languages: QuerySet,
+):
+    """Should be able to update a user language."""
+    lang = user_languages.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-languages-detail', args=[lang.pk]))
+    assert response.status_code == 204
+    assert user_languages.filter(user=user).count() == 0

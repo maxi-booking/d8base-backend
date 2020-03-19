@@ -89,6 +89,7 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,6 +101,11 @@ MIDDLEWARE = [
     'd8b.middleware.DisableAdminI18nMiddleware',
     'd8b.middleware.ThreadSafeUserMiddleware',
     'reversion.middleware.RevisionMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'oauth2_provider.backends.OAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 if not DEBUG:  # pragma: no cover
@@ -249,10 +255,6 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 # Django restframework
 REST_FRAMEWORK = {
-    # 'HTML_SELECT_CUTOFF':
-    #     10,
-    # 'HTML_SELECT_CUTOFF_TEXT':
-    #     10,
     'DEFAULT_VERSION':
         '1.0',
     'DEFAULT_VERSIONING_CLASS':
@@ -267,6 +269,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
+        'users.filters.OwnerFilter',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',

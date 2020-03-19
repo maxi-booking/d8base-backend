@@ -5,7 +5,7 @@ from django.conf import settings
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from .models import User
+from .models import User, UserLanguage
 from .registration import get_auth_tokens
 
 
@@ -38,3 +38,26 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
         model = User
         fields = settings.USER_FIELDS + ['token']
         read_only_fields = settings.USER_READONLY_FIELDS
+
+
+class UserHiddenFieldMixin(serializers.Serializer):
+    """Mixin with a hidden user field."""
+
+    # pylint: disable=abstract-method
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+class UserLanguageSerializer(
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The user language serializer."""
+
+    class Meta:
+        """The user language class serializer META class."""
+
+        model = UserLanguage
+
+        fields = ('id', 'user', 'language', 'is_native', 'created', 'modified',
+                  'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')

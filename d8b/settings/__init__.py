@@ -2,3 +2,4 @@
 from .custom import *
 from .languages import *
 from .main import *
+from .permissions import *

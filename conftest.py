@@ -5,14 +5,18 @@ import pytest
 from cities.models import (AlternativeName, City, Continent, Country, District,
                            Place, PostalCode, Region, Subregion)
 from django.contrib.gis.geos import Point
+from django.db.models.query import QuerySet
 from django.test.client import Client
+from rest_framework.test import APIClient
 
+from d8b import middleware
 from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    CityRepository, ContinentRepository,
                                    CountryRepository, DistrictRepository,
                                    PostalCodeRepository, RegionRepository,
                                    SubregionRepository)
-from users.models import User
+from users.models import User, UserLanguage
+from users.registration import get_auth_tokens
 
 collect_ignore_glob = ['*/migrations/*']  # pylint: disable=invalid-name
 
@@ -29,6 +33,16 @@ def admin_client(admin: User) -> Client:
     """Return a Django test client logged in as an admin user."""
     client = Client()
     client.login(username=admin.email, password=ADMIN_PASSWORD)
+
+    return client
+
+
+@pytest.fixture()
+def client_with_token(user: User) -> APIClient:
+    """Return a Django test client logged with a token."""
+    client = APIClient()
+    access, _ = get_auth_tokens(user)
+    client.credentials(HTTP_AUTHORIZATION='Bearer ' + access)
 
     return client
 
@@ -162,3 +176,23 @@ def user() -> User:
         USER_EMAIL,
         USER_PASSWORD,
     )
+
+
+@pytest.fixture(autouse=True)
+def before_all():
+    """Run before all tests."""
+    # pylint: disable=protected-access
+    middleware._USER.value = None
+
+
+@pytest.fixture
+def user_languages(admin: User, user: User) -> QuerySet:
+    """Return a languages queryset."""
+    for i in (
+        ('en', admin, True),
+        ('fr', user, True),
+        ('de', admin, False),
+        ('ru', admin, False),
+    ):
+        UserLanguage.objects.create(language=i[0], user=i[1], is_native=i[2])
+    return UserLanguage.objects.all()

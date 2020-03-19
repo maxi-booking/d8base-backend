@@ -76,7 +76,7 @@ class User(AbstractUser):
         return self.email
 
 
-class Language(CommonInfo):
+class UserLanguage(CommonInfo):
     """The user language class."""
 
     language = LanguageField(verbose_name=_('language'))

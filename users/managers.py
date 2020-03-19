@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
+from .repositories import GroupRepository
+
 if TYPE_CHECKING:
     from .models import User
 
@@ -29,6 +31,8 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
+        group = GroupRepository().get_or_create_user_group()
+        group.user_set.add(user)
 
         return user
 

@@ -1,4 +1,4 @@
-"""The location models module."""
+"""The location routers module."""
 from rest_framework.routers import SimpleRouter
 
 from .views import (AlternativeNameViewSet, CityViewSet, ContinentViewSet,

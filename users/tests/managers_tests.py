@@ -1,5 +1,6 @@
 """The managers tests module."""
 import pytest
+from django.conf import settings
 
 from users.models import User
 
@@ -11,12 +12,15 @@ pytestmark = pytest.mark.django_db
 def test_user_manager_create_user():
     """Should create a user."""
     user = User.objects.create_user(email='common@user.com', password='foo')
+    groups = user.groups.all()
 
     assert user.email == 'common@user.com'
     assert user.is_active
     assert not user.is_staff
     assert not user.is_superuser
     assert user.username is None
+    assert groups.count() == 1
+    assert groups[0].name == settings.GROUP_USER_NAME
     with pytest.raises(TypeError):
         User.objects.create_user()  # type: ignore
     with pytest.raises(TypeError):

@@ -2,6 +2,7 @@
 from rest_framework.routers import DefaultRouter as BaseRouter
 
 from location.routers import get_router as get_location_router
+from users.routers import get_router as get_users_router
 
 
 class DefaultRouter(BaseRouter):
@@ -17,4 +18,5 @@ def get_router_urls() -> list:
     """Return the default router URLs."""
     router = DefaultRouter()
     router.extend(get_location_router())
+    router.extend(get_users_router())
     return router.urls

@@ -5,9 +5,20 @@ from django.utils import timezone
 from oauth2_provider.models import Application
 
 from users.models import User
-from users.repositories import OauthRepository
+from users.repositories import GroupRepository, OauthRepository
 
 pytestmark = pytest.mark.django_db
+
+
+def test_group_repository_get_or_create_user_group():
+    """Should create or return the users group."""
+    repo = GroupRepository()
+    group = repo.get_or_create_user_group()
+
+    codenames = [p.codename for p in group.permissions.all()]
+    assert sorted(codenames) == sorted(settings.GROUP_USER_PERMISSIONS)
+    assert group == repo.get_or_create_user_group()
+    assert group.name == settings.GROUP_USER_NAME
 
 
 def test_oauth_repository_init():

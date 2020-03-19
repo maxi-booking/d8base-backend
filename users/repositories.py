@@ -1,13 +1,33 @@
 """The users repositories module."""
 
 from datetime import timedelta
+from typing import TYPE_CHECKING, List
 
 from django.conf import settings
+from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
 from oauth2_provider.models import AccessToken, Application, RefreshToken
 from oauthlib import common
 
-from users.models import User
+if TYPE_CHECKING:
+    from users.models import User
+
+
+class GroupRepository():
+    """The group repository."""
+
+    user_group_name: str = settings.GROUP_USER_NAME
+    user_group_permissions: List[str] = settings.GROUP_USER_PERMISSIONS
+
+    def get_or_create_user_group(self) -> Group:
+        """Return or create the users group."""
+        group, created = Group.objects.get_or_create(name=self.user_group_name)
+        if not created:
+            return group
+
+        for perm in self.user_group_permissions:
+            group.permissions.add(Permission.objects.get(codename=perm))
+        return group
 
 
 class OauthRepository():
@@ -34,7 +54,7 @@ class OauthRepository():
 
         return app
 
-    def create_access_token(self, user: User) -> AccessToken:
+    def create_access_token(self, user: 'User') -> AccessToken:
         """Create an access token."""
         expires = timezone.now() + timedelta(seconds=self.token_expire)
         access_token = AccessToken(

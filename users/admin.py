@@ -15,7 +15,7 @@ from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
                        SearchFieldsUpdateMixin)
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import Language, User
+from .models import User, UserLanguage
 
 admin.site.unregister(Application)
 
@@ -36,7 +36,7 @@ class GroupAdmin(VersionAdmin, BaseGroupAdmin):
 class LanguageInlineAdmin(admin.TabularInline):
     """The languages inline admin."""
 
-    model = Language
+    model = UserLanguage
     fields = ('id', 'language', 'is_native', 'created', 'modified',
               'created_by', 'modified_by')
     fk_name = 'user'
