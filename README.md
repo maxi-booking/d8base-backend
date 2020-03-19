@@ -1,2 +1,2 @@
-# d8base-backend  ![tests](https://github.com/maxi-booking/d8base-backend/workflows/tests/badge.svg) [![codecov](https://codecov.io/gh/maxi-booking/d8base-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/maxi-booking/d8base-backend)
+# d8base-backend  ![tests](https://github.com/maxi-booking/d8base-backend/workflows/tests/badge.svg) [![codecov](https://codecov.io/gh/maxi-booking/d8base-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/maxi-booking/d8base-backend) [![codebeat badge](https://codebeat.co/badges/641cd3bc-20a8-4fe7-ac1c-547687d7aa58)](https://codebeat.co/projects/github-com-maxi-booking-d8base-backend-master)
 The REST backend for the d8base project
