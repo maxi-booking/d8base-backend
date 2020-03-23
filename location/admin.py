@@ -92,7 +92,9 @@ class PostalCodeAdmin(
 ):
     """The alternative name admin."""
 
-    raw_id_fields = ['alt_names', 'region', 'subregion', 'city', 'district']
+    autocomplete_fields = [
+        'alt_names', 'region', 'subregion', 'city', 'district'
+    ]
     list_select_related = ('subregion', 'region', 'country')
     search_fields_extend = [
         'region__name', 'subregion__name', 'city__name', 'district__name'

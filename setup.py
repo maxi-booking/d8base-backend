@@ -46,6 +46,7 @@ setup(
         'django-crispy-forms==1.9.0',
         'django-oauth-toolkit @ https://github.com/\
 jazzband/django-oauth-toolkit/zipball/master',
+        'django-admin-autocomplete-filter==0.4',
         'drf-yasg==1.17.1',
         'celery==4.4.0',
         'Werkzeug==1.0.0',

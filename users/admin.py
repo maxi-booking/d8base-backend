@@ -13,9 +13,11 @@ from reversion.admin import VersionAdmin
 
 from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
                        SearchFieldsUpdateMixin)
+from location.admin_filters import CityFilter, DistrictFilter, RegionFilter
 
+from .admin_fiters import UserFilter
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, UserLanguage
+from .models import User, UserLanguage, UserLocation
 
 admin.site.unregister(Application)
 
@@ -33,14 +35,69 @@ class GroupAdmin(VersionAdmin, BaseGroupAdmin):
     """The groups admin class."""
 
 
+@admin.register(UserLocation)
+class LocationAdmin(VersionAdmin):
+    """The location admin class."""
+
+    model: Type = UserLocation
+    list_display = ('id', 'user', 'is_default', 'country', 'region', 'city',
+                    'district', 'coordinates', 'created', 'created_by')
+    list_filter = (
+        'country',
+        RegionFilter,
+        CityFilter,
+        DistrictFilter,
+        UserFilter,
+        'is_default',
+    )
+    search_fields = ('=id', 'user__email', 'country__name', 'region__name',
+                     'city__name', 'address')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('user', 'region', 'subregion', 'city', 'district',
+                           'postal_code')
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('country', 'region', 'subregion', 'city', 'district',
+                       'postal_code', 'address', 'coordinates')
+        }),
+        ('Options', {
+            'fields': ('user', 'is_default', 'created', 'modified',
+                       'created_by', 'modified_by')
+        }),
+    )
+    list_select_related = ('user', 'country', 'region', 'city', 'district',
+                           'created_by')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+class LocationInlineAdmin(admin.StackedInline):
+    """The location inline admin."""
+
+    model = UserLocation
+    fk_name = 'user'
+    fields = ('id', 'country', 'region', 'subregion', 'city', 'district',
+              'postal_code', 'address', 'coordinates', 'is_default',
+              'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    autocomplete_fields = ('region', 'subregion', 'city', 'district',
+                           'postal_code')
+    classes = ['collapse']
+    extra = 1
+
+
 class LanguageInlineAdmin(admin.TabularInline):
     """The languages inline admin."""
 
     model = UserLanguage
+    fk_name = 'user'
     fields = ('id', 'language', 'is_native', 'created', 'modified',
               'created_by', 'modified_by')
-    fk_name = 'user'
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
+    extra = 1
 
 
 @admin.register(User)
@@ -57,7 +114,7 @@ class UserAdmin(
     form: Type = UserChangeForm
     model: Type = User
 
-    inlines = (LanguageInlineAdmin, )
+    inlines = (LanguageInlineAdmin, LocationInlineAdmin)
 
     fieldsets: Tuple = (
         (None, {

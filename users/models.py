@@ -1,13 +1,17 @@
 """The users models module."""
 from typing import List
 
+from cities.models import (City, Country, District, PostalCode, Region,
+                           Subregion)
 from django.contrib.auth.models import AbstractUser
+from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from d8b.fields import LanguageField
 from d8b.models import CommonInfo
+from location.services import LocationAutofiller
 
 from .managers import UserManager
 from .validators import validate_birthday
@@ -62,18 +66,98 @@ class User(AbstractUser):
 
     # avatar
 
-    # --- location
-    # country
-    # region
-    # city
-    # postal code
-    # address
-    # coordinates
-    # --- location
-
     def __str__(self):
         """Return a string representation of the object."""
         return self.email
+
+
+class UserLocation(CommonInfo):
+    """The user location class."""
+
+    autofiller = LocationAutofiller
+
+    country = models.ForeignKey(
+        Country,
+        verbose_name=_('country'),
+        on_delete=models.CASCADE,
+        related_name='user_locations',
+    )
+    region = models.ForeignKey(
+        Region,
+        verbose_name=_('region'),
+        on_delete=models.SET_NULL,
+        related_name='user_locations',
+        null=True,
+        blank=True,
+    )
+    subregion = models.ForeignKey(
+        Subregion,
+        verbose_name=_('subregion'),
+        on_delete=models.SET_NULL,
+        related_name='user_locations',
+        null=True,
+        blank=True,
+    )
+    city = models.ForeignKey(
+        City,
+        verbose_name=_('city'),
+        on_delete=models.SET_NULL,
+        related_name='user_locations',
+        null=True,
+        blank=True,
+    )
+    district = models.ForeignKey(
+        District,
+        verbose_name=_('district'),
+        on_delete=models.SET_NULL,
+        related_name='user_locations',
+        null=True,
+        blank=True,
+    )
+    postal_code = models.ForeignKey(
+        PostalCode,
+        verbose_name=_('postal code'),
+        on_delete=models.SET_NULL,
+        related_name='user_locations',
+        null=True,
+        blank=True,
+    )
+    address = models.CharField(
+        _('address'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    coordinates = gis_models.PointField(
+        _('coordinates'),
+        null=True,
+        blank=True,
+    )
+    is_default = models.BooleanField(
+        default=False,
+        help_text=_('is default location?'),
+        verbose_name=_('is default'),
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='locations',
+        verbose_name=_('user'),
+    )
+
+    def save(self, **kwargs):
+        """Save the object."""
+        self.autofiller(self).autofill_location()
+        super().save(**kwargs)
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}: {self.country}, {self.city}, {self.address}'
+
+    class Meta:
+        """The user location class META class."""
+
+        ordering = ('-created', )
 
 
 class UserLanguage(CommonInfo):
@@ -91,6 +175,10 @@ class UserLanguage(CommonInfo):
         related_name='languages',
         verbose_name=_('user'),
     )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}: {self.language}'
 
     class Meta:
         """The user language class META class."""

@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'cities',
     'drf_yasg',
     'crispy_forms',
+    'admin_auto_filters',
 
     # d8base apps
     'd8b',

@@ -71,7 +71,7 @@ def test_repositories_get_list(
 
 
 def test_language_repository_get_list():
-    """Should return a the list of Languages."""
+    """Should return a list of Languages."""
     langs = LanguageRepository().get_list()
 
     assert len(settings.LANGUAGES) == len(langs)
