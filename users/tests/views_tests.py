@@ -4,6 +4,7 @@ from typing import List
 from urllib.parse import parse_qs, urlparse
 
 import pytest
+from cities.models import City, Country
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
@@ -226,3 +227,94 @@ def test_user_languages_delete(
         reverse('user-languages-detail', args=[lang.pk]))
     assert response.status_code == 204
     assert user_languages.filter(user=user).count() == 0
+
+
+def test_user_locations_list(
+    user: User,
+    client_with_token: Client,
+    user_locations: QuerySet,
+):
+    """Should return a locations list."""
+    response = client_with_token.get(reverse('user-locations-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == user_locations.filter(user=user).count()
+
+    assert data['results'][0]['address'] == 'test address 3'
+
+
+def test_user_location_detail(
+    user: User,
+    client_with_token: Client,
+    user_locations: QuerySet,
+):
+    """Should return a user location."""
+    obj = user_locations.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-locations-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['city'] == obj.city.pk
+    assert data['address'] == obj.address
+
+
+def test_user_location_create(
+    user: User,
+    countries: List[Country],
+    cities: List[City],
+    client_with_token: Client,
+    user_locations: QuerySet,
+):
+    """Should be able to create a user location."""
+    response = client_with_token.post(
+        reverse('user-locations-list'),
+        {
+            'address': 'new test address',
+            'is_default': True,
+            'city': cities[0].pk,
+            'country': countries[0].pk
+        },
+    )
+    obj = user_locations.get(user=user, address='new test address')
+
+    assert response.status_code == 201
+    assert obj.is_default is True
+    assert obj.city == cities[0]
+    assert obj.user == user
+    assert obj.created_by == user
+    assert obj.modified_by == user
+
+
+def test_user_location_update(
+    user: User,
+    client_with_token: Client,
+    user_locations: QuerySet,
+):
+    """Should be able to update a user location."""
+    obj = user_locations.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-locations-detail', args=[obj.pk]),
+        {
+            'address': 'new test address',
+            'is_default': True,
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.is_default is True
+    assert obj.address == 'new test address'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_location_delete(
+    user: User,
+    client_with_token: Client,
+    user_locations: QuerySet,
+):
+    """Should be able to update a user language."""
+    obj = user_locations.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-locations-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert user_locations.filter(user=user, pk=obj.pk).count() == 0

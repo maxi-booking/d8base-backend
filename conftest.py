@@ -15,7 +15,7 @@ from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    CountryRepository, DistrictRepository,
                                    PostalCodeRepository, RegionRepository,
                                    SubregionRepository)
-from users.models import User, UserLanguage
+from users.models import User, UserLanguage, UserLocation
 from users.registration import get_auth_tokens
 
 collect_ignore_glob = ['*/migrations/*']  # pylint: disable=invalid-name
@@ -187,7 +187,7 @@ def before_all():
 
 @pytest.fixture
 def user_languages(admin: User, user: User) -> QuerySet:
-    """Return a languages queryset."""
+    """Return a user languages queryset."""
     for i in (
         ('en', admin, True),
         ('fr', user, True),
@@ -195,4 +195,26 @@ def user_languages(admin: User, user: User) -> QuerySet:
         ('ru', admin, False),
     ):
         UserLanguage.objects.create(language=i[0], user=i[1], is_native=i[2])
-    return UserLanguage.objects.all()
+    return UserLanguage.objects.get_list()
+
+
+@pytest.fixture
+def user_locations(
+        admin: User,
+        user: User,
+        postal_codes: List[PostalCode],
+) -> QuerySet:
+    """Return a user locations queryset."""
+    for k, i in enumerate((
+        (admin, postal_codes[0], Point((13, 53))),
+        (user, postal_codes[2], Point((13, 36))),
+        (admin, postal_codes[1], Point((18, 11))),
+        (user, postal_codes[3], Point((73, 93))),
+    )):
+        UserLocation.objects.create(
+            user=i[0],
+            postal_code=i[1],
+            address=f'test address {k}',
+            coordinates=i[2],
+        )
+    return UserLocation.objects.get_list()

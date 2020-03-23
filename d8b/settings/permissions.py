@@ -4,9 +4,17 @@ from typing import List
 GROUP_USER_NAME: str = 'user'
 
 GROUP_USER_PERMISSIONS: List[str] = [
+    # user languages
     'add_userlanguage',
     'change_userlanguage',
     'delete_userlanguage',
+
+    # user locations
+    'add_userlocation',
+    'change_userlocation',
+    'delete_userlocation',
+
+    # location
     'change_continent',
     'change_country',
     'change_region',

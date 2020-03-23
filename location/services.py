@@ -3,7 +3,7 @@ from typing import List
 
 from cities.models import City, District, PostalCode, Region, Subregion
 
-from .models import AbstractLocation
+from .interfaces import AbstractLocation
 
 
 class LocationAutofiller():

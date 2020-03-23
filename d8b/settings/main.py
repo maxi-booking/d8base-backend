@@ -321,9 +321,9 @@ PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 # Django rest registration
 USER_FIELDS = [
     'id', 'email', 'first_name', 'last_name', 'patronymic', 'phone', 'gender',
-    'birthday', 'account_type', 'languages'
+    'birthday', 'account_type', 'languages', 'locations'
 ]
-USER_READONLY_FIELDS = ['languages']
+USER_READONLY_FIELDS = ['languages', 'locations']
 USER_EDITABLE_FIELDS = [
     f for f in USER_FIELDS if f not in USER_READONLY_FIELDS
 ]

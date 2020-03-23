@@ -5,7 +5,7 @@ from django.conf import settings
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from .models import User, UserLanguage
+from .models import User, UserLanguage, UserLocation
 from .registration import get_auth_tokens
 
 
@@ -60,4 +60,22 @@ class UserLanguageSerializer(
 
         fields = ('id', 'user', 'language', 'is_native', 'created', 'modified',
                   'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class UserLocationSerializer(
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The user location serializer."""
+
+    class Meta:
+        """The user location class serializer META class."""
+
+        model = UserLocation
+
+        fields = ('id', 'user', 'country', 'region', 'subregion', 'city',
+                  'district', 'postal_code', 'address', 'coordinates',
+                  'is_default', 'created', 'modified', 'created_by',
+                  'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')

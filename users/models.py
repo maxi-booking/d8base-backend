@@ -11,9 +11,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from d8b.fields import LanguageField
 from d8b.models import CommonInfo
+from d8b.services import DefaultFieldSetter
 from location.services import LocationAutofiller
 
-from .managers import UserManager
+from .managers import UserLanguageManager, UserLocationManager, UserManager
 from .validators import validate_birthday
 
 
@@ -75,6 +76,8 @@ class UserLocation(CommonInfo):
     """The user location class."""
 
     autofiller = LocationAutofiller
+    default_field_setter = DefaultFieldSetter
+    objects = UserLocationManager()
 
     country = models.ForeignKey(
         Country,
@@ -148,6 +151,8 @@ class UserLocation(CommonInfo):
     def save(self, **kwargs):
         """Save the object."""
         self.autofiller(self).autofill_location()
+        self.default_field_setter(self).\
+            process_default_for_query(user=self.user)
         super().save(**kwargs)
 
     def __str__(self) -> str:
@@ -162,6 +167,8 @@ class UserLocation(CommonInfo):
 
 class UserLanguage(CommonInfo):
     """The user language class."""
+
+    objects = UserLanguageManager()
 
     language = LanguageField(verbose_name=_('language'))
     is_native = models.BooleanField(

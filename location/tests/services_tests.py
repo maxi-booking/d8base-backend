@@ -5,7 +5,7 @@ import pytest
 from cities.models import (City, Country, District, PostalCode, Region,
                            Subregion)
 
-from location.models import AbstractLocation
+from location.interfaces import AbstractLocation
 from location.services import LocationAutofiller
 
 pytestmark = pytest.mark.django_db
