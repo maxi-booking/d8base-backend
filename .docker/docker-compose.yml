@@ -2,7 +2,7 @@ version: '3'
 
 services:
   postgres:
-    image: postgres
+    image: postgis/postgis
     hostname: postgres
     env_file:
       - pgsql-variables.env
@@ -34,7 +34,11 @@ services:
   web:
     build:
       context: ..
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./.docker/Dockerfile
+    hostname: web
+    env_file:
+      - ./.env
+
     command: python /usr/src/app/manage.py runserver 0.0.0.0:8000
     volumes:
       - ..:/usr/src/app
