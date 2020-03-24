@@ -1,6 +1,6 @@
-comments.txt
-docker/pgsql-variables.env
-docker/rmq/rmq_variables.env
+.docker/pgsql-variables.env
+.docker/rmq/rmq_variables.env
+.docker/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
