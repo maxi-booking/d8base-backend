@@ -5,8 +5,9 @@ import os
 
 from kombu import Queue
 
-from .env import ENV, ROOT
+from .env import ROOT, get_env
 
+ENV = get_env()
 SITE_ROOT = ROOT()
 BASE_DIR = SITE_ROOT
 
