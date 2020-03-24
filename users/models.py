@@ -3,15 +3,18 @@ from typing import List
 
 from cities.models import (City, Country, District, PostalCode, Region,
                            Subregion)
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
 
 from d8b.fields import LanguageField
 from d8b.models import CommonInfo
-from d8b.services import DefaultFieldSetter
+from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
 from location.services import LocationAutofiller
 
 from .managers import UserLanguageManager, UserLocationManager, UserManager
@@ -64,8 +67,30 @@ class User(AbstractUser):
         choices=ACCOUNT_CHOICES,
         default=ACCOUNT_USER,
     )
+    avatar = ProcessedImageField(
+        blank=True,
+        null=True,
+        upload_to=RandomFilenameGenerator('avatars', 'email'),
+        processors=[
+            SmartResize(
+                width=settings.D8B_AVATAR_WIDTH,
+                height=settings.D8B_AVATAR_HEIGHT,
+                upscale=True,
+            )
+        ],
+        format='PNG',
+    )
 
-    # avatar
+    avatar_thumbnail = ImageSpecField(
+        source='avatar',
+        processors=[
+            SmartResize(
+                width=settings.D8B_AVATAR_THUMBNAIL_WIDTH,
+                height=settings.D8B_AVATAR_THUMBNAIL_HEIGHT,
+            )
+        ],
+        format='PNG',
+    )
 
     def __str__(self):
         """Return a string representation of the object."""

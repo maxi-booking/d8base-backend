@@ -56,18 +56,30 @@ def test_accounts_profile_update(admin: User, admin_client: Client):
     response = admin_client.patch(
         reverse('profile'),
         {
-            'first_name': 'new_name',
-            'email': 'new_email@test.ru',
+            'first_name':
+                'new_name',
+            'email':
+                'new_email@test.ru',
+            'avatar':
+                ('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAA'
+                 'AB/HNKOAAAAGFBMVEXMzMyWlpajo6O3t7fFxcWcnJyxsbG+vr50Rsl6AAAAC'
+                 'XBIWXMAAA7EAAAOxAGVKw4bAAAAJklEQVQImWNgwADKDAwsAQyuDAzMAgyMb'
+                 'OYMAgyuLApAUhnMRgIANvcCBwsFJwYAAAAASUVORK5CYII=')
         },
         content_type='application/json',
     )
     admin.refresh_from_db()
+    data = response.json()
+    avatar_path = f'avatars/{ADMIN_EMAIL}'
     assert response.status_code == 200
     assert response.accepted_media_type == 'application/json'
-    assert response.json()['email'] == ADMIN_EMAIL
-    assert response.json()['first_name'] == 'new_name'
+    assert data['email'] == ADMIN_EMAIL
+    assert data['first_name'] == 'new_name'
     assert admin.first_name == 'new_name'
     assert admin.email == ADMIN_EMAIL
+    assert avatar_path in admin.avatar.name
+    assert admin.avatar_thumbnail is not None
+    admin.avatar.delete()
 
 
 def test_accounts_change_password(admin: User, admin_client: Client):

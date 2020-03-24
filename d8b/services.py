@@ -1,5 +1,10 @@
 """The d8b services module."""
 
+import os
+import uuid
+
+from django.utils.deconstruct import deconstructible
+
 from .interfaces import AbstractDefaultEntry
 
 
@@ -26,3 +31,26 @@ class DefaultFieldSetter():
         self.entry.is_default = is_default
         if is_default:
             query.update(is_default=False)
+
+
+@deconstructible
+class RandomFilenameGenerator():
+    """The random file name generator."""
+
+    path: str
+    id_field: str
+
+    def __init__(self, path: str, id_field: str):
+        """Construct the object."""
+        self.path = os.path.join(path, '{}/{}{}')
+        self.id_field = id_field
+
+    def __call__(self, instance, filename) -> str:
+        """Generate the filename."""
+        extension = os.path.splitext(filename)[1]
+
+        return self.path.format(
+            getattr(instance, self.id_field, '_'),
+            uuid.uuid4(),
+            extension,
+        )

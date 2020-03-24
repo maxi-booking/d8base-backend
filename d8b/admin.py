@@ -13,6 +13,7 @@ if not settings.TESTS:
 
 actions.add_to_site(site)
 admin.site.site_header = admin.site.site_title = 'D8B admin'
+admin.site.site_url = '/api/'
 
 
 class SearchFieldsUpdateMixin(admin.ModelAdmin):

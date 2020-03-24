@@ -4,6 +4,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views.generic import RedirectView
 
 from users.registration import get_registration_urls
 
@@ -11,6 +12,7 @@ from .openapi import get_openapi_urls
 from .routers import get_router_urls
 
 urlpatterns = [
+    re_path(r'^$', RedirectView.as_view(pattern_name='api-root')),
     path(settings.ADMIN_URL + '/', admin.site.urls),
     re_path(r'^adminactions/', include('adminactions.urls')),
     re_path(

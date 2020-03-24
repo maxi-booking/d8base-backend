@@ -7,6 +7,7 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
+from imagekit.admin import AdminThumbnail
 from oauth2_provider.admin import ApplicationAdmin
 from oauth2_provider.models import Application
 from reversion.admin import VersionAdmin
@@ -113,12 +114,13 @@ class UserAdmin(
     add_form: Type = UserCreationForm
     form: Type = UserChangeForm
     model: Type = User
-
     inlines = (LanguageInlineAdmin, LocationInlineAdmin)
+
+    avatar_thumbnail = AdminThumbnail(image_field='avatar_thumbnail')
 
     fieldsets: Tuple = (
         (None, {
-            'fields': ('email', 'password', 'account_type')
+            'fields': ('email', 'password', 'account_type', 'avatar')
         }),
         (_('Personal info'), {
             'fields': ('first_name', 'last_name', 'patronymic', 'gender',
@@ -144,5 +146,5 @@ class UserAdmin(
 
     list_filter_extend = ['account_type', 'gender']
 
-    list_display_extend = ['account_type']
+    list_display_extend = ['account_type', 'avatar_thumbnail']
     list_display_remove = ['username']

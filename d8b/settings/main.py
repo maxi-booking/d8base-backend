@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'crispy_forms',
     'admin_auto_filters',
+    'imagekit',
 
     # d8base apps
     'd8b',
@@ -321,7 +322,7 @@ PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 # Django rest registration
 USER_FIELDS = [
     'id', 'email', 'first_name', 'last_name', 'patronymic', 'phone', 'gender',
-    'birthday', 'account_type', 'languages', 'locations'
+    'birthday', 'account_type', 'languages', 'locations', 'avatar'
 ]
 USER_READONLY_FIELDS = ['languages', 'locations']
 USER_EDITABLE_FIELDS = [

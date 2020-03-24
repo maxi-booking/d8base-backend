@@ -2,6 +2,7 @@
 from typing import Dict
 
 from django.conf import settings
+from drf_extra_fields.fields import Base64ImageField
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
@@ -12,11 +13,14 @@ from .registration import get_auth_tokens
 class ProfileSerializer(serializers.ModelSerializer):
     """The profile serializer."""
 
+    avatar_thumbnail = serializers.ImageField(read_only=True)
+    avatar = Base64ImageField(required=False)
+
     class Meta:
         """The profile class serializer META class."""
 
         model = User
-        fields = settings.USER_FIELDS
+        fields = settings.USER_FIELDS + ['avatar_thumbnail']
         read_only_fields = settings.USER_READONLY_FIELDS + ['email']
 
 
