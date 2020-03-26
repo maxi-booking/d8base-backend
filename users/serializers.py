@@ -1,5 +1,5 @@
 """The users serializers module."""
-from typing import Dict
+from typing import Any, Dict
 
 from django.conf import settings
 from drf_extra_fields.fields import Base64ImageField
@@ -24,6 +24,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         read_only_fields = settings.USER_READONLY_FIELDS + ['email']
 
 
+class TokenSerializer(serializers.Serializer):
+    """The auth token serializer."""
+
+    # pylint: disable=abstract-method
+
+    access_token: str = serializers.CharField()
+    expires_in: str = serializers.IntegerField(
+        default=settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS'])
+    token_type: str = serializers.CharField(default='Bearer')
+    scope: str = serializers.CharField()
+    refresh_token: str = serializers.CharField()
+
+
 class RegisterTokenSerializer(serializers.ModelSerializer):
     """The registration serializer with the user token included."""
 
@@ -31,10 +44,15 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
 
     # pylint: disable=no-self-use
     @swagger_serializer_method(serializer_or_field=serializers.DictField)
-    def get_token(self, user: User) -> Dict[str, str]:
+    def get_token(self, user: User) -> Dict[str, Any]:
         """Return the user token."""
         access, refresh = get_auth_tokens(user)
-        return {'access': access, 'refresh': refresh}
+
+        return TokenSerializer({
+            'access_token': access.token,
+            'scope': access.scope,
+            'refresh_token': refresh.token
+        }).data
 
     class Meta:
         """The register class serializer META class."""

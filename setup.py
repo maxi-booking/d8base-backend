@@ -45,7 +45,9 @@ setup(
         'django-phonenumber-field==3.0.1',
         'django-cities==0.6',
         'django-crispy-forms==1.9.0',
-        'django-oauth-toolkit==1.3.1',
+        # 'django-oauth-toolkit==1.3.1',
+        'django-oauth-toolkit @ https://github.com/jazzband/\
+django-oauth-toolkit/archive/1.3.1.tar.gz',
         'django-admin-autocomplete-filter==0.4',
         'django-imagekit==4.0.2',
         'drf-yasg==1.17.1',

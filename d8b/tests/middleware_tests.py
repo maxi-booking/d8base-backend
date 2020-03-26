@@ -28,7 +28,7 @@ def test_thread_safe_user_middleware_token(user: User, client: Client):
 
     assert client.get(
         reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access}',
+        HTTP_AUTHORIZATION=f'Bearer {access.token}',
     ).status_code == 200
 
     assert ThreadSafeUserMiddleware.get_current_user() == user

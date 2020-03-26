@@ -42,7 +42,7 @@ def client_with_token(user: User) -> APIClient:
     """Return a Django test client logged with a token."""
     client = APIClient()
     access, _ = get_auth_tokens(user)
-    client.credentials(HTTP_AUTHORIZATION='Bearer ' + access)
+    client.credentials(HTTP_AUTHORIZATION='Bearer ' + access.token)
 
     return client
 

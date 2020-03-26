@@ -136,6 +136,7 @@ def test_accounts_reset_password(
 
 def test_accounts_register(client: Client):
     """Should be able to register a new user."""
+    expires: int = settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS']
     response = client.post(
         reverse('register'),
         {
@@ -147,8 +148,11 @@ def test_accounts_register(client: Client):
         content_type='application/json',
     )
     assert response.status_code == 201
-    assert response.json()['token']['access'] is not None
-    assert response.json()['token']['refresh'] is not None
+    assert response.json()['token']['access_token'] is not None
+    assert response.json()['token']['refresh_token'] is not None
+    assert response.json()['token']['scope'] == 'read write groups'
+    assert response.json()['token']['token_type'] == 'Bearer'
+    assert response.json()['token']['expires_in'] == expires
 
     user = User.objects.get(email='test@test.io')
     groups = user.groups.all()

@@ -32,25 +32,25 @@ def test_get_auth_tokens(user: User, client: Client):
     assert client.get(reverse('api-root')).status_code == 401
     assert access is not None
     assert refresh is not None
-    assert access != refresh
+    assert access.token != refresh.token
     assert client.get(
         reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access}',
+        HTTP_AUTHORIZATION=f'Bearer {access.token}',
     ).status_code == 200
     assert client.get(
         reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access}',
+        HTTP_AUTHORIZATION=f'Bearer {access.token}',
     ).status_code == 200
 
     response = client.post(
         reverse('oauth2_provider:token'),
         {
             'grant_type': 'refresh_token',
-            'refresh_token': refresh,
+            'refresh_token': refresh.token,
             'client_id': app.client_id,
             'client_secret': app.client_secret,
         },
         content_type='application/json',
     )
     assert response.status_code == 200
-    assert response.json()['access_token'] != access
+    assert response.json()['access_token'] != access.token
