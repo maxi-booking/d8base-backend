@@ -10,6 +10,7 @@ jobs:
       postgis:
         image: postgis/postgis
         ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         volumes:
           - /usr/share/postgresql:/usr/share/postgresql
         env:
@@ -33,7 +34,6 @@ jobs:
             sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
             sudo apt-get update
             sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev binutils libproj-dev gdal-bin
-            sudo netstat -lntup
 
       - name: Copy configs
         run: |
