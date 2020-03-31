@@ -98,6 +98,6 @@ class UserLocationSerializer(
 
         fields = ('id', 'user', 'country', 'region', 'subregion', 'city',
                   'district', 'postal_code', 'address', 'coordinates',
-                  'is_default', 'created', 'modified', 'created_by',
-                  'modified_by')
+                  'is_default', 'units', 'timezone', 'created', 'modified',
+                  'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')

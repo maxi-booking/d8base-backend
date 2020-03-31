@@ -63,8 +63,8 @@ class LocationAdmin(VersionAdmin):
                        'postal_code', 'address', 'coordinates')
         }),
         ('Options', {
-            'fields': ('user', 'is_default', 'created', 'modified',
-                       'created_by', 'modified_by')
+            'fields': ('user', 'units', 'timezone', 'is_default', 'created',
+                       'modified', 'created_by', 'modified_by')
         }),
     )
     list_select_related = ('user', 'country', 'region', 'city', 'district',
@@ -81,7 +81,7 @@ class LocationInlineAdmin(admin.StackedInline):
     fk_name = 'user'
     fields = ('id', 'country', 'region', 'subregion', 'city', 'district',
               'postal_code', 'address', 'coordinates', 'is_default',
-              'created_by', 'modified_by')
+              'timezone', 'units', 'created_by', 'modified_by')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     autocomplete_fields = ('region', 'subregion', 'city', 'district',
                            'postal_code')

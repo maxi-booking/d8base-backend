@@ -4,6 +4,7 @@ from typing import List
 import pytest
 from cities.models import (City, Country, District, PostalCode, Region,
                            Subregion)
+from django.conf import settings
 
 from location.interfaces import AbstractLocation
 from location.services import LocationAutofiller
@@ -108,3 +109,28 @@ def test_location_autofiller_skip():
     assert location.city is None
     assert location.district is None
     assert location.postal_code is None
+
+
+def test_location_autofiller_set_timezone(cities: List[City]):
+    """Should autofill timezone from a city."""
+    location = AbstractLocation()
+    location.city = cities[0]
+    LocationAutofiller(location).autofill_location()
+
+    assert location.timezone == cities[0].timezone
+
+
+def test_location_autofiller_set_units(countries: List[Country]):
+    """Should autofill units from a country."""
+    country = countries[0]
+    country.tld = 'us'
+    location = AbstractLocation()
+    location.units = settings.UNITS_METRIC
+    LocationAutofiller(location).autofill_location()
+
+    assert location.units == settings.UNITS_METRIC
+
+    location.country = country
+    LocationAutofiller(location).autofill_location()
+
+    assert location.units == settings.UNITS_IMPERIAL

@@ -12,7 +12,7 @@ from imagekit.models import ImageSpecField, ProcessedImageField
 from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
 
-from d8b.fields import LanguageField
+from d8b.fields import LanguageField, TimezoneField, UnitsField
 from d8b.models import CommonInfo
 from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
 from location.services import LocationAutofiller
@@ -151,13 +151,13 @@ class UserLocation(CommonInfo):
         blank=True,
     )
     address = models.CharField(
-        _('address'),
+        verbose_name=_('address'),
         max_length=255,
         null=True,
         blank=True,
     )
     coordinates = gis_models.PointField(
-        _('coordinates'),
+        verbose_name=_('coordinates'),
         null=True,
         blank=True,
     )
@@ -165,6 +165,12 @@ class UserLocation(CommonInfo):
         default=False,
         help_text=_('is default location?'),
         verbose_name=_('is default'),
+    )
+    units = UnitsField(verbose_name=_('units'))
+    timezone = TimezoneField(
+        verbose_name=_('timezone'),
+        null=True,
+        blank=True,
     )
     user = models.ForeignKey(
         User,
@@ -182,7 +188,8 @@ class UserLocation(CommonInfo):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: {self.country}, {self.city}, {self.address}'
+        return f'{self.user}: ' + ', '.join(
+            map(str, filter(None, [self.country, self.city, self.address])))
 
     class Meta:
         """The user location class META class."""

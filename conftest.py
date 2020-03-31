@@ -120,6 +120,7 @@ def cities(countries, regions, subregions) -> List[City]:
         country=countries[0],
         region=regions[0],
         subregion=subregions[0],
+        timezone='Europe/Paris',
     )
 
 

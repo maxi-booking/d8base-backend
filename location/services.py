@@ -2,6 +2,7 @@
 from typing import List
 
 from cities.models import City, District, PostalCode, Region, Subregion
+from django.conf import settings
 
 from .interfaces import AbstractLocation
 
@@ -54,11 +55,27 @@ class LocationAutofiller():
         source: Region = self.location.region
         self.location.country = source.country
 
+    def _set_timezone(self):
+        """Set the timezone attr based on the city attr."""
+        city = getattr(self.location, 'city', None)
+        if city and city.timezone:
+            self.location.timezone = city.timezone
+
+    def _set_units(self):
+        """Set the units based on the country attr."""
+        country = getattr(self.location, 'country', None)
+        if not country:
+            return
+        if country.tld in settings.IMPERIAL_UNITS_COUNTRIES:
+            self.location.units = settings.UNITS_IMPERIAL
+
     def autofill_location(self) -> AbstractLocation:
         """Autofill a location object fields."""
+        self._set_units()
         for member in self.members:
             if getattr(self.location, member, None):
                 getattr(self, f'_set_from_{member}')()
+                self._set_timezone()
                 return self.location
 
         return self.location
