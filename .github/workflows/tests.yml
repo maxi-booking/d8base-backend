@@ -8,9 +8,9 @@ jobs:
 
     services:
       postgis:
-        image: postgis/postgis:10
+        image: postgis/postgis
         ports: ["5432:5432"]
-        volumes: 
+        volumes:
           - /usr/share/postgresql:/usr/share/postgresql
         env:
           POSTGRES_DB: d8b
@@ -33,6 +33,7 @@ jobs:
             sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
             sudo apt-get update
             sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev binutils libproj-dev gdal-bin
+            sudo netstat -lntup
 
       - name: Copy configs
         run: |
