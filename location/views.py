@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
+from d8b.viewsets import AllowAnyViewSetMixin, DistanceFilterViewSetMixin
+
 from .repositories import (AlternativeNameRepository, CityRepository,
                            ContinentRepository, CountryRepository,
                            DistrictRepository, LanguageRepository,
@@ -18,7 +20,11 @@ from .serializers import (AlternativeNameSerializer, CitySerializer,
                           SubregionSerializer)
 
 
-class ContinentViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
+class ContinentViewSet(
+        CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The Continent viewset."""
 
     serializer_class = ContinentSerializer
@@ -27,6 +33,7 @@ class ContinentViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
 
 class CountryViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The Country viewset."""
@@ -37,11 +44,12 @@ class CountryViewSet(
     search_fields = ('=id', 'name', 'alt_names__name', 'slug', 'code', 'code3',
                      'tld', 'capital', 'language_codes')
 
-    filterset_fields = ('currency', 'continent')
+    filterset_fields = ('currency', 'continent', 'code', 'code3', 'tld')
 
 
 class RegionViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The Region viewset."""
@@ -52,11 +60,12 @@ class RegionViewSet(
     search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
                      'code')
 
-    filterset_fields = ('country', )
+    filterset_fields = ('country', 'code')
 
 
 class SubregionViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The Subregion viewset."""
@@ -72,6 +81,8 @@ class SubregionViewSet(
 
 class CityViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        DistanceFilterViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The City viewset."""
@@ -88,6 +99,8 @@ class CityViewSet(
 
 class DistrictViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        DistanceFilterViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The District viewset."""
@@ -103,6 +116,8 @@ class DistrictViewSet(
 
 class PostalCodeViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        DistanceFilterViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The PostalCode viewset."""
@@ -120,6 +135,7 @@ class PostalCodeViewSet(
 
 class AlternativeNameViewSet(
         CacheResponseMixin,
+        AllowAnyViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
 ):
     """The AlternativeName viewset."""
