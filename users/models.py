@@ -12,12 +12,14 @@ from imagekit.models import ImageSpecField, ProcessedImageField
 from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
 
+from contacts.models import Contact
 from d8b.fields import LanguageField, TimezoneField, UnitsField
 from d8b.models import CommonInfo
 from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
 from location.services import LocationAutofiller
 
-from .managers import UserLanguageManager, UserLocationManager, UserManager
+from .managers import (UserContactManager, UserLanguageManager,
+                       UserLocationManager, UserManager)
 from .validators import validate_birthday
 
 
@@ -107,6 +109,8 @@ class UserLocation(CommonInfo):
     country = models.ForeignKey(
         Country,
         verbose_name=_('country'),
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name='user_locations',
     )
@@ -224,3 +228,40 @@ class UserLanguage(CommonInfo):
 
         ordering = ('language', )
         unique_together = (('language', 'user'), )
+
+
+class UserContact(CommonInfo):
+    """The user contact class."""
+
+    objects = UserContactManager()
+
+    value = models.CharField(
+        verbose_name=_('value'),
+        max_length=255,
+    )
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name='user_contacts',
+        verbose_name=_('contact'),
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='contacts',
+        verbose_name=_('user'),
+    )
+
+    @property
+    def contact_display(self) -> str:
+        """Return the name of the contact."""
+        return self.contact.name
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}: {self.contact} {self.value}'
+
+    class Meta:
+        """The user language class META class."""
+
+        unique_together = (('value', 'user', 'contact'), )

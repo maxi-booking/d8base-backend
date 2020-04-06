@@ -1,6 +1,7 @@
 """The d8b router module."""
 from rest_framework.routers import DefaultRouter as BaseRouter
 
+from contacts.routers import get_router as get_contacts_router
 from location.routers import get_router as get_location_router
 from users.routers import get_router as get_users_router
 
@@ -19,4 +20,5 @@ def get_router_urls() -> list:
     router = DefaultRouter()
     router.extend(get_location_router())
     router.extend(get_users_router())
+    router.extend(get_contacts_router())
     return router.urls

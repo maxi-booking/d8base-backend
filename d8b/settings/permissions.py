@@ -14,6 +14,14 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'change_userlocation',
     'delete_userlocation',
 
+    # user contacts
+    'add_usercontact',
+    'change_usercontact',
+    'delete_usercontact',
+
+    # contact
+    'change_contact',
+
     # location
     'change_continent',
     'change_country',

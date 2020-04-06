@@ -6,7 +6,7 @@ from drf_extra_fields.fields import Base64ImageField
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from .models import User, UserLanguage, UserLocation
+from .models import User, UserContact, UserLanguage, UserLocation
 from .registration import get_auth_tokens
 
 
@@ -82,6 +82,22 @@ class UserLanguageSerializer(
 
         fields = ('id', 'user', 'language', 'is_native', 'created', 'modified',
                   'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class UserContactSerializer(
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The user contact serializer."""
+
+    class Meta:
+        """The user contact class serializer META class."""
+
+        model = UserContact
+
+        fields = ('id', 'user', 'contact', 'contact_display', 'value',
+                  'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

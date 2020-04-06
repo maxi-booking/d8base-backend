@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'd8b',
     'users',
     'location',
+    'contacts',
 ]
 
 SITE_ID = 1
@@ -323,9 +324,9 @@ PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 # Django rest registration
 USER_FIELDS = [
     'id', 'email', 'first_name', 'last_name', 'patronymic', 'phone', 'gender',
-    'birthday', 'account_type', 'languages', 'locations', 'avatar'
+    'birthday', 'account_type', 'languages', 'locations', 'contacts', 'avatar'
 ]
-USER_READONLY_FIELDS = ['languages', 'locations']
+USER_READONLY_FIELDS = ['languages', 'locations', 'contacts']
 USER_EDITABLE_FIELDS = [
     f for f in USER_FIELDS if f not in USER_READONLY_FIELDS
 ]

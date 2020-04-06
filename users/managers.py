@@ -12,6 +12,18 @@ if TYPE_CHECKING:
     from .models import User
 
 
+class UserContactManager(models.Manager):
+    """The user contact manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of user contacts."""
+        return self.all().select_related(
+            'user',
+            'created_by',
+            'modified_by',
+        )
+
+
 class UserLanguageManager(models.Manager):
     """The user language manager."""
 

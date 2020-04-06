@@ -397,6 +397,7 @@ weak_cryptographic_key:
 exclude_dirs:
 - d8b/tests
 - users/tests
+- contacts/tests
 - location/tests
 - .tox
 - conftest.py

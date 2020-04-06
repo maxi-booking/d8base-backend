@@ -328,9 +328,92 @@ def test_user_location_delete(
     client_with_token: Client,
     user_locations: QuerySet,
 ):
-    """Should be able to update a user language."""
+    """Should be able to delete a user language."""
     obj = user_locations.filter(user=user).first()
     response = client_with_token.delete(
         reverse('user-locations-detail', args=[obj.pk]))
     assert response.status_code == 204
     assert user_locations.filter(user=user, pk=obj.pk).count() == 0
+
+
+def test_user_contacts_list(
+    user: User,
+    client_with_token: Client,
+    user_contacts: QuerySet,
+):
+    """Should return a contacts list."""
+    response = client_with_token.get(reverse('user-contacts-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == user_contacts.filter(user=user).count()
+
+    assert data['results'][0]['value'] == 'test contact 3'
+
+
+def test_user_contacts_detail(
+    user: User,
+    client_with_token: Client,
+    user_contacts: QuerySet,
+):
+    """Should return a user contact."""
+    obj = user_contacts.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-contacts-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['value'] == obj.value
+    assert data['contact'] == obj.contact.pk
+
+
+def test_user_contacts_create(
+    user: User,
+    client_with_token: Client,
+    user_contacts: QuerySet,
+):
+    """Should be able to create a user contact."""
+    response = client_with_token.post(
+        reverse('user-contacts-list'),
+        {
+            'value': 'test 123456',
+            'contact': user_contacts[0].contact.pk
+        },
+    )
+    obj = user_contacts.get(user=user, value='test 123456')
+
+    assert response.status_code == 201
+    assert obj.user == user
+    assert obj.created_by == user
+    assert obj.modified_by == user
+
+
+def test_user_contacts_update(
+    user: User,
+    client_with_token: Client,
+    user_contacts: QuerySet,
+):
+    """Should be able to update a user contact."""
+    obj = user_contacts.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-contacts-detail', args=[obj.pk]),
+        {
+            'value': 'new test contact',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.value == 'new test contact'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_contacts_delete(
+    user: User,
+    client_with_token: Client,
+    user_contacts: QuerySet,
+):
+    """Should be able to delete a user contact."""
+    obj = user_contacts.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-contacts-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert user_contacts.filter(user=user, pk=obj.pk).count() == 0

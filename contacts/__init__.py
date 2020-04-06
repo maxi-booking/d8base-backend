@@ -1,0 +1,1 @@
+"""The contacts initialization module."""

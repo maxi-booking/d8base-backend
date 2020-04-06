@@ -1,8 +1,9 @@
 """The users views module."""
 from rest_framework import viewsets
 
-from .models import UserLanguage, UserLocation
-from .serializers import UserLanguageSerializer, UserLocationSerializer
+from .models import UserContact, UserLanguage, UserLocation
+from .serializers import (UserContactSerializer, UserLanguageSerializer,
+                          UserLocationSerializer)
 
 
 class UserLanguageViewSet(viewsets.ModelViewSet):
@@ -19,3 +20,11 @@ class UserLocationViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = UserLocationSerializer
     queryset = UserLocation.objects.get_list()
+
+
+class UserContactViewSet(viewsets.ModelViewSet):
+    """The user contacts viewset."""
+
+    is_owner_filter_enabled = True
+    serializer_class = UserContactSerializer
+    queryset = UserContact.objects.get_list()

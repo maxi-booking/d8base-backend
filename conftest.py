@@ -9,13 +9,14 @@ from django.db.models.query import QuerySet
 from django.test.client import Client
 from rest_framework.test import APIClient
 
+from contacts.models import Contact
 from d8b import middleware
 from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    CityRepository, ContinentRepository,
                                    CountryRepository, DistrictRepository,
                                    PostalCodeRepository, RegionRepository,
                                    SubregionRepository)
-from users.models import User, UserLanguage, UserLocation
+from users.models import User, UserContact, UserLanguage, UserLocation
 from users.registration import get_auth_tokens
 
 collect_ignore_glob = ['*/migrations/*']  # pylint: disable=invalid-name
@@ -219,3 +220,38 @@ def user_locations(
             coordinates=i[2],
         )
     return UserLocation.objects.get_list()
+
+
+@pytest.fixture
+def contacts(countries: List[Country]) -> QuerySet:
+    """Return a contacts queryset."""
+    telegram, _ = Contact.objects.get_or_create(name='telegram')
+    icq, _ = Contact.objects.get_or_create(name='icq')
+    whatsapp, _ = Contact.objects.get_or_create(name='whatsapp')
+
+    telegram.countries.add(countries[0])
+    icq.excluded_countries.add(countries[1])
+    whatsapp.excluded_countries.add(countries[0])
+
+    return Contact.objects.get_list()
+
+
+@pytest.fixture
+def user_contacts(
+        admin: User,
+        user: User,
+        contacts: QuerySet,
+) -> QuerySet:
+    """Return a user contacts queryset."""
+    for k, i in enumerate((
+        (admin, contacts[0]),
+        (user, contacts[1]),
+        (admin, contacts[1]),
+        (user, contacts[2]),
+    )):
+        UserContact.objects.create(
+            user=i[0],
+            contact=i[1],
+            value=f'test contact {k}',
+        )
+    return UserContact.objects.get_list()
