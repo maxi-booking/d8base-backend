@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from d8b.models import CommonInfo
 
+from .managers import CategoryManager, SubcategoryManager
+
 
 class BaseCategory(CommonInfo):
     """The base category class."""
@@ -43,6 +45,8 @@ class BaseCategory(CommonInfo):
 class Category(BaseCategory, SortableMixin):
     """The professional category class."""
 
+    objects = CategoryManager()
+
     class Meta(BaseCategory.Meta):
         """The contact class META class."""
 
@@ -52,7 +56,13 @@ class Category(BaseCategory, SortableMixin):
 class Subcategory(BaseCategory, SortableMixin):
     """The professional subcategory class."""
 
-    category = SortableForeignKey(Category, on_delete=models.CASCADE)
+    objects = SubcategoryManager()
+
+    category = SortableForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='subcategories',
+    )
 
     class Meta(BaseCategory.Meta):
         """The contact class META class."""

@@ -53,6 +53,6 @@ def test_user_location_save_set_default_field(
 
 def test_user_contact_contact_display(user_contacts: QuerySet):
     """Should return the contact name."""
-    assert user_contacts[0].contact_display == 'icq'
-    assert user_contacts[2].contact_display == 'whatsapp'
-    assert user_contacts[3].contact_display == 'telegram'
+    assert user_contacts[0].contact_display == 'whatsapp'
+    assert user_contacts[2].contact_display == 'telegram'
+    assert user_contacts[3].contact_display == 'icq'

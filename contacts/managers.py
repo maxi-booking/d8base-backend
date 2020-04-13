@@ -25,4 +25,5 @@ class ContactsManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of contacts."""
         return self.all().\
+            select_related('created_by', 'modified_by').\
             prefetch_related('countries', 'excluded_countries')

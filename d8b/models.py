@@ -62,7 +62,7 @@ class CommonInfo(TimeStampedModel):
         self._set_user_fields(self.get_current_user())
         super(CommonInfo, self).save(**kwargs)
 
-    class Meta:
+    class Meta(TimeStampedModel.Meta):
         """The metainformation."""
 
         abstract = True

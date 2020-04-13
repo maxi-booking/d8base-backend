@@ -399,5 +399,6 @@ exclude_dirs:
 - users/tests
 - contacts/tests
 - location/tests
+- professionals/tests
 - .tox
 - conftest.py

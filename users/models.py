@@ -261,7 +261,8 @@ class UserContact(CommonInfo):
         """Return the string representation."""
         return f'{self.user}: {self.contact} {self.value}'
 
-    class Meta:
+    class Meta(CommonInfo.Meta):
         """The user language class META class."""
 
+        abstract = False
         unique_together = (('value', 'user', 'contact'), )

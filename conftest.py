@@ -16,6 +16,7 @@ from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    CountryRepository, DistrictRepository,
                                    PostalCodeRepository, RegionRepository,
                                    SubregionRepository)
+from professionals.models import Category, Subcategory
 from users.models import User, UserContact, UserLanguage, UserLocation
 from users.registration import get_auth_tokens
 
@@ -255,3 +256,32 @@ def user_contacts(
             value=f'test contact {k}',
         )
     return UserContact.objects.get_list()
+
+
+@pytest.fixture
+def categories() -> QuerySet:
+    """Return a categories queryset."""
+    for i in range(0, 6):
+        Category.objects.create(
+            name_en=f'category {i}',
+            description_en=f'category {i} description',
+            name_de=f'kategorie {i}',
+            description_de=f'kategorie {i} beschreibung',
+        )
+    return Category.objects.get_list()
+
+
+@pytest.fixture
+def subcategories(categories: QuerySet) -> QuerySet:
+    """Return a categories queryset."""
+    for category in categories:
+        for i in range(0, 4):
+            Subcategory.objects.create(
+                category=category,
+                name_en=f'{category}: subcategory {i}',
+                description_en=f'{category}: subcategory {i} description',
+                name_de=f'{category}: unterkategorie {i}',
+                description_de='{category}: unterkategorie {i} beschreibung',
+            )
+
+    return Subcategory.objects.get_list()
