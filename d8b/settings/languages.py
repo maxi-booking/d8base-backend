@@ -1,6 +1,16 @@
 """The language settings module."""
 from django.utils.translation import ugettext_lazy as _
 
+USE_I18N = True
+
+USE_L10N = True
+
+LANGUAGE_CODE = 'en'
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = LANGUAGE_CODE
+
+MODELTRANSLATION_LANGUAGES = ('en', 'de', 'fr', 'ru')
+
 LANGUAGES = (
     ('af', _('Afrikaans')),
     ('sq', _('Albanian')),

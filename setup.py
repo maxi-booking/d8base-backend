@@ -31,6 +31,8 @@ setup(
         'Django>=2.0,<3.0',
         'django-environ==0.4.5',
         'django-cors-headers==3.2.1',
+        'django-modeltranslation==0.14.4',
+        'django-admin-sortable==2.2.3',
         'djangorestframework==3.11.0',
         'drf-extensions==0.6.0',
         'djangorestframework-gis==0.15',

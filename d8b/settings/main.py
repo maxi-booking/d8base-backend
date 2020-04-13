@@ -49,6 +49,7 @@ for domain in ENV.list('CORS_ORIGIN_REGEX_WHITELIST', default=[]):
 # Application definition
 INSTALLED_APPS = [
     'corsheaders',
+    'modeltranslation',
     'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.humanize',
@@ -78,12 +79,14 @@ INSTALLED_APPS = [
     'crispy_forms',
     'admin_auto_filters',
     'imagekit',
+    'adminsortable',
 
     # d8base apps
     'd8b',
     'users',
     'location',
     'contacts',
+    'professionals',
 ]
 
 SITE_ID = 1
@@ -119,7 +122,7 @@ if not DEBUG:  # pragma: no cover
     SESSION_COOKIE_SECURE = 'Secure'
     SESSION_COOKIE_HTTPONLY = True
 
-    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = False
     CSRF_COOKIE_SAMESITE = 'Strict'
 
     CSRF_COOKIE_SECURE = 'Secure'
@@ -133,6 +136,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.static',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -163,13 +167,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en'
-
 TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 

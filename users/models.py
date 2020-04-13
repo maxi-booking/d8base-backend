@@ -27,10 +27,10 @@ class User(AbstractUser):
     """The user class."""
 
     ACCOUNT_USER: str = 'user'
-    ACCOUNT_SPECIALIST: str = 'specialist'
+    ACCOUNT_PROFESSIONAL: str = 'professional'
     ACCOUNT_CHOICES = [
         (ACCOUNT_USER, 'user'),
-        (ACCOUNT_SPECIALIST, 'specialist'),
+        (ACCOUNT_PROFESSIONAL, 'professional'),
     ]
 
     GENDER_MALE: int = 0
