@@ -10,12 +10,16 @@ services:
     - pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - d8b-network
 
   adminer:
     image: adminer
     hostname: adminer
     ports:
       - 8080:8080
+    networks:
+      - d8b-network
 
   rabbitmq:
     image: rabbitmq:latest
@@ -27,9 +31,13 @@ services:
       - "5673:5672"
     volumes:
       - ./rmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+    networks:
+      - d8b-network
 
   memcached:
     image: memcached:alpine
+    networks:
+      - d8b-network
 
   web:
     build:
@@ -38,8 +46,6 @@ services:
     hostname: web
     env_file:
       - ./.env
-
-    command: python /usr/src/app/manage.py runserver 0.0.0.0:8000
     volumes:
       - ..:/usr/src/app
     ports:
@@ -48,6 +54,13 @@ services:
       - postgres
       - rabbitmq
       - memcached
+    networks:
+      d8b-network:
+        aliases:
+          - backend
 
 volumes:
   pgdata:
+
+networks:
+  d8b-network:

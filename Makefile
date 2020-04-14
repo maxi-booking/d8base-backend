@@ -1,3 +1,5 @@
+include .docker/.env
+
 .DEFAULT_GOAL := all
 .PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage
 
@@ -8,7 +10,7 @@ env := .env
 env_test := .env_test
 manage := manage.py
 
-all: check_env docker_start django_migration
+all: check_env docker_build docker_start
 
 update: django_update django_migration docker_restart
 
@@ -21,6 +23,10 @@ check_env: .docker/pgsql-variables.env.dist .docker/rmq/rmq_variables.env.dist
 	@test ! -f 'd8b/settings/${env_test}' && (echo 'Copy file ...'; cp -v d8b/settings/${env_test}_dist d8b/settings/${env_test}) || echo 'File '${env_test} 'exists.'
 
 docker_restart: docker_stop docker_start
+
+docker_build:
+	@echo "Build docker services..."
+	$(dockerc) build
 
 docker_start:
 	@echo "Start docker services..."
@@ -44,6 +50,14 @@ django_update:
 django_migration:
 	@echo 'Do migrations'
 	$(dockerc) exec web python ${manage} migrate
+
+django_setup: django_superuser
+
+django_superuser:
+	@$(dockerc) exec web python ${manage} createsuperuser --no-input  -email ${DJANGO_SUPERUSER_EMAIL}
+	@$(dockerc) exec web python ${manage} changepassword --no-input  -email ${DJANGO_SUPERUSER_EMAIL}
+
+#RUN python manage.py migrate && python manage.py createsuperuser --no-input --email $SUPERUSER_EMAIL --password $SUPERUSER_PASSWORD
 
 coverage:
 	pytest  --cov=./ --cov-report html
