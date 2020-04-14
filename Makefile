@@ -1,5 +1,3 @@
-include .docker/.env
-
 .DEFAULT_GOAL := all
 .PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage
 
@@ -10,9 +8,12 @@ env := .env
 env_test := .env_test
 manage := manage.py
 
-all: check_env docker_build docker_start
+all: check_env docker_build docker_start django_migration app_before_setup_message
 
 update: django_update django_migration docker_restart
+
+app_before_setup_message:
+	@echo -e "\033[0;33mPlease start \033[0;31mmake django_init_setup \033[0;33mif its your first start."
 
 check_env: .docker/pgsql-variables.env.dist .docker/rmq/rmq_variables.env.dist
 	@echo "Check docker env files..."
@@ -23,6 +24,8 @@ check_env: .docker/pgsql-variables.env.dist .docker/rmq/rmq_variables.env.dist
 	@test ! -f 'd8b/settings/${env_test}' && (echo 'Copy file ...'; cp -v d8b/settings/${env_test}_dist d8b/settings/${env_test}) || echo 'File '${env_test} 'exists.'
 
 docker_restart: docker_stop docker_start
+
+django_init_setup: django_migration django_cities
 
 docker_build:
 	@echo "Build docker services..."
@@ -50,6 +53,10 @@ django_update:
 django_migration:
 	@echo 'Do migrations'
 	$(dockerc) exec web python ${manage} migrate
+
+django_cities:
+	@echo 'Load cities ...'
+	$(dockerc) exec web python ${manage} cities
 
 django_setup: django_superuser
 
