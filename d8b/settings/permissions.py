@@ -19,6 +19,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'change_usercontact',
     'delete_usercontact',
 
+    # user settings
+    'add_usersettings',
+    'change_usersettings',
+    'delete_usersettings',
+
     # contact
     'change_contact',
 

@@ -30,7 +30,7 @@ class UserSettingsManager(models.Manager):
         self,
         user_language: 'UserLanguage',
     ):
-        """Update or create an user settings from the user language object."""
+        """Update or create a user settings from the user language object."""
         settings, created = self.get_or_create(user=user_language.user)
         if created or not settings.language:
             settings.language = user_language.language
@@ -44,11 +44,12 @@ class UserSettingsManager(models.Manager):
         self,
         user_location: 'UserLocation',
     ):
-        """Update or create an user settings from the user location object."""
+        """Update or create a user settings from the user location object."""
         country = user_location.country
+        settings, created = self.get_or_create(user=user_location.user)
+
         if not country:
             return
-        settings, created = self.get_or_create(user=user_location.user)
 
         def save(settings):
             try:

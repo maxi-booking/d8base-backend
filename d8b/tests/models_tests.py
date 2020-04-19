@@ -85,7 +85,7 @@ def test_common_info_set_user_fields_on_save(
     admin_client: Client,
     mock_common_info,
 ):
-    """Should set user fields for an user when saving."""
+    """Should set user fields for a user when saving."""
     mock_common_info.reset_user()
     response = admin_client.get(reverse('admin:users_user_changelist'))
     mock_common_info.pk = None

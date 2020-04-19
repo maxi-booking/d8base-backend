@@ -17,7 +17,8 @@ from location.repositories import (AlternativeNameRepository, BaseRepository,
                                    PostalCodeRepository, RegionRepository,
                                    SubregionRepository)
 from professionals.models import Category, Subcategory
-from users.models import User, UserContact, UserLanguage, UserLocation
+from users.models import (User, UserContact, UserLanguage, UserLocation,
+                          UserSettings)
 from users.registration import get_auth_tokens
 
 collect_ignore_glob = ['*/migrations/*']  # pylint: disable=invalid-name
@@ -200,6 +201,17 @@ def user_languages(admin: User, user: User) -> QuerySet:
     ):
         UserLanguage.objects.create(language=i[0], user=i[1], is_native=i[2])
     return UserLanguage.objects.get_list()
+
+
+@pytest.fixture
+def user_settings(admin: User, user: User) -> QuerySet:
+    """Return a user settings queryset."""
+    for i in (
+        ('en', 'UDS', admin),
+        ('fr', 'EUR', user),
+    ):
+        UserSettings.objects.create(language=i[0], currency=i[1], user=i[2])
+    return UserSettings.objects.get_list()
 
 
 @pytest.fixture

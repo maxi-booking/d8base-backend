@@ -1,8 +1,11 @@
 """The managers tests module."""
+from typing import List
+
 import pytest
+from cities.models import Country
 from django.conf import settings
 
-from users.models import User
+from users.models import User, UserLanguage, UserLocation
 
 pytestmark = pytest.mark.django_db
 
@@ -54,3 +57,51 @@ def test_user_manager_create_superuser():
             password='foo',
             is_staff=False,
         )
+
+
+def test_user_settings_manager_update_or_create_from_user_language(user: User):
+    """Should update or create a user settings from the user language."""
+    UserLanguage.objects.create(user=user, language='de')
+    user.refresh_from_db()
+
+    assert user.settings.language == 'de'
+
+    user.settings.delete()
+    UserLanguage.objects.create(user=user, language='xx')
+    user.refresh_from_db()
+
+    assert user.settings.language == 'en'
+
+
+def test_user_settings_manager_update_or_create_from_user_location(
+    user: User,
+    countries: List[Country],
+):
+    """Should update or create a user settings from the user location."""
+    countries[0].language_codes = 'fr'
+    countries[0].currency = 'EUR'
+
+    countries[1].language_codes = 'invalid'
+    countries[1].currency = 'INVALID'
+
+    UserLocation.objects.create(user=user, country=countries[0])
+    user.refresh_from_db()
+
+    assert user.settings.language == 'fr'
+    assert user.settings.currency == 'EUR'
+
+    # invalid language and currency
+    user.settings.delete()
+    UserLocation.objects.create(user=user, country=countries[1])
+    user.refresh_from_db()
+
+    assert user.settings.language == 'en'
+    assert user.settings.currency == 'USD'
+
+    # user location without a country
+    user.settings.delete()
+    UserLocation.objects.create(user=user)
+    user.refresh_from_db()
+
+    assert user.settings.language == 'en'
+    assert user.settings.currency == 'USD'

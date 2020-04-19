@@ -2,7 +2,7 @@
 from typing import List
 
 import pytest
-from cities.models import Place
+from cities.models import Country, Place
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -88,3 +88,15 @@ def test_language_repository_get():
 
     with pytest.raises(ObjectDoesNotExist):
         LanguageRepository().get('invalid')
+
+
+def test_country_repository_get_language(countries: List[Country]):
+    """Should extract the language code string from the country object."""
+    countries[0].language_codes = 'en'
+    countries[1].language_codes = 'fr, en'
+    countries[2].language_codes = 'en-GB'
+
+    assert CountryRepository.get_language(countries[0]) == 'en'
+    assert CountryRepository.get_language(countries[1]) == 'fr'
+    assert CountryRepository.get_language(countries[2]) == 'en'
+    assert CountryRepository.get_language(countries[3]) is None

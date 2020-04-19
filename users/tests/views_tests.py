@@ -431,7 +431,7 @@ def test_user_contacts_list(
     client_with_token: Client,
     user_contacts: QuerySet,
 ):
-    """Should return a contacts list."""
+    """Should return an contacts list."""
     response = client_with_token.get(reverse('user-contacts-list'))
     data = response.json()
     assert response.status_code == 200
@@ -507,3 +507,80 @@ def test_user_contacts_delete(
         reverse('user-contacts-detail', args=[obj.pk]))
     assert response.status_code == 204
     assert user_contacts.filter(user=user, pk=obj.pk).count() == 0
+
+
+def test_user_settings_list(
+    user: User,
+    client_with_token: Client,
+    user_settings: QuerySet,
+):
+    """Should return a settings list."""
+    obj = user_settings.filter(user=user).first()
+    response = client_with_token.get(reverse('user-settings-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['results'][0]['language'] == obj.language
+
+
+def test_user_settings_detail(
+    user: User,
+    client_with_token: Client,
+    user_settings: QuerySet,
+):
+    """Should return a user settings."""
+    obj = user_settings.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-settings-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['currency'] == obj.currency
+
+
+def test_user_settings_create(
+    user: User,
+    client_with_token: Client,
+):
+    """Should be able to create a user settings object."""
+    response = client_with_token.post(
+        reverse('user-settings-list'),
+        {
+            'language': 'de',
+            'currency': 'EUR'
+        },
+    )
+    assert response.status_code == 201
+    assert user.settings.language == 'de'
+    assert user.settings.currency == 'EUR'
+
+
+def test_user_settings_update(
+    user: User,
+    client_with_token: Client,
+    user_settings: QuerySet,
+):
+    """Should be able to update a user settings."""
+    obj = user_settings.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-settings-detail', args=[obj.pk]),
+        {
+            'language': 'ru',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.language == 'ru'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_settings_delete(
+    user: User,
+    client_with_token: Client,
+    user_settings: QuerySet,
+):
+    """Should be able to delete a user settings."""
+    obj = user_settings.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-settings-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert user_settings.filter(user=user).count() == 0
