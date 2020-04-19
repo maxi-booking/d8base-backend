@@ -7,9 +7,9 @@ from rest_framework.response import Response
 from rest_registration.utils.verification_notifications import \
     send_register_verification_email_notification
 
-from .models import UserContact, UserLanguage, UserLocation
+from .models import UserContact, UserLanguage, UserLocation, UserSettings
 from .serializers import (UserContactSerializer, UserLanguageSerializer,
-                          UserLocationSerializer)
+                          UserLocationSerializer, UserSettingsSerializer)
 
 
 @api_view(['POST'])
@@ -21,6 +21,14 @@ def resend_verify_registration(request):
         raise NotFound('the user has already been confirmed')
     send_register_verification_email_notification(request, request.user)
     return Response({'detail': 'a message has been sent'})
+
+
+class UserSettingsViewSet(viewsets.ModelViewSet):
+    """The user settings viewset."""
+
+    is_owner_filter_enabled = True
+    serializer_class = UserSettingsSerializer
+    queryset = UserSettings.objects.get_list()
 
 
 class UserLanguageViewSet(viewsets.ModelViewSet):

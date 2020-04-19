@@ -42,6 +42,7 @@ setup(
         'django-debug-toolbar==2.2',
         'django-reversion==3.0.5',
         'django-filter==2.2.0',
+        'django-money==1.1',
         'django-otp==0.8.1',
         'django-adminactions==1.8.1',
         'django-phonenumber-field==3.0.1',

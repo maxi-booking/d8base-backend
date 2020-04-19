@@ -6,7 +6,7 @@ from drf_extra_fields.fields import Base64ImageField
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from .models import User, UserContact, UserLanguage, UserLocation
+from .models import User, UserContact, UserLanguage, UserLocation, UserSettings
 from .registration import get_auth_tokens
 
 
@@ -67,6 +67,22 @@ class UserHiddenFieldMixin(serializers.Serializer):
 
     # pylint: disable=abstract-method
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+class UserSettingsSerializer(
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The user settings serializer."""
+
+    class Meta:
+        """The user settings class serializer META class."""
+
+        model = UserSettings
+
+        fields = ('id', 'user', 'language', 'currency', 'created', 'modified',
+                  'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class UserLanguageSerializer(

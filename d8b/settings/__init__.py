@@ -1,4 +1,5 @@
 """The settings init module."""
+from .celery import *
 from .custom import *
 from .images import *
 from .languages import *

@@ -2,14 +2,68 @@
 from typing import TYPE_CHECKING
 
 from django.contrib.auth.base_user import BaseUserManager
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils.translation import ugettext_lazy as _
 
+from location.repositories import CountryRepository
+
 from .repositories import GroupRepository
 
 if TYPE_CHECKING:
-    from .models import User
+    from .models import User, UserLanguage, UserLocation
+
+
+class UserSettingsManager(models.Manager):
+    """The user settings manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of user contacts."""
+        return self.all().select_related(
+            'user',
+            'created_by',
+            'modified_by',
+        )
+
+    def update_or_create_from_user_language(
+        self,
+        user_language: 'UserLanguage',
+    ):
+        """Update or create an user settings from the user language object."""
+        settings, created = self.get_or_create(user=user_language.user)
+        if created or not settings.language:
+            settings.language = user_language.language
+            try:
+                settings.full_clean()
+                settings.save()
+            except ValidationError:
+                pass
+
+    def update_or_create_from_user_location(
+        self,
+        user_location: 'UserLocation',
+    ):
+        """Update or create an user settings from the user location object."""
+        country = user_location.country
+        if not country:
+            return
+        settings, created = self.get_or_create(user=user_location.user)
+
+        def save(settings):
+            try:
+                settings.full_clean()
+                settings.save()
+            except ValidationError:
+                pass
+
+        if country.language_codes and (created or not settings.language):
+            settings.language = CountryRepository.get_language(country)
+            save(settings)
+
+        if country.currency and (created or not settings.currency):
+            settings.currency = country.currency
+            save(settings)
 
 
 class UserContactManager(models.Manager):

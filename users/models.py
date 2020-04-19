@@ -8,6 +8,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from djmoney.models.fields import CurrencyField
+from djmoney.settings import CURRENCY_CHOICES
 from imagekit.models import ImageSpecField, ProcessedImageField
 from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
@@ -19,14 +21,12 @@ from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
 from location.services import LocationAutofiller
 
 from .managers import (UserContactManager, UserLanguageManager,
-                       UserLocationManager, UserManager)
+                       UserLocationManager, UserManager, UserSettingsManager)
 from .validators import validate_birthday
 
 
 class User(AbstractUser):
     """The user class."""
-
-    # settings
 
     ACCOUNT_USER: str = 'user'
     ACCOUNT_PROFESSIONAL: str = 'professional'
@@ -112,6 +112,36 @@ class User(AbstractUser):
     def __str__(self):
         """Return a string representation of the object."""
         return self.email
+
+
+class UserSettings(CommonInfo):
+    """The user settings class."""
+
+    objects = UserSettingsManager()
+
+    language = LanguageField(
+        verbose_name=_('language'),
+        null=True,
+        blank=True,
+        default=settings.LANGUAGE_CODE,
+        choices=settings.APP_LANGUAGES,
+    )
+    currency = CurrencyField(
+        verbose_name=_('currency'),
+        null=True,
+        blank=True,
+        choices=CURRENCY_CHOICES,
+    )
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='settings',
+        verbose_name=_('user'),
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user} settings'
 
 
 class UserLocation(CommonInfo):
@@ -204,6 +234,7 @@ class UserLocation(CommonInfo):
         self.default_field_setter(self).\
             process_default_for_query(user=self.user)
         super().save(**kwargs)
+        UserSettings.objects.update_or_create_from_user_location(self)
 
     def __str__(self) -> str:
         """Return the string representation."""
@@ -233,6 +264,11 @@ class UserLanguage(CommonInfo):
         related_name='languages',
         verbose_name=_('user'),
     )
+
+    def save(self, **kwargs):
+        """Save the object."""
+        super().save(**kwargs)
+        UserSettings.objects.update_or_create_from_user_language(self)
 
     def __str__(self) -> str:
         """Return the string representation."""

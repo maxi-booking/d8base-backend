@@ -106,3 +106,5 @@ LANGUAGES = (
     ('yo', _('Yoruba')),
     ('zu', _('Zulu')),
 )
+
+APP_LANGUAGES = [x for x in LANGUAGES if x[0] in MODELTRANSLATION_LANGUAGES]

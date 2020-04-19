@@ -80,7 +80,6 @@ class Subcategory(BaseCategory, SortableMixin):
 #     # level
 #     # instant confirmation
 
-#     # TODO: fields
 #     # favorite master
 #     # reviews and rating
 #     # services

@@ -29,16 +29,6 @@ TESTS = ENV.bool('TESTS', default=False)
 
 AUTH_USER_MODEL = 'users.User'
 
-# Celery
-CELERY_LOGLEVEL = ENV.str('CELERY_LOGLEVEL')
-BROKER_URL = ENV.str('BROKER_URL')
-CELERY_RESULT_BACKEND = ENV.str('CELERY_RESULT_BACKEND')
-CELERY_ALWAYS_EAGER = ENV.bool('CELERY_ALWAYS_EAGER', default=False)
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = ENV.bool(
-    'CELERY_EAGER_PROPAGATES_EXCEPTIONS', default=False)
-if ENV.str('BROKER_BACKEND', default=None):
-    BROKER_BACKEND = ENV.str('BROKER_BACKEND')
-
 # Django-cors
 CORS_ORIGIN_ALLOW_ALL = ENV.bool('CORS_ORIGIN_ALLOW_ALL', default=False)
 CORS_ORIGIN_REGEX_WHITELIST = []
@@ -80,6 +70,8 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'imagekit',
     'adminsortable',
+    'djmoney',
+    'djmoney.contrib.exchange',
 
     # d8base apps
     'd8b',
@@ -368,6 +360,7 @@ OAUTH2_PROVIDER = {
     }
 }
 
+# Swagger
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
@@ -377,3 +370,10 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# Django money
+DEFAULT_CURRENCY = 'USD'
+BASE_CURRENCY = DEFAULT_CURRENCY
+# CURRENCIES = ('RUB', 'EUR', 'CAD', 'USD')
+EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
+FIXER_ACCESS_KEY = ENV.str('FIXER_ACCESS_KEY')

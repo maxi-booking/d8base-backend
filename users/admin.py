@@ -18,7 +18,7 @@ from location.admin_filters import CityFilter, DistrictFilter, RegionFilter
 
 from .admin_fiters import UserFilter
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, UserContact, UserLanguage, UserLocation
+from .models import User, UserContact, UserLanguage, UserLocation, UserSettings
 
 admin.site.unregister(Application)
 
@@ -114,6 +114,17 @@ class ContactInlineAdmin(admin.TabularInline):
     extra = 1
 
 
+class SettingsInlineAdmin(admin.TabularInline):
+    """The setting inline admin."""
+
+    model = UserSettings
+    fk_name = 'user'
+    fields = ('id', 'language', 'currency', 'created', 'modified',
+              'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
+
+
 @admin.register(User)
 class UserAdmin(
         VersionAdmin,
@@ -127,7 +138,12 @@ class UserAdmin(
     add_form: Type = UserCreationForm
     form: Type = UserChangeForm
     model: Type = User
-    inlines = (LanguageInlineAdmin, LocationInlineAdmin, ContactInlineAdmin)
+    inlines = (
+        LanguageInlineAdmin,
+        LocationInlineAdmin,
+        ContactInlineAdmin,
+        SettingsInlineAdmin,
+    )
 
     avatar_thumbnail = AdminThumbnail(image_field='avatar_thumbnail')
 

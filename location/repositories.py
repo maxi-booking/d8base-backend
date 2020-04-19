@@ -1,7 +1,7 @@
 """The location repositories module."""
 
 from abc import ABC, abstractmethod
-from typing import List, Type
+from typing import List, Optional, Type
 
 from cities.models import (AlternativeName, City, Continent, Country, District,
                            Place, PostalCode, Region, Subregion)
@@ -66,6 +66,14 @@ class CountryRepository(BaseRepository):
     order_by: str = 'name'
     select_related: List[str] = ['continent']
     prefetch_related: List[str] = ['neighbours', 'alt_names']
+
+    @staticmethod
+    def get_language(country: Country) -> Optional[str]:
+        """Return the country language."""
+        codes = country.language_codes
+        if not codes:
+            return None
+        return codes.split(',')[0].split('-')[0].strip().lower()
 
 
 class RegionRepository(BaseRepository):
