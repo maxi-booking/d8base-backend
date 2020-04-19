@@ -1,9 +1,26 @@
 """The users views module."""
 from rest_framework import viewsets
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_registration.utils.verification_notifications import \
+    send_register_verification_email_notification
 
 from .models import UserContact, UserLanguage, UserLocation
 from .serializers import (UserContactSerializer, UserLanguageSerializer,
                           UserLocationSerializer)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def resend_verify_registration(request):
+    """Resend a registration verification email."""
+    user = request.user
+    if user.is_confirmed:
+        raise NotFound('the user has already been confirmed')
+    send_register_verification_email_notification(request, request.user)
+    return Response({'detail': 'a message has been sent'})
 
 
 class UserLanguageViewSet(viewsets.ModelViewSet):

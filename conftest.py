@@ -178,6 +178,7 @@ def user() -> User:
     return User.objects.create_user(
         USER_EMAIL,
         USER_PASSWORD,
+        is_confirmed=True,
     )
 
 

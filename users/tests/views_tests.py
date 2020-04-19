@@ -1,6 +1,6 @@
 """The views tests module."""
 import re
-from typing import List
+from typing import Any, Dict, List
 from urllib.parse import parse_qs, urlparse
 
 import pytest
@@ -10,8 +10,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
+from rest_framework.test import APIClient
 
-from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, USER_PASSWORD
+from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, USER_EMAIL, USER_PASSWORD
 from users.models import User
 from users.repositories import OauthRepository
 
@@ -100,6 +101,16 @@ def test_accounts_change_password(admin: User, admin_client: Client):
     assert not admin.check_password(ADMIN_PASSWORD)
 
 
+def _get_query_params_from_link_in_text(text: str) -> Dict[str, List[Any]]:
+    """Find, parse a link and return query params."""
+    pattern = re.compile((r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
+                          r'[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'))
+    url = pattern.findall(text)[0]
+    query_params = parse_qs(urlparse(url).query)
+
+    return query_params
+
+
 def test_accounts_reset_password(
     user: User,
     client: Client,
@@ -113,10 +124,7 @@ def test_accounts_reset_password(
     )
     assert response.status_code == 200
     assert len(mailoutbox) == 1
-    pattern = re.compile((r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-                          r'[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'))
-    url = pattern.findall(mailoutbox[0].body)[0]
-    query_params = parse_qs(urlparse(url).query)
+    query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
 
     response = client.post(
         reverse('reset-password'),
@@ -134,7 +142,34 @@ def test_accounts_reset_password(
     assert not user.check_password(USER_PASSWORD)
 
 
-def test_accounts_register(client: Client):
+def _check_register_verification(
+    client: Client,
+    user: User,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Verify a new user account."""
+    assert len(mailoutbox) == 1
+    query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
+
+    response = client.post(
+        reverse('verify-registration'),
+        {
+            'user_id': query_params['user_id'][0],
+            'timestamp': query_params['timestamp'][0],
+            'signature': query_params['signature'][0],
+        },
+        content_type='application/json',
+    )
+    assert response.status_code == 200
+    user.refresh_from_db()
+    assert user.is_active
+    assert user.is_confirmed
+
+
+def test_accounts_register(
+    client: Client,
+    mailoutbox: List[EmailMultiAlternatives],
+):
     """Should be able to register a new user."""
     expires: int = settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS']
     response = client.post(
@@ -157,14 +192,69 @@ def test_accounts_register(client: Client):
     user = User.objects.get(email='test@test.io')
     groups = user.groups.all()
     assert user.first_name == 'test'
+    assert user.is_active
+    assert not user.is_confirmed
     assert user.check_password('test_pass')
     assert groups.count() == 1
     assert groups[0].name == settings.GROUP_USER_NAME
 
+    _check_register_verification(client, user, mailoutbox)
+
+
+def test_resend_verify_registration(
+    client_with_token: APIClient,
+    client: Client,
+    user: User,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should be able to resend a registration verification email."""
+    response = client_with_token.post(reverse('resend-verify-registration'))
+
+    assert response.status_code == 404
+    user.is_confirmed = False
+    user.save()
+
+    client_with_token.post(reverse('resend-verify-registration'))
+
+    _check_register_verification(client, user, mailoutbox)
+
+
+def test_accounts_register_email(
+    client_with_token: APIClient,
+    user: User,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should be able to change a user email."""
+    new_email = 'new_email@example.com'
+    response = client_with_token.post(
+        reverse('register-email'),
+        {'email': new_email},
+    )
+    assert response.status_code == 200
+
+    assert user.email == USER_EMAIL
+
+    assert len(mailoutbox) == 1
+    query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
+
+    response = client_with_token.post(
+        reverse('verify-email'),
+        {
+            'user_id': query_params['user_id'][0],
+            'email': query_params['email'][0],
+            'timestamp': query_params['timestamp'][0],
+            'signature': query_params['signature'][0],
+        },
+    )
+    assert response.status_code == 200
+    user.refresh_from_db()
+    assert user.email == new_email
+    assert user.is_confirmed
+
 
 def test_user_languages_list(
     user: User,
-    client_with_token: Client,
+    client_with_token: APIClient,
     user_languages: QuerySet,
 ):
     """Should return a languages list."""

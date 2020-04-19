@@ -6,22 +6,20 @@ from django.urls import reverse
 from oauth2_provider.models import Application
 
 from users.models import User
-from users.registration import get_auth_tokens, get_registration_urls
+from users.registration import get_auth_tokens
+from users.urls import get_urls
 
 pytestmark = pytest.mark.django_db
 
 
 def test_get_registration_urls():
     """Should return the filtered registration URLs."""
-    names = [u.name for u in get_registration_urls()]
+    names = [u.name for u in get_urls()]
 
     assert 'login' not in names
     assert 'logout' not in names
-    assert 'verify-registration' not in names
-    assert 'verify-email' not in names
-    assert 'register-email' not in names
     assert 'register' in names
-    assert len(names) == 5
+    assert len(names) == 10
 
 
 def test_get_auth_tokens(user: User, client: Client):

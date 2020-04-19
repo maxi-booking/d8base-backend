@@ -9,6 +9,8 @@ from d8b.models import CommonInfo
 
 from .managers import CategoryManager, SubcategoryManager
 
+# from users.models import User
+
 
 class BaseCategory(CommonInfo):
     """The base category class."""
@@ -68,3 +70,47 @@ class Subcategory(BaseCategory, SortableMixin):
         """The contact class META class."""
 
         verbose_name_plural = _('subcategories')
+
+
+# class Professional(CommonInfo):
+#     """The professional profile class."""
+
+#     # company
+#     # experience years
+#     # level
+#     # instant confirmation
+
+#     # TODO: fields
+#     # favorite master
+#     # reviews and rating
+#     # services
+#     # location
+#     # work experience
+#     # education
+#     # certifications
+#     # contacts
+#     # tags
+#     # portfolio/photos
+#     # payments
+
+#     name = models.CharField(
+#         _('name'),
+#         max_length=255,
+#     )
+#     description = models.TextField(
+#         _('description'),
+#         null=True,
+#         blank=True,
+#     )
+#     subcategory = models.ForeignKey(
+#         Subcategory,
+#         on_delete=models.PROTECT,
+#         related_name='professionals',
+#         verbose_name=_('user'),
+#     )
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         related_name='professionals',
+#         verbose_name=_('user'),
+#     )

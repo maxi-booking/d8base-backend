@@ -322,17 +322,24 @@ PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 # Django rest registration
 USER_FIELDS = [
     'id', 'email', 'first_name', 'last_name', 'patronymic', 'phone', 'gender',
-    'birthday', 'account_type', 'languages', 'locations', 'contacts', 'avatar'
+    'birthday', 'nationality', 'account_type', 'languages', 'locations',
+    'contacts', 'is_confirmed', 'avatar'
 ]
-USER_READONLY_FIELDS = ['languages', 'locations', 'contacts']
+USER_READONLY_FIELDS = ['languages', 'locations', 'contacts', 'is_confirmed']
 USER_EDITABLE_FIELDS = [
     f for f in USER_FIELDS if f not in USER_READONLY_FIELDS
 ]
 REST_REGISTRATION = {
+    'USER_VERIFICATION_FLAG_FIELD':
+        'is_confirmed',
     'REGISTER_VERIFICATION_ENABLED':
-        False,
+        True,
+    'REGISTER_VERIFICATION_URL':
+        ENV.str('REGISTER_VERIFICATION_URL'),
     'REGISTER_EMAIL_VERIFICATION_ENABLED':
-        False,
+        True,
+    'REGISTER_EMAIL_VERIFICATION_URL':
+        ENV.str('REGISTER_EMAIL_VERIFICATION_URL'),
     'RESET_PASSWORD_VERIFICATION_ENABLED':
         True,
     'RESET_PASSWORD_VERIFICATION_URL':

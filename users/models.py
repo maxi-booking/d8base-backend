@@ -26,6 +26,8 @@ from .validators import validate_birthday
 class User(AbstractUser):
     """The user class."""
 
+    # settings
+
     ACCOUNT_USER: str = 'user'
     ACCOUNT_PROFESSIONAL: str = 'professional'
     ACCOUNT_CHOICES = [
@@ -63,11 +65,24 @@ class User(AbstractUser):
         null=True,
         validators=[validate_birthday],
     )
+    nationality = models.ForeignKey(
+        Country,
+        verbose_name=_('nationality'),
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='nationalities',
+    )
     account_type = models.CharField(
         _('account type'),
         max_length=10,
         choices=ACCOUNT_CHOICES,
         default=ACCOUNT_USER,
+    )
+    is_confirmed = models.BooleanField(
+        default=False,
+        help_text=_('is account confirmed?'),
+        verbose_name=_('is confirmed'),
     )
     avatar = ProcessedImageField(
         blank=True,

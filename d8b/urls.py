@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 
-from users.registration import get_registration_urls
+from users.urls import get_urls as get_user_urls
 
 from .openapi import get_openapi_urls
 from .routers import get_router_urls
@@ -22,7 +22,7 @@ urlpatterns = [
 ]
 urlpatterns += i18n_patterns(
     re_path(r'^api/', include(get_router_urls())),
-    re_path(r'^api/accounts/', include(get_registration_urls())),
+    re_path(r'^api/accounts/', include(get_user_urls())),
 )
 urlpatterns += get_openapi_urls()
 

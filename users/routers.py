@@ -11,7 +11,6 @@ def get_router() -> SimpleRouter:
                     'user-languages')
     router.register(r'accounts/locations', UserLocationViewSet,
                     'user-locations')
-    router.register(r'accounts/contacts', UserContactViewSet,
-                    'user-contacts')
+    router.register(r'accounts/contacts', UserContactViewSet, 'user-contacts')
 
     return router

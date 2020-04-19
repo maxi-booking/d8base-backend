@@ -137,11 +137,11 @@ class UserAdmin(
         }),
         (_('Personal info'), {
             'fields': ('first_name', 'last_name', 'patronymic', 'gender',
-                       'birthday', 'phone')
+                       'birthday', 'nationality', 'phone')
         }),
         (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups',
-                       'user_permissions'),
+            'fields': ('is_active', 'is_confirmed', 'is_staff', 'is_superuser',
+                       'groups', 'user_permissions'),
         }),
         (_('Dates'), {
             'fields': ('last_login', 'date_joined')
@@ -157,7 +157,7 @@ class UserAdmin(
     search_fields_extend = ['patronymic', 'phone']
     search_fields_remove = ['username']
 
-    list_filter_extend = ['account_type', 'gender']
+    list_filter_extend = ['account_type', 'is_confirmed', 'gender']
 
-    list_display_extend = ['account_type', 'avatar_thumbnail']
+    list_display_extend = ['account_type', 'is_confirmed', 'avatar_thumbnail']
     list_display_remove = ['username']
