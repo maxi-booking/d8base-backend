@@ -31,8 +31,8 @@ class User(AbstractUser):
     ACCOUNT_USER: str = 'user'
     ACCOUNT_PROFESSIONAL: str = 'professional'
     ACCOUNT_CHOICES = [
-        (ACCOUNT_USER, 'user'),
-        (ACCOUNT_PROFESSIONAL, 'professional'),
+        (ACCOUNT_USER, _('user')),
+        (ACCOUNT_PROFESSIONAL, _('professional')),
     ]
 
     GENDER_MALE: int = 0

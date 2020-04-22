@@ -1,4 +1,4 @@
-"""The contacts filters module."""
+"""The contacts filtersets module."""
 from django.utils.translation import ugettext_lazy as _
 from django_filters import rest_framework as filters
 
@@ -7,7 +7,7 @@ from location.repositories import CountryRepository
 from .models import Contact
 
 
-class ContactFilter(filters.FilterSet):
+class ContactFilterSet(filters.FilterSet):
     """The filter class for the contact viewset class."""
 
     by_country = filters.ModelChoiceFilter(

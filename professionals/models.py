@@ -6,10 +6,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from d8b.models import CommonInfo
+from users.models import User
 
-from .managers import CategoryManager, SubcategoryManager
-
-# from users.models import User
+from .managers import (CategoryManager, ProfessionalManager,
+                       ProfessionalTagManager, SubcategoryManager)
 
 
 class BaseCategory(CommonInfo):
@@ -72,44 +72,114 @@ class Subcategory(BaseCategory, SortableMixin):
         verbose_name_plural = _('subcategories')
 
 
-# class Professional(CommonInfo):
-#     """The professional profile class."""
+class Professional(CommonInfo):
+    """The professional profile class."""
 
-#     # company
-#     # experience years
-#     # level
-#     # instant confirmation
+    # favorite master
+    # reviews and rating
+    # services
+    # location
+    # work experience
+    # education
+    # certifications
+    # contacts
+    # tags
+    # portfolio/photos
+    # payments
 
-#     # favorite master
-#     # reviews and rating
-#     # services
-#     # location
-#     # work experience
-#     # education
-#     # certifications
-#     # contacts
-#     # tags
-#     # portfolio/photos
-#     # payments
+    objects = ProfessionalManager()
 
-#     name = models.CharField(
-#         _('name'),
-#         max_length=255,
-#     )
-#     description = models.TextField(
-#         _('description'),
-#         null=True,
-#         blank=True,
-#     )
-#     subcategory = models.ForeignKey(
-#         Subcategory,
-#         on_delete=models.PROTECT,
-#         related_name='professionals',
-#         verbose_name=_('user'),
-#     )
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name='professionals',
-#         verbose_name=_('user'),
-#     )
+    LEVEL_JUNIOR: str = 'junior'
+    LEVEL_MIDDLE: str = 'middle'
+    LEVEL_SENIOR: str = 'senior'
+    LEVEL_CHOICES = [
+        (LEVEL_JUNIOR, _('junior')),
+        (LEVEL_MIDDLE, _('middle')),
+        (LEVEL_SENIOR, _('senior')),
+    ]
+
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+    )
+    description = models.TextField(
+        _('description'),
+        null=True,
+        blank=True,
+    )
+    company = models.CharField(
+        _('company'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    experience = models.PositiveSmallIntegerField(
+        _('years of experience'),
+        null=True,
+        blank=True,
+    )
+    level = models.CharField(
+        _('level'),
+        max_length=20,
+        choices=LEVEL_CHOICES,
+        null=True,
+        blank=True,
+    )
+    is_auto_order_confirmation = models.BooleanField(
+        default=True,
+        help_text=_('are orders confirmed automatically?'),
+        verbose_name=_('is auto order confirmation?'),
+    )
+    subcategory = models.ForeignKey(
+        Subcategory,
+        on_delete=models.PROTECT,
+        related_name='professionals',
+        verbose_name=_('subcategory'),
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='professionals',
+        verbose_name=_('user'),
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}: {self.name}'
+
+
+class BaseTag(CommonInfo):
+    """The base tag class."""
+
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.name}'
+
+    class Meta(CommonInfo.Meta):
+        """The contact class META class."""
+
+        abstract = True
+
+
+class ProfessionalTag(BaseTag):
+    """The base tag class."""
+
+    objects = ProfessionalTagManager()
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='tags',
+        verbose_name=_('professional'),
+    )
+
+    class Meta(BaseTag.Meta):
+        """The contact class META class."""
+
+        abstract = False
+        unique_together = (('name', 'professional'), )

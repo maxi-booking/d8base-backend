@@ -2,7 +2,60 @@
 
 from rest_framework import serializers
 
-from .models import Category, Subcategory
+from users.serializers import UserHiddenFieldMixin
+
+from .models import Category, Professional, ProfessionalTag, Subcategory
+
+
+class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
+    """The professional field filtered by the request user."""
+
+    def get_queryset(self):
+        """Return the queryset."""
+        user = self.context['request'].user
+        return Professional.objects.get_user_list(user=user)
+
+
+class ProfessionalTagSerializer(
+        serializers.ModelSerializer, ):
+    """The professional tag serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The professional class serializer META class."""
+
+        model = ProfessionalTag
+        fields = ('id', 'professional', 'name', 'created', 'modified',
+                  'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class ProfessionalTagListSerializer(
+        serializers.ModelSerializer, ):
+    """The professional tag list serializer."""
+
+    class Meta:
+        """The professional class serializer META class."""
+
+        model = ProfessionalTag
+        fields = ('name', )
+
+
+class ProfessionalSerializer(
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The professional serializer."""
+
+    class Meta:
+        """The professional class serializer META class."""
+
+        model = Professional
+        fields = ('id', 'user', 'name', 'description', 'company', 'experience',
+                  'level', 'is_auto_order_confirmation', 'subcategory',
+                  'created', 'modified', 'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class CategorySerializer(serializers.ModelSerializer):

@@ -24,6 +24,16 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'change_usersettings',
     'delete_usersettings',
 
+    # professional
+    'add_professional',
+    'change_professional',
+    'delete_professional',
+
+    # professional tag
+    'add_professionaltag',
+    'change_professionaltag',
+    'delete_professionaltag',
+
     # contact
     'change_contact',
 

@@ -3,19 +3,22 @@ import pytest
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest
 
+from conftest import OBJECTS_TO_CREATE
 from users.filters import OwnerFilter
 from users.models import User
 
 pytestmark = pytest.mark.django_db
 
 
-def test_owner_filter(user: User, user_languages: QuerySet):
+def test_owner_filter(user: User, user_languages: QuerySet,
+                      professional_tags: QuerySet):
     """Should filter a queryset by user."""
 
     class MockView():
         """The mock view class."""
 
         is_owner_filter_enabled = False
+        owner_filter_field = 'user'
 
     request = HttpRequest()
     request.user = user
@@ -45,3 +48,12 @@ def test_owner_filter(user: User, user_languages: QuerySet):
         user_languages,
         view,
     ).count() == 4
+
+    view.is_owner_filter_enabled = True
+    view.owner_filter_field = 'professional__user'
+
+    assert owner_filter.filter_queryset(
+        request,
+        professional_tags,
+        view,
+    ).count() == OBJECTS_TO_CREATE * 2

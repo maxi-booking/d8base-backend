@@ -4,8 +4,39 @@ from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.viewsets import AllowAnyViewSetMixin
 
-from .models import Category, Subcategory
-from .serializers import CategorySerializer, SubcategorySerializer
+from .filtersets import ProfessionalTagFilterSet
+from .models import Category, Professional, ProfessionalTag, Subcategory
+from .serializers import (CategorySerializer, ProfessionalSerializer,
+                          ProfessionalTagListSerializer,
+                          ProfessionalTagSerializer, SubcategorySerializer)
+
+
+class ProfessionalTagViewSet(viewsets.ModelViewSet):
+    """The professional tag viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'professional__user'
+    serializer_class = ProfessionalTagSerializer
+    queryset = ProfessionalTag.objects.get_list()
+    search_fields = ('=id', 'name')
+    filterset_class = ProfessionalTagFilterSet
+
+
+class ProfessionalTagListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The professional tag list viewset."""
+
+    serializer_class = ProfessionalTagListSerializer
+    queryset = ProfessionalTag.objects.get_names()
+    search_fields = ('name', )
+
+
+class ProfessionalViewSet(viewsets.ModelViewSet):
+    """The professional viewset."""
+
+    is_owner_filter_enabled = True
+    serializer_class = ProfessionalSerializer
+    queryset = Professional.objects.get_list()
+    search_fields = ('=id', 'name')
 
 
 class CategoryViewSet(

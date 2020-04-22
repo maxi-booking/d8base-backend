@@ -255,6 +255,8 @@ REST_FRAMEWORK = {
         'rest_framework.versioning.AcceptHeaderVersioning',
     'DEFAULT_PAGINATION_CLASS':
         'd8b.pagination.StandardPagination',
+    'PAGE_SIZE':
+        100,
     'DEFAULT_PERMISSION_CLASSES': [
         'd8b.permissions.DjangoModelPermissionsGet',
         'rest_framework.permissions.IsAuthenticated',

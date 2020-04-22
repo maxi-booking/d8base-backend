@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
-from .filters import ContactFilter
+from .filtersets import ContactFilterSet
 from .models import Contact
 from .serializers import ContactSerializer
 
@@ -16,4 +16,4 @@ class ContactViewSet(
     serializer_class = ContactSerializer
     queryset = Contact.objects.get_list()
     search_fields = ('=id', 'name')
-    filterset_class = ContactFilter
+    filterset_class = ContactFilterSet
