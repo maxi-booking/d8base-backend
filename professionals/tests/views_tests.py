@@ -280,3 +280,16 @@ def test_user_professional_tags_delete_restricted_entry(
     response = client_with_token.delete(
         reverse('user-professional-tags-detail', args=[obj.pk]))
     assert response.status_code == 404
+
+
+def test_professional_tags_list(
+    client_with_token: Client,
+    professional_tags: QuerySet,
+):
+    """Should return a professional tag names list."""
+    obj = professional_tags.order_by('name').first()
+    response = client_with_token.get(reverse('professional-tags-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == OBJECTS_TO_CREATE * 4
+    assert data['results'][0]['name'] == obj.name
