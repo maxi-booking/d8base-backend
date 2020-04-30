@@ -2,7 +2,7 @@
 from typing import List
 
 import pytest
-from cities.models import Country, Place
+from cities.models import City, Country, Place
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -100,3 +100,16 @@ def test_country_repository_get_language(countries: List[Country]):
     assert CountryRepository.get_language(countries[1]) == 'fr'
     assert CountryRepository.get_language(countries[2]) == 'en'
     assert CountryRepository.get_language(countries[3]) is None
+
+
+def test_city_repository_find_by_name(cities: List[City]):
+    """Should be able to find cities by the name."""
+    city = cities[0]
+    city.name = 'test name'
+    city.save()
+    repo = CityRepository()
+    queryset = repo.get_all().filter(pk=cities[2].pk)
+
+    assert repo.find_by_name(name='tes').first().name == 'test name'
+    assert not repo.find_by_name(name='tes', queryset=queryset).count()
+    assert repo.find_by_name(name='city', queryset=queryset).count() == 1

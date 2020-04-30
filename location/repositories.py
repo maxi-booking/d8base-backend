@@ -7,6 +7,7 @@ from cities.models import (AlternativeName, City, Continent, Country, District,
                            Place, PostalCode, Region, Subregion)
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.db.models.query import QuerySet
 
 from .models import Language
@@ -101,6 +102,19 @@ class CityRepository(BaseRepository):
     order_by: str = 'name'
     select_related: List[str] = ['region', 'country', 'subregion']
     prefetch_related: List[str] = ['alt_names']
+
+    def find_by_name(
+            self,
+            *,
+            name: str,
+            queryset: Optional[QuerySet] = None,
+    ) -> QuerySet:
+        """Find cities by name."""
+        if not queryset:
+            queryset = self.get_list()
+        return queryset.filter(
+            Q(name__istartswith=name) | Q(name_std__istartswith=name)
+            | Q(alt_names__name__istartswith=name))
 
 
 class DistrictRepository(BaseRepository):

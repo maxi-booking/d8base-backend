@@ -8,6 +8,7 @@ from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.viewsets import AllowAnyViewSetMixin, DistanceFilterViewSetMixin
 
+from .filtersets import CityFilterSet
 from .repositories import (AlternativeNameRepository, CityRepository,
                            ContinentRepository, CountryRepository,
                            DistrictRepository, LanguageRepository,
@@ -94,7 +95,7 @@ class CityViewSet(
                      'region__name', 'region__name_std', 'subregion__name',
                      'subregion__name_std')
 
-    filterset_fields = ('country', 'region', 'subregion', 'timezone')
+    filterset_class = CityFilterSet
 
 
 class DistrictViewSet(
