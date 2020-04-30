@@ -75,7 +75,6 @@ class Subcategory(BaseCategory, SortableMixin):
 class Professional(CommonInfo):
     """The professional profile class."""
 
-    # favorite master --
     # reviews and rating
     # servicesMaking Anagrams
     # location --
