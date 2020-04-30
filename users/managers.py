@@ -5,7 +5,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query import QuerySet
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from location.repositories import CountryRepository
 

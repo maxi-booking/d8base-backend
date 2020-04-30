@@ -3,7 +3,7 @@
 from adminsortable.fields import SortableForeignKey
 from adminsortable.models import SortableMixin
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from d8b.models import CommonInfo
 from users.models import User

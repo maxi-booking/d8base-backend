@@ -1,5 +1,5 @@
 """The units settings module."""
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 UNITS_METRIC = 0
 UNITS_IMPERIAL = 1

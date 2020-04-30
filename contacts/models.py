@@ -1,7 +1,7 @@
 """The contacts models module."""
 from cities.models import Country
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from d8b.models import CommonInfo
 

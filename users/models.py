@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models as gis_models
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import CurrencyField
 from djmoney.settings import CURRENCY_CHOICES
 from imagekit.models import ImageSpecField, ProcessedImageField
@@ -76,7 +76,7 @@ class User(AbstractUser):
     )
     account_type = models.CharField(
         _('account type'),
-        max_length=10,
+        max_length=20,
         choices=ACCOUNT_CHOICES,
         default=ACCOUNT_USER,
     )
