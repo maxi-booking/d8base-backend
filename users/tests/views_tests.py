@@ -584,3 +584,82 @@ def test_user_settings_delete(
         reverse('user-settings-detail', args=[obj.pk]))
     assert response.status_code == 204
     assert user_settings.filter(user=user).count() == 0
+
+
+def test_user_saved_professional_list(
+    user: User,
+    client_with_token: Client,
+    user_saved_professionals: QuerySet,
+):
+    """Should return a user saved professionals list."""
+    obj = user_saved_professionals.filter(user=user).first()
+    response = client_with_token.get(reverse('user-saved-professionals-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['results'][0]['professional'] == obj.professional.pk
+    assert data['results'][0]['note'] == obj.note
+
+
+def test_user_saved_professional_detail(
+    user: User,
+    client_with_token: Client,
+    user_saved_professionals: QuerySet,
+):
+    """Should return a user saved professionals."""
+    obj = user_saved_professionals.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-saved-professionals-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['note'] == obj.note
+
+
+def test_user_saved_professional_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user saved professional object."""
+    response = client_with_token.post(
+        reverse('user-saved-professionals-list'),
+        {
+            'note': 'test note',
+            'professional': professionals[0].pk
+        },
+    )
+    assert response.status_code == 201
+    assert user.saved_professionals.first().note == 'test note'
+    assert user.saved_professionals.first().professional == professionals[0]
+
+
+def test_user_saved_professional_update(
+    user: User,
+    client_with_token: Client,
+    user_saved_professionals: QuerySet,
+):
+    """Should be able to update a user saved professional."""
+    obj = user_saved_professionals.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-saved-professionals-detail', args=[obj.pk]),
+        {
+            'note': 'new note',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.note == 'new note'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_saved_professional_delete(
+    user: User,
+    client_with_token: Client,
+    user_saved_professionals: QuerySet,
+):
+    """Should be able to delete a user saved professionals."""
+    obj = user_saved_professionals.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-saved-professionals-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert user_saved_professionals.filter(pk=obj.pk).count() == 0

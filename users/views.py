@@ -7,9 +7,12 @@ from rest_framework.response import Response
 from rest_registration.utils.verification_notifications import \
     send_register_verification_email_notification
 
-from .models import UserContact, UserLanguage, UserLocation, UserSettings
+from .models import (UserContact, UserLanguage, UserLocation,
+                     UserSavedProfessional, UserSettings)
 from .serializers import (UserContactSerializer, UserLanguageSerializer,
-                          UserLocationSerializer, UserSettingsSerializer)
+                          UserLocationSerializer,
+                          UserSavedProfessionalSerializer,
+                          UserSettingsSerializer)
 
 
 @api_view(['POST'])
@@ -29,6 +32,14 @@ class UserSettingsViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = UserSettingsSerializer
     queryset = UserSettings.objects.get_list()
+
+
+class UserSavedProfessionalViewSet(viewsets.ModelViewSet):
+    """The user saved professional viewset."""
+
+    is_owner_filter_enabled = True
+    serializer_class = UserSavedProfessionalSerializer
+    queryset = UserSavedProfessional.objects.get_list()
 
 
 class UserLanguageViewSet(viewsets.ModelViewSet):

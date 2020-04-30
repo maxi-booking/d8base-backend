@@ -21,7 +21,8 @@ from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
 from location.services import LocationAutofiller
 
 from .managers import (UserContactManager, UserLanguageManager,
-                       UserLocationManager, UserManager, UserSettingsManager)
+                       UserLocationManager, UserManager,
+                       UserSavedProfessionalManager, UserSettingsManager)
 from .validators import validate_birthday
 
 
@@ -112,6 +113,41 @@ class User(AbstractUser):
     def __str__(self):
         """Return a string representation of the object."""
         return self.email
+
+
+class UserSavedProfessional(CommonInfo):
+    """The user saved professional class."""
+
+    objects = UserSavedProfessionalManager()
+
+    note = models.CharField(
+        _('note'),
+        null=True,
+        blank=True,
+        max_length=255,
+    )
+    professional = models.ForeignKey(
+        'professionals.Professional',
+        on_delete=models.CASCADE,
+        related_name='user_saved_professionals',
+        verbose_name=_('professional'),
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='saved_professionals',
+        verbose_name=_('user'),
+    )
+
+    class Meta(CommonInfo.Meta):
+        """The user language class META class."""
+
+        abstract = False
+        unique_together = (('user', 'professional'), )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}: {self.professional} saved professional'
 
 
 class UserSettings(CommonInfo):

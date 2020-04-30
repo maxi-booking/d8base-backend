@@ -8,7 +8,7 @@ from django.db.models.query import QuerySet
 
 from contacts.models import Contact
 from users.models import (User, UserContact, UserLanguage, UserLocation,
-                          UserSettings)
+                          UserSavedProfessional, UserSettings)
 
 
 # pylint: disable=redefined-outer-name
@@ -91,3 +91,24 @@ def user_contacts(
             value=f'test contact {k}',
         )
     return UserContact.objects.get_list()
+
+
+@pytest.fixture
+def user_saved_professionals(
+        admin: User,
+        user: User,
+        professionals: QuerySet,
+) -> QuerySet:
+    """Return a user saved professionals queryset."""
+    for k, i in enumerate((
+        (admin, professionals[0]),
+        (user, professionals[1]),
+        (admin, professionals[1]),
+        (user, professionals[2]),
+    )):
+        UserSavedProfessional.objects.create(
+            user=i[0],
+            professional=i[1],
+            note=f'professional note {k}',
+        )
+    return UserSavedProfessional.objects.get_list()

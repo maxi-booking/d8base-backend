@@ -18,7 +18,8 @@ from location.admin_filters import CityFilter, DistrictFilter, RegionFilter
 
 from .admin_fiters import UserFilter
 from .forms import UserChangeForm, UserCreationForm
-from .models import User, UserContact, UserLanguage, UserLocation, UserSettings
+from .models import (User, UserContact, UserLanguage, UserLocation,
+                     UserSavedProfessional, UserSettings)
 
 admin.site.unregister(Application)
 
@@ -125,6 +126,18 @@ class SettingsInlineAdmin(admin.TabularInline):
     classes = ['collapse']
 
 
+class SavedProfessionlInlineAdmin(admin.TabularInline):
+    """The saved professional inline admin."""
+
+    model = UserSavedProfessional
+    fk_name = 'user'
+    fields = ('id', 'professional', 'note', 'created', 'modified',
+              'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    extra = 1
+    classes = ['collapse']
+
+
 @admin.register(User)
 class UserAdmin(
         VersionAdmin,
@@ -143,6 +156,7 @@ class UserAdmin(
         LocationInlineAdmin,
         ContactInlineAdmin,
         SettingsInlineAdmin,
+        SavedProfessionlInlineAdmin,
     )
 
     avatar_thumbnail = AdminThumbnail(image_field='avatar_thumbnail')

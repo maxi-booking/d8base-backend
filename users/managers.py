@@ -15,6 +15,19 @@ if TYPE_CHECKING:
     from .models import User, UserLanguage, UserLocation
 
 
+class UserSavedProfessionalManager(models.Manager):
+    """The user saved professionals manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of user saved professionals."""
+        return self.all().select_related(
+            'user',
+            'professional',
+            'created_by',
+            'modified_by',
+        )
+
+
 class UserSettingsManager(models.Manager):
     """The user settings manager."""
 
