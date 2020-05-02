@@ -62,5 +62,6 @@ setup(
         'psycopg2==2.8.4',
         'python-memcached==1.59',
         'Pillow==7.0.0',
+        'pytz==2020.1',
     ],
 )
