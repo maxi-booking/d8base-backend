@@ -8,10 +8,12 @@ from modeltranslation.admin import (TabbedTranslationAdmin,
                                     TranslationTabularInline)
 from reversion.admin import VersionAdmin
 
+from location.admin_filters import CityFilter, DistrictFilter, RegionFilter
 from users.admin_fiters import UserFilter
 
+from .admin_fiters import ProfessionalFilter
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalLocation, ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -69,6 +71,20 @@ class ProfessionalContactInlineAdmin(admin.TabularInline):
     extra = 1
 
 
+class ProfessionalLocationInlineAdmin(admin.StackedInline):
+    """The location inline admin."""
+
+    model = ProfessionalLocation
+    fields = ('id', 'country', 'region', 'subregion', 'city', 'district',
+              'postal_code', 'address', 'coordinates', 'is_default',
+              'timezone', 'units', 'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    autocomplete_fields = ('region', 'subregion', 'city', 'district',
+                           'postal_code')
+    classes = ['collapse']
+    extra = 1
+
+
 @admin.register(Professional)
 class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
@@ -81,7 +97,11 @@ class ProfessionalAdmin(VersionAdmin):
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     list_filter = ('level', 'subcategory', UserFilter)
     autocomplete_fields = ('user', )
-    inlines = (ProfessionalTagInlineAdmin, ProfessionalContactInlineAdmin)
+    inlines = (
+        ProfessionalTagInlineAdmin,
+        ProfessionalContactInlineAdmin,
+        ProfessionalLocationInlineAdmin,
+    )
 
     fieldsets: Tuple = (
         ('General', {
@@ -96,6 +116,43 @@ class ProfessionalAdmin(VersionAdmin):
         }),
     )
     list_select_related = ('created_by', 'subcategory', 'user')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(ProfessionalLocation)
+class ProfessionalLocationAdmin(VersionAdmin):
+    """The location admin class."""
+
+    model: Type = ProfessionalLocation
+    list_display = ('id', 'professional', 'country', 'region', 'city',
+                    'district', 'coordinates', 'created', 'created_by')
+    list_filter = (
+        'country',
+        RegionFilter,
+        CityFilter,
+        DistrictFilter,
+        ProfessionalFilter,
+    )
+    search_fields = ('=id', 'professional__name', 'professional__user__email',
+                     'country__name', 'region__name', 'city__name', 'address')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', 'region', 'subregion', 'city',
+                           'district', 'postal_code')
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('country', 'region', 'subregion', 'city', 'district',
+                       'postal_code', 'address', 'coordinates')
+        }),
+        ('Options', {
+            'fields': ('professional', 'units', 'timezone', 'created',
+                       'modified', 'created_by', 'modified_by')
+        }),
+    )
+    list_select_related = ('professional', 'professional__user', 'country',
+                           'region', 'city', 'district', 'created_by')
 
     class Media:
         """Required for the AutocompleteFilter."""

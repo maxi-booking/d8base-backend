@@ -1,11 +1,15 @@
 """The auth fixtures module."""
 
+from typing import List
+
 import pytest
+from cities.models import PostalCode
 from django.db.models.query import QuerySet
 
 from conftest import OBJECTS_TO_CREATE
 from professionals.models import (Category, Professional, ProfessionalContact,
-                                  ProfessionalTag, Subcategory)
+                                  ProfessionalLocation, ProfessionalTag,
+                                  Subcategory)
 from users.models import User
 
 # pylint: disable=redefined-outer-name
@@ -42,9 +46,9 @@ def subcategories(categories: QuerySet) -> QuerySet:
 
 @pytest.fixture
 def professionals(
-        subcategories: QuerySet,
-        admin: User,
-        user: User,
+    subcategories: QuerySet,
+    admin: User,
+    user: User,
 ) -> QuerySet:
     """Return a professionals queryset."""
     for k, i in enumerate((
@@ -77,8 +81,10 @@ def professional_tags(professionals: QuerySet, ) -> QuerySet:
 
 
 @pytest.fixture
-def professional_contacts(professionals: QuerySet,
-                          contacts: QuerySet) -> QuerySet:
+def professional_contacts(
+    professionals: QuerySet,
+    contacts: QuerySet,
+) -> QuerySet:
     """Return a professional contacts queryset."""
     for professional in professionals:
         ProfessionalContact.objects.create(
@@ -89,6 +95,26 @@ def professional_contacts(professionals: QuerySet,
         ProfessionalContact.objects.create(
             professional=professional,
             contact=contacts[1],
-            value=f'{contacts[0]}',
+            value=f'{contacts[1]}',
         )
     return ProfessionalContact.objects.get_list()
+
+
+@pytest.fixture
+def professional_locations(
+    professionals: QuerySet,
+    postal_codes: List[PostalCode],
+) -> QuerySet:
+    """Return a professional locations queryset."""
+    for professional in professionals:
+        ProfessionalLocation.objects.create(
+            professional=professional,
+            postal_code=postal_codes[0],
+            address=f'test address {postal_codes[0]}',
+        )
+        ProfessionalLocation.objects.create(
+            professional=professional,
+            postal_code=postal_codes[1],
+            address=f'test address {postal_codes[1]}',
+        )
+    return ProfessionalLocation.objects.get_list()

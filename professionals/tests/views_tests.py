@@ -412,3 +412,120 @@ def test_user_professional_contacts_delete_restricted_entry(
     response = client_with_token.delete(
         reverse('user-professional-contacts-detail', args=[obj.pk]))
     assert response.status_code == 404
+
+
+def test_user_professional_locations_list(
+    user: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should return a professional locations list."""
+    obj = professional_locations.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-locations-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 4
+    assert data['results'][0]['city'] == obj.city.pk
+
+
+def test_user_professional_locations_detail(
+    user: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should return a user professional location."""
+    obj = professional_locations.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-locations-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['address'] == obj.address
+
+
+def test_user_professional_tags_location_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_locations.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-locations-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_location_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional location object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-locations-list'),
+        {
+            'address': 'test address',
+            'professional': obj.pk,
+        },
+    )
+    assert response.status_code == 201
+    assert obj.locations.first().address == 'test address'
+
+
+def test_user_professional_location_update(
+    user: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should be able to update a user professional location."""
+    obj = professional_locations.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-locations-detail', args=[obj.pk]),
+        {
+            'address': 'new address',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.address == 'new address'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_locations_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_locations.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-locations-detail', args=[obj.pk]),
+        {'name': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_location_delete(
+    user: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should be able to delete a user professional location."""
+    obj = professional_locations.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-locations-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_locations.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_locations_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_locations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_locations.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-locations-detail', args=[obj.pk]))
+    assert response.status_code == 404

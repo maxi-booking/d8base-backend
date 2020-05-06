@@ -89,14 +89,20 @@ def test_user_settings_manager_update_or_create_from_user_location(
 
     assert user.settings.language == 'fr'
     assert user.settings.currency == 'EUR'
+    assert user.settings.units == settings.UNITS_METRIC
 
     # invalid language and currency
     user.settings.delete()
-    UserLocation.objects.create(user=user, country=countries[1])
+    UserLocation.objects.create(
+        user=user,
+        country=countries[1],
+        units=settings.UNITS_IMPERIAL,
+    )
     user.refresh_from_db()
 
     assert user.settings.language == 'en'
     assert user.settings.currency == 'USD'
+    assert user.settings.units == settings.UNITS_IMPERIAL
 
     # user location without a country
     user.settings.delete()
@@ -105,3 +111,4 @@ def test_user_settings_manager_update_or_create_from_user_location(
 
     assert user.settings.language == 'en'
     assert user.settings.currency == 'USD'
+    assert user.settings.units == settings.UNITS_METRIC

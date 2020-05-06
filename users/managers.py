@@ -59,7 +59,10 @@ class UserSettingsManager(models.Manager):
     ):
         """Update or create a user settings from the user location object."""
         country = user_location.country
-        settings, created = self.get_or_create(user=user_location.user)
+        settings, created = self.get_or_create(
+            user=user_location.user,
+            units=user_location.units,
+        )
 
         if not country:
             return
@@ -131,10 +134,10 @@ class UserManager(BaseUserManager):
     """
 
     def create_user(
-            self,
-            email: str,
-            password: str,
-            **extra_fields,
+        self,
+        email: str,
+        password: str,
+        **extra_fields,
     ) -> 'User':
         """Create and save a User with the given email and password."""
         if not email:
@@ -149,10 +152,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(
-            self,
-            email: str,
-            password: str,
-            **extra_fields,
+        self,
+        email: str,
+        password: str,
+        **extra_fields,
     ) -> 'User':
         """Create and save a superuser with the given email and password."""
         extra_fields.setdefault('is_staff', True)

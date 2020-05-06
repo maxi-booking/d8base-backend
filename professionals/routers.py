@@ -2,8 +2,9 @@
 from rest_framework.routers import SimpleRouter
 
 from .views import (CategoryViewSet, ProfessionalContactViewSet,
-                    ProfessionalTagListViewSet, ProfessionalTagViewSet,
-                    ProfessionalViewSet, SubcategoryViewSet)
+                    ProfessionalLocationViewSet, ProfessionalTagListViewSet,
+                    ProfessionalTagViewSet, ProfessionalViewSet,
+                    SubcategoryViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -20,4 +21,6 @@ def get_router() -> SimpleRouter:
                     'user-professional-tags')
     router.register(r'accounts/professional-contacts',
                     ProfessionalContactViewSet, 'user-professional-contacts')
+    router.register(r'accounts/professional-locations',
+                    ProfessionalLocationViewSet, 'user-professional-locations')
     return router

@@ -150,7 +150,7 @@ class SettingsInlineAdmin(admin.TabularInline):
 
     model = UserSettings
     fk_name = 'user'
-    fields = ('id', 'language', 'currency', 'created', 'modified',
+    fields = ('id', 'language', 'currency', 'units', 'created', 'modified',
               'created_by', 'modified_by')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     classes = ['collapse']

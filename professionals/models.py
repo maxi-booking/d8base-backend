@@ -7,11 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 from contacts.models import ContactMixin
 from d8b.models import CommonInfo
+from location.models import LocationMixin
+from location.services import LocationAutofiller
 from users.models import User
 
 from .managers import (CategoryManager, ProfessionalContactManager,
-                       ProfessionalManager, ProfessionalTagManager,
-                       SubcategoryManager)
+                       ProfessionalLocationManager, ProfessionalManager,
+                       ProfessionalTagManager, SubcategoryManager)
 
 
 class BaseCategory(CommonInfo):
@@ -78,12 +80,10 @@ class Professional(CommonInfo):
     """The professional profile class."""
 
     # reviews and rating
-    # servicesMaking Anagrams
-    # location --
-    # work experience
-    # education
-    # certifications
-    # contacts --
+    # services
+    # work experience *
+    # education *
+    # certifications *
     # portfolio/photos
     # payments
 
@@ -206,3 +206,37 @@ class ProfessionalContact(CommonInfo, ContactMixin):
 
         abstract = False
         unique_together = (('value', 'professional', 'contact'), )
+
+
+class ProfessionalLocation(CommonInfo, LocationMixin):
+    """The user location class."""
+
+    objects = ProfessionalLocationManager()
+    autofiller = LocationAutofiller
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='locations',
+        verbose_name=_('professional'),
+    )
+    is_default = models.BooleanField(
+        default=False,
+        help_text=_('is default location?'),
+        verbose_name=_('is default'),
+    )
+
+    def save(self, **kwargs):
+        """Save the object."""
+        self.autofiller(self).autofill_location()
+        super().save(**kwargs)
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: ' + ', '.join(
+            map(str, filter(None, [self.country, self.city, self.address])))
+
+    class Meta(CommonInfo.Meta):
+        """The user location class META class."""
+
+        abstract = False

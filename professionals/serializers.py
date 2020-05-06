@@ -5,7 +5,7 @@ from rest_framework import serializers
 from users.serializers import UserHiddenFieldMixin
 
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalLocation, ProfessionalTag, Subcategory)
 
 
 class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
@@ -15,6 +15,24 @@ class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
         """Return the queryset."""
         user = self.context['request'].user
         return Professional.objects.get_user_list(user=user)
+
+
+class ProfessionalLocationSerializer(
+        serializers.ModelSerializer, ):
+    """The professional location serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The professional location class serializer META class."""
+
+        model = ProfessionalLocation
+
+        fields = ('id', 'professional', 'country', 'region', 'subregion',
+                  'city', 'district', 'postal_code', 'address', 'coordinates',
+                  'units', 'timezone', 'created', 'modified', 'created_by',
+                  'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class ProfessionalContactSerializer(

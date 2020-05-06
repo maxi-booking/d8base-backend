@@ -1,11 +1,9 @@
 """The users models module."""
 from typing import List
 
-from cities.models import (City, Country, District, PostalCode, Region,
-                           Subregion)
+from cities.models import Country
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.contrib.gis.db import models as gis_models
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import CurrencyField
@@ -15,9 +13,10 @@ from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
 
 from contacts.models import ContactMixin
-from d8b.fields import LanguageField, TimezoneField, UnitsField
+from d8b.fields import LanguageField, UnitsField
 from d8b.models import CommonInfo
 from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
+from location.models import LocationMixin
 from location.services import LocationAutofiller
 
 from .managers import (UserContactManager, UserLanguageManager,
@@ -174,88 +173,24 @@ class UserSettings(CommonInfo):
         related_name='settings',
         verbose_name=_('user'),
     )
+    units = UnitsField(verbose_name=_('units'))
 
     def __str__(self) -> str:
         """Return the string representation."""
         return f'{self.user} settings'
 
 
-class UserLocation(CommonInfo):
+class UserLocation(CommonInfo, LocationMixin):
     """The user location class."""
 
-    autofiller = LocationAutofiller
-    default_field_setter = DefaultFieldSetter
     objects = UserLocationManager()
+    default_field_setter = DefaultFieldSetter
+    autofiller = LocationAutofiller
 
-    country = models.ForeignKey(
-        Country,
-        verbose_name=_('country'),
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name='user_locations',
-    )
-    region = models.ForeignKey(
-        Region,
-        verbose_name=_('region'),
-        on_delete=models.SET_NULL,
-        related_name='user_locations',
-        null=True,
-        blank=True,
-    )
-    subregion = models.ForeignKey(
-        Subregion,
-        verbose_name=_('subregion'),
-        on_delete=models.SET_NULL,
-        related_name='user_locations',
-        null=True,
-        blank=True,
-    )
-    city = models.ForeignKey(
-        City,
-        verbose_name=_('city'),
-        on_delete=models.SET_NULL,
-        related_name='user_locations',
-        null=True,
-        blank=True,
-    )
-    district = models.ForeignKey(
-        District,
-        verbose_name=_('district'),
-        on_delete=models.SET_NULL,
-        related_name='user_locations',
-        null=True,
-        blank=True,
-    )
-    postal_code = models.ForeignKey(
-        PostalCode,
-        verbose_name=_('postal code'),
-        on_delete=models.SET_NULL,
-        related_name='user_locations',
-        null=True,
-        blank=True,
-    )
-    address = models.CharField(
-        verbose_name=_('address'),
-        max_length=255,
-        null=True,
-        blank=True,
-    )
-    coordinates = gis_models.PointField(
-        verbose_name=_('coordinates'),
-        null=True,
-        blank=True,
-    )
     is_default = models.BooleanField(
         default=False,
         help_text=_('is default location?'),
         verbose_name=_('is default'),
-    )
-    units = UnitsField(verbose_name=_('units'))
-    timezone = TimezoneField(
-        verbose_name=_('timezone'),
-        null=True,
-        blank=True,
     )
     user = models.ForeignKey(
         User,
@@ -277,10 +212,10 @@ class UserLocation(CommonInfo):
         return f'{self.user}: ' + ', '.join(
             map(str, filter(None, [self.country, self.city, self.address])))
 
-    class Meta:
+    class Meta(CommonInfo.Meta):
         """The user location class META class."""
 
-        ordering = ('-created', )
+        abstract = False
 
 
 class UserLanguage(CommonInfo):

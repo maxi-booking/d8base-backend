@@ -6,6 +6,25 @@ from modeltranslation.manager import MultilingualManager
 from users.models import User
 
 
+class ProfessionalLocationManager(models.Manager):
+    """The professional location manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of professional locations."""
+        return self.all().select_related(
+            'country',
+            'region',
+            'subregion',
+            'city',
+            'district',
+            'postal_code',
+            'professional',
+            'professional__user',
+            'created_by',
+            'modified_by',
+        )
+
+
 class ProfessionalContactManager(models.Manager):
     """The professional contact manager."""
 

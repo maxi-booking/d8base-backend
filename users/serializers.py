@@ -81,8 +81,8 @@ class UserSettingsSerializer(
 
         model = UserSettings
 
-        fields = ('id', 'user', 'language', 'currency', 'created', 'modified',
-                  'created_by', 'modified_by')
+        fields = ('id', 'user', 'language', 'currency', 'units', 'created',
+                  'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

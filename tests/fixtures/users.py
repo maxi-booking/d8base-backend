@@ -52,9 +52,9 @@ def user_settings(admin: User, user: User) -> QuerySet:
 
 @pytest.fixture
 def user_locations(
-        admin: User,
-        user: User,
-        postal_codes: List[PostalCode],
+    admin: User,
+    user: User,
+    postal_codes: List[PostalCode],
 ) -> QuerySet:
     """Return a user locations queryset."""
     for k, i in enumerate((
@@ -74,9 +74,9 @@ def user_locations(
 
 @pytest.fixture
 def user_contacts(
-        admin: User,
-        user: User,
-        contacts: QuerySet,
+    admin: User,
+    user: User,
+    contacts: QuerySet,
 ) -> QuerySet:
     """Return a user contacts queryset."""
     for k, i in enumerate((
@@ -95,9 +95,9 @@ def user_contacts(
 
 @pytest.fixture
 def user_saved_professionals(
-        admin: User,
-        user: User,
-        professionals: QuerySet,
+    admin: User,
+    user: User,
+    professionals: QuerySet,
 ) -> QuerySet:
     """Return a user saved professionals queryset."""
     for k, i in enumerate((
