@@ -4,11 +4,24 @@ from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.viewsets import AllowAnyViewSetMixin
 
-from .filtersets import ProfessionalTagFilterSet
-from .models import Category, Professional, ProfessionalTag, Subcategory
-from .serializers import (CategorySerializer, ProfessionalSerializer,
+from .filtersets import ProfessionalContactFilterSet, ProfessionalTagFilterSet
+from .models import (Category, Professional, ProfessionalContact,
+                     ProfessionalTag, Subcategory)
+from .serializers import (CategorySerializer, ProfessionalContactSerializer,
+                          ProfessionalSerializer,
                           ProfessionalTagListSerializer,
                           ProfessionalTagSerializer, SubcategorySerializer)
+
+
+class ProfessionalContactViewSet(viewsets.ModelViewSet):
+    """The professional contact viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'professional__user'
+    serializer_class = ProfessionalContactSerializer
+    queryset = ProfessionalContact.objects.get_list()
+    search_fields = ('=id', 'contact__name', 'value')
+    filterset_class = ProfessionalContactFilterSet
 
 
 class ProfessionalTagViewSet(viewsets.ModelViewSet):

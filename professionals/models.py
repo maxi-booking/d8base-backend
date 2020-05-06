@@ -5,11 +5,13 @@ from adminsortable.models import SortableMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from contacts.models import ContactMixin
 from d8b.models import CommonInfo
 from users.models import User
 
-from .managers import (CategoryManager, ProfessionalManager,
-                       ProfessionalTagManager, SubcategoryManager)
+from .managers import (CategoryManager, ProfessionalContactManager,
+                       ProfessionalManager, ProfessionalTagManager,
+                       SubcategoryManager)
 
 
 class BaseCategory(CommonInfo):
@@ -181,3 +183,26 @@ class ProfessionalTag(BaseTag):
 
         abstract = False
         unique_together = (('name', 'professional'), )
+
+
+class ProfessionalContact(CommonInfo, ContactMixin):
+    """The professional contact class."""
+
+    objects = ProfessionalContactManager()
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='contacts',
+        verbose_name=_('professional'),
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: {self.contact} {self.value}'
+
+    class Meta(CommonInfo.Meta):
+        """The professional contact class META class."""
+
+        abstract = False
+        unique_together = (('value', 'professional', 'contact'), )

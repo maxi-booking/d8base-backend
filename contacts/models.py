@@ -40,3 +40,28 @@ class Contact(CommonInfo):
         """The contact class META class."""
 
         ordering = ('name', )
+
+
+class ContactMixin(models.Model):
+    """The contact mixin class."""
+
+    value = models.CharField(
+        verbose_name=_('value'),
+        max_length=255,
+    )
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name='%(app_label)s_%(class)s_contacts',
+        verbose_name=_('contact'),
+    )
+
+    @property
+    def contact_display(self) -> str:
+        """Return the name of the contact."""
+        return self.contact.name
+
+    class Meta():
+        """The contact mixin class META class."""
+
+        abstract = True

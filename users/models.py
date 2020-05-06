@@ -14,7 +14,7 @@ from imagekit.models import ImageSpecField, ProcessedImageField
 from imagekit.processors import SmartResize
 from phonenumber_field.modelfields import PhoneNumberField
 
-from contacts.models import Contact
+from contacts.models import ContactMixin
 from d8b.fields import LanguageField, TimezoneField, UnitsField
 from d8b.models import CommonInfo
 from d8b.services import DefaultFieldSetter, RandomFilenameGenerator
@@ -317,21 +317,11 @@ class UserLanguage(CommonInfo):
         unique_together = (('language', 'user'), )
 
 
-class UserContact(CommonInfo):
+class UserContact(ContactMixin, CommonInfo):
     """The user contact class."""
 
     objects = UserContactManager()
 
-    value = models.CharField(
-        verbose_name=_('value'),
-        max_length=255,
-    )
-    contact = models.ForeignKey(
-        Contact,
-        on_delete=models.CASCADE,
-        related_name='user_contacts',
-        verbose_name=_('contact'),
-    )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -339,17 +329,12 @@ class UserContact(CommonInfo):
         verbose_name=_('user'),
     )
 
-    @property
-    def contact_display(self) -> str:
-        """Return the name of the contact."""
-        return self.contact.name
-
     def __str__(self) -> str:
         """Return the string representation."""
         return f'{self.user}: {self.contact} {self.value}'
 
     class Meta(CommonInfo.Meta):
-        """The user language class META class."""
+        """The user contact class META class."""
 
         abstract = False
         unique_together = (('value', 'user', 'contact'), )

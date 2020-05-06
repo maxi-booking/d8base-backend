@@ -230,7 +230,7 @@ def test_user_professional_tags_update(
     client_with_token: Client,
     professional_tags: QuerySet,
 ):
-    """Should be able to update a user professional."""
+    """Should be able to update a user professional tag."""
     obj = professional_tags.filter(professional__user=user).first()
     response = client_with_token.patch(
         reverse('user-professional-tags-detail', args=[obj.pk]),
@@ -262,7 +262,7 @@ def test_user_professional_tags_delete(
     client_with_token: Client,
     professional_tags: QuerySet,
 ):
-    """Should be able to delete a user professionals."""
+    """Should be able to delete a user professional tag."""
     obj = professional_tags.filter(professional__user=user).first()
     response = client_with_token.delete(
         reverse('user-professional-tags-detail', args=[obj.pk]))
@@ -293,3 +293,122 @@ def test_professional_tags_list(
     assert response.status_code == 200
     assert data['count'] == OBJECTS_TO_CREATE * 4
     assert data['results'][0]['name'] == obj.name
+
+
+def test_user_professional_contacts_list(
+    user: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should return a professional contacts list."""
+    obj = professional_contacts.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-contacts-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 4
+    assert data['results'][0]['value'] == obj.value
+
+
+def test_user_professional_contact_detail(
+    user: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should return a user professional contact."""
+    obj = professional_contacts.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-contacts-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['contact'] == obj.contact.pk
+
+
+def test_user_professional_tags_contact_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_contacts.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-contacts-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_contacts_create(
+    user: User,
+    client_with_token: Client,
+    contacts: QuerySet,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional contact object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-contacts-list'),
+        {
+            'value': 'test professional contact',
+            'contact': contacts[0].pk,
+            'professional': obj.pk,
+        },
+    )
+    assert response.status_code == 201
+    assert obj.contacts.first().value == 'test professional contact'
+
+
+def test_user_professional_contacts_update(
+    user: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should be able to update a user professional contact."""
+    obj = professional_contacts.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-contacts-detail', args=[obj.pk]),
+        {
+            'value': 'new name',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.value == 'new name'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_contacts_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_contacts.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-contacts-detail', args=[obj.pk]),
+        {'name': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_contacts_delete(
+    user: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should be able to delete a user professional contact."""
+    obj = professional_contacts.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-contacts-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_contacts.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_contacts_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_contacts: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_contacts.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-contacts-detail', args=[obj.pk]))
+    assert response.status_code == 404

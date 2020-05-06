@@ -64,3 +64,4 @@ class UserContactViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = UserContactSerializer
     queryset = UserContact.objects.get_list()
+    filterset_fields = ('contact', )

@@ -4,7 +4,8 @@ from rest_framework import serializers
 
 from users.serializers import UserHiddenFieldMixin
 
-from .models import Category, Professional, ProfessionalTag, Subcategory
+from .models import (Category, Professional, ProfessionalContact,
+                     ProfessionalTag, Subcategory)
 
 
 class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
@@ -16,6 +17,21 @@ class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
         return Professional.objects.get_user_list(user=user)
 
 
+class ProfessionalContactSerializer(
+        serializers.ModelSerializer, ):
+    """The professional contact serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The professional contact class serializer META class."""
+
+        model = ProfessionalContact
+        fields = ('id', 'professional', 'contact', 'value', 'created',
+                  'modified', 'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
 class ProfessionalTagSerializer(
         serializers.ModelSerializer, ):
     """The professional tag serializer."""
@@ -23,7 +39,7 @@ class ProfessionalTagSerializer(
     professional = AccountProfessionalForeignKey()
 
     class Meta:
-        """The professional class serializer META class."""
+        """The professional tag class serializer META class."""
 
         model = ProfessionalTag
         fields = ('id', 'professional', 'name', 'created', 'modified',

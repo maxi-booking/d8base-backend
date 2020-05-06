@@ -1,9 +1,9 @@
 """The professionals routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import (CategoryViewSet, ProfessionalTagListViewSet,
-                    ProfessionalTagViewSet, ProfessionalViewSet,
-                    SubcategoryViewSet)
+from .views import (CategoryViewSet, ProfessionalContactViewSet,
+                    ProfessionalTagListViewSet, ProfessionalTagViewSet,
+                    ProfessionalViewSet, SubcategoryViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -18,4 +18,6 @@ def get_router() -> SimpleRouter:
                     'user-professionals')
     router.register(r'accounts/professional-tags', ProfessionalTagViewSet,
                     'user-professional-tags')
+    router.register(r'accounts/professional-contacts',
+                    ProfessionalContactViewSet, 'user-professional-contacts')
     return router

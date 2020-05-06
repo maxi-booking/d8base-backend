@@ -10,7 +10,8 @@ from reversion.admin import VersionAdmin
 
 from users.admin_fiters import UserFilter
 
-from .models import Category, Professional, ProfessionalTag, Subcategory
+from .models import (Category, Professional, ProfessionalContact,
+                     ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -56,6 +57,18 @@ class ProfessionalTagInlineAdmin(admin.TabularInline):
     extra = 3
 
 
+class ProfessionalContactInlineAdmin(admin.TabularInline):
+    """The professional contact admin class."""
+
+    model = ProfessionalContact
+    fields = ('id', 'contact', 'value', 'created', 'modified', 'created_by',
+              'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    autocomplete_fields = ('contact', )
+    classes = ['collapse']
+    extra = 1
+
+
 @admin.register(Professional)
 class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
@@ -68,7 +81,7 @@ class ProfessionalAdmin(VersionAdmin):
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     list_filter = ('level', 'subcategory', UserFilter)
     autocomplete_fields = ('user', )
-    inlines = (ProfessionalTagInlineAdmin, )
+    inlines = (ProfessionalTagInlineAdmin, ProfessionalContactInlineAdmin)
 
     fieldsets: Tuple = (
         ('General', {

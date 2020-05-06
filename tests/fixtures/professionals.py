@@ -4,8 +4,8 @@ import pytest
 from django.db.models.query import QuerySet
 
 from conftest import OBJECTS_TO_CREATE
-from professionals.models import (Category, Professional, ProfessionalTag,
-                                  Subcategory)
+from professionals.models import (Category, Professional, ProfessionalContact,
+                                  ProfessionalTag, Subcategory)
 from users.models import User
 
 # pylint: disable=redefined-outer-name
@@ -66,7 +66,7 @@ def professionals(
 
 @pytest.fixture
 def professional_tags(professionals: QuerySet, ) -> QuerySet:
-    """Return a professionals queryset."""
+    """Return a professional tags queryset."""
     for professional in professionals:
         for i in range(0, OBJECTS_TO_CREATE):
             ProfessionalTag.objects.create(
@@ -74,3 +74,21 @@ def professional_tags(professionals: QuerySet, ) -> QuerySet:
                 name=f'tag {professional.pk}-{i}',
             )
     return ProfessionalTag.objects.get_list()
+
+
+@pytest.fixture
+def professional_contacts(professionals: QuerySet,
+                          contacts: QuerySet) -> QuerySet:
+    """Return a professional contacts queryset."""
+    for professional in professionals:
+        ProfessionalContact.objects.create(
+            professional=professional,
+            contact=contacts[0],
+            value=f'{contacts[0]}',
+        )
+        ProfessionalContact.objects.create(
+            professional=professional,
+            contact=contacts[1],
+            value=f'{contacts[0]}',
+        )
+    return ProfessionalContact.objects.get_list()

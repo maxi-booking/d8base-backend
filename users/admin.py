@@ -102,6 +102,36 @@ class LanguageInlineAdmin(admin.TabularInline):
     extra = 1
 
 
+@admin.register(UserContact)
+class UserContactAdmin(admin.ModelAdmin):
+    """The user contacts admin."""
+
+    model: Type = UserContact
+    list_display = ('id', 'contact', 'value', 'user', 'created_by')
+    list_display_links = ('id', 'contact')
+    search_fields = ('=id', 'contact', 'user__email', 'user__lastname')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    list_filter = ('contact', UserFilter)
+    autocomplete_fields = ('user', 'contact')
+
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': (
+                'contact',
+                'value',
+            )
+        }),
+        ('Options', {
+            'fields':
+                ('user', 'created', 'modified', 'created_by', 'modified_by')
+        }),
+    )
+    list_select_related = ('created_by', 'user', 'contact')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
 class ContactInlineAdmin(admin.TabularInline):
     """The contacts inline admin."""
 
