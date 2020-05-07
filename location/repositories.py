@@ -104,17 +104,17 @@ class CityRepository(BaseRepository):
     prefetch_related: List[str] = ['alt_names']
 
     def find_by_name(
-            self,
-            *,
-            name: str,
-            queryset: Optional[QuerySet] = None,
+        self,
+        *,
+        name: str,
+        queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
         """Find cities by name."""
         if not queryset:
             queryset = self.get_list()
         return queryset.filter(
             Q(name__istartswith=name) | Q(name_std__istartswith=name)
-            | Q(alt_names__name__istartswith=name))
+            | Q(alt_names__name__istartswith=name)).distinct()
 
 
 class DistrictRepository(BaseRepository):
