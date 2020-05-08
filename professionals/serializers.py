@@ -45,7 +45,7 @@ class ProfessionalContactSerializer(
         """The professional contact class serializer META class."""
 
         model = ProfessionalContact
-        fields = ('id', 'professional', 'contact', 'value', 'created',
+        fields = ('id', 'professional', 'contact', 'contact_display', 'value', 'created',
                   'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
