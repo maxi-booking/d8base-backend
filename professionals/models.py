@@ -6,14 +6,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from contacts.models import ContactMixin
-from d8b.models import CommonInfo
+from d8b.models import CommonInfo, ValidationMixin
 from location.models import LocationMixin
 from location.services import LocationAutofiller
-from users.models import User
+from users.models import User, UserLocation
 
 from .managers import (CategoryManager, ProfessionalContactManager,
                        ProfessionalLocationManager, ProfessionalManager,
                        ProfessionalTagManager, SubcategoryManager)
+from .validators import validate_user_location
 
 
 class BaseCategory(CommonInfo):
@@ -208,11 +209,12 @@ class ProfessionalContact(CommonInfo, ContactMixin):
         unique_together = (('value', 'professional', 'contact'), )
 
 
-class ProfessionalLocation(CommonInfo, LocationMixin):
+class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
     """The user location class."""
 
     objects = ProfessionalLocationManager()
     autofiller = LocationAutofiller
+    validators = [validate_user_location]
 
     professional = models.ForeignKey(
         Professional,
@@ -224,6 +226,15 @@ class ProfessionalLocation(CommonInfo, LocationMixin):
         default=False,
         help_text=_('is default location?'),
         verbose_name=_('is default'),
+    )
+    user_location = models.ForeignKey(
+        UserLocation,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='professional_locations',
+        verbose_name=_('user location'),
+        help_text=_('user location to copy the location'),
     )
 
     def save(self, **kwargs):

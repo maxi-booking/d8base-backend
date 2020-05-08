@@ -2,36 +2,30 @@
 
 from rest_framework import serializers
 
+from d8b.serializers import ModelCleanFieldsSerializer
+from users.serializer_fields import AccountUserLocationForeignKey
 from users.serializers import UserHiddenFieldMixin
 
 from .models import (Category, Professional, ProfessionalContact,
                      ProfessionalLocation, ProfessionalTag, Subcategory)
+from .serializer_fields import AccountProfessionalForeignKey
 
 
-class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
-    """The professional field filtered by the request user."""
-
-    def get_queryset(self):
-        """Return the queryset."""
-        user = self.context['request'].user
-        return Professional.objects.get_user_list(user=user)
-
-
-class ProfessionalLocationSerializer(
-        serializers.ModelSerializer, ):
+class ProfessionalLocationSerializer(ModelCleanFieldsSerializer):
     """The professional location serializer."""
 
     professional = AccountProfessionalForeignKey()
+    user_location = AccountUserLocationForeignKey(required=False)
 
     class Meta:
         """The professional location class serializer META class."""
 
         model = ProfessionalLocation
 
-        fields = ('id', 'professional', 'country', 'region', 'subregion',
-                  'city', 'district', 'postal_code', 'address', 'coordinates',
-                  'units', 'timezone', 'created', 'modified', 'created_by',
-                  'modified_by')
+        fields = ('id', 'professional', 'user_location', 'country', 'region',
+                  'subregion', 'city', 'district', 'postal_code', 'address',
+                  'coordinates', 'units', 'timezone', 'created', 'modified',
+                  'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
@@ -45,8 +39,8 @@ class ProfessionalContactSerializer(
         """The professional contact class serializer META class."""
 
         model = ProfessionalContact
-        fields = ('id', 'professional', 'contact', 'value', 'created',
-                  'modified', 'created_by', 'modified_by')
+        fields = ('id', 'professional', 'contact', 'contact_display', 'value',
+                  'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

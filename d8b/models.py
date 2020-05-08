@@ -1,5 +1,5 @@
 """The d8b models module."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Callable, List, Optional
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +9,24 @@ from .middleware import ThreadSafeUserMiddleware
 
 if TYPE_CHECKING:
     from users.models import User  # noqa
+
+
+#TODO: test it
+class ValidationMixin(models.Model):
+    """The validation mixin to validate multiple dependent fields."""
+
+    validators: List[Callable[[models.Model], None]] = []
+
+    def clean(self):
+        """Validate the object."""
+        for validator in self.validators:
+            validator(self)
+        return super().clean()
+
+    class Meta():
+        """The metainformation."""
+
+        abstract = True
 
 
 class CommonInfo(TimeStampedModel):

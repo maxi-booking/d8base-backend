@@ -124,6 +124,10 @@ class UserLocationManager(models.Manager):
             'modified_by',
         )
 
+    def get_user_list(self, user: 'User') -> QuerySet:
+        """Return a list of user location filtered by user."""
+        return self.get_list().filter(user=user)
+
 
 class UserManager(BaseUserManager):
     """

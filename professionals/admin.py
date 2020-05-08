@@ -75,12 +75,12 @@ class ProfessionalLocationInlineAdmin(admin.StackedInline):
     """The location inline admin."""
 
     model = ProfessionalLocation
-    fields = ('id', 'country', 'region', 'subregion', 'city', 'district',
-              'postal_code', 'address', 'coordinates', 'is_default',
-              'timezone', 'units', 'created_by', 'modified_by')
+    fields = ('id', 'user_location', 'country', 'region', 'subregion', 'city',
+              'district', 'postal_code', 'address', 'coordinates',
+              'is_default', 'timezone', 'units', 'created_by', 'modified_by')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
-    autocomplete_fields = ('region', 'subregion', 'city', 'district',
-                           'postal_code')
+    autocomplete_fields = ('region', 'user_location', 'subregion', 'city',
+                           'district', 'postal_code')
     classes = ['collapse']
     extra = 1
 
@@ -128,6 +128,7 @@ class ProfessionalLocationAdmin(VersionAdmin):
     model: Type = ProfessionalLocation
     list_display = ('id', 'professional', 'country', 'region', 'city',
                     'district', 'coordinates', 'created', 'created_by')
+    list_display_links = ('id', 'professional')
     list_filter = (
         'country',
         RegionFilter,
@@ -140,15 +141,15 @@ class ProfessionalLocationAdmin(VersionAdmin):
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
 
     autocomplete_fields = ('professional', 'region', 'subregion', 'city',
-                           'district', 'postal_code')
+                           'district', 'postal_code', 'user_location')
     fieldsets: Tuple = (
         ('General', {
             'fields': ('country', 'region', 'subregion', 'city', 'district',
                        'postal_code', 'address', 'coordinates')
         }),
         ('Options', {
-            'fields': ('professional', 'units', 'timezone', 'created',
-                       'modified', 'created_by', 'modified_by')
+            'fields': ('professional', 'user_location', 'units', 'timezone',
+                       'created', 'modified', 'created_by', 'modified_by')
         }),
     )
     list_select_related = ('professional', 'professional__user', 'country',

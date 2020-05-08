@@ -3,7 +3,7 @@ import pytest
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
 
-from professionals.serializers import AccountProfessionalForeignKey
+from professionals.serializer_fields import AccountProfessionalForeignKey
 
 pytestmark = pytest.mark.django_db
 
