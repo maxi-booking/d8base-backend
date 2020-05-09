@@ -3,7 +3,6 @@
 from rest_framework import serializers
 
 
-#TODO: test it
 class ModelCleanFieldsSerializer(
         serializers.ModelSerializer, ):
     """The serializer to call the model clean method."""

@@ -4,10 +4,10 @@ from typing import List
 from cities.models import City, District, PostalCode, Region, Subregion
 from django.conf import settings
 
-from .interfaces import AbstractLocation
+from .interfaces import AbstractLocation, BaseLocationAutofiller
 
 
-class LocationAutofiller():
+class LocationAutofiller(BaseLocationAutofiller):
     """The location autofiller."""
 
     location: AbstractLocation

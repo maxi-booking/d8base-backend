@@ -1,10 +1,12 @@
 """The location interfaces module."""
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional
 
 from cities.models import (City, Country, District, PostalCode, Region,
                            Subregion)
+from django.contrib.gis.geos import Point
 
 
 @dataclass
@@ -19,3 +21,13 @@ class AbstractLocation():
     postal_code: Optional[PostalCode] = None
     timezone: Optional[str] = None
     units: int = 0
+    address: Optional[str] = None
+    coordinates: Optional[Point] = None
+
+
+class BaseLocationAutofiller(ABC):
+    """The base location autofiller."""
+
+    @abstractmethod
+    def autofill_location(self) -> AbstractLocation:
+        """Autofill the location."""

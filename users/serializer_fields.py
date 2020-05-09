@@ -5,7 +5,6 @@ from rest_framework import serializers
 from .models import UserLocation
 
 
-#TODO: test it
 class AccountUserLocationForeignKey(serializers.PrimaryKeyRelatedField):
     """The user location field filtered by the request user."""
 

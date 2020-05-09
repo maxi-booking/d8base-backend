@@ -11,7 +11,6 @@ if TYPE_CHECKING:
     from users.models import User  # noqa
 
 
-#TODO: test it
 class ValidationMixin(models.Model):
     """The validation mixin to validate multiple dependent fields."""
 

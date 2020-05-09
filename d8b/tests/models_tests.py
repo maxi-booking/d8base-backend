@@ -4,9 +4,10 @@ from django.db import connection
 from django.db.utils import ProgrammingError
 from django.test.client import Client
 from django.urls import reverse
+from pytest_mock.plugin import MockFixture
 
 import d8b.middleware
-from d8b.models import CommonInfo
+from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
 pytestmark = pytest.mark.django_db
@@ -18,7 +19,7 @@ pytestmark = pytest.mark.django_db
 def mock_common_info_class(django_db_blocker):
     """Get the mock of the CommomInfo class."""
 
-    class MockCommonInfo(CommonInfo):
+    class MockCommonInfo(CommonInfo, ValidationMixin):
         """The CommonInfo mock class."""
 
         @staticmethod
@@ -104,3 +105,14 @@ def test_common_info_set_user_fields_on_save_without_user(mock_common_info):
 
     assert mock_common_info.created_by is None
     assert mock_common_info.modified_by is None
+
+
+def test_validation_mixin(mock_common_info, mocker: MockFixture):
+    """Should run validators."""
+    validator1 = mocker.Mock(return_value='validator1')
+    validator2 = mocker.Mock(return_value='validator2')
+    mock_common_info.validators = [validator1, validator2]
+    mock_common_info.clean()
+
+    assert validator1.called
+    assert validator2.called

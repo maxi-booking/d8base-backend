@@ -17,13 +17,27 @@ def test_professional_location_save_autofill(
     professionals: QuerySet
 ):
     """Should call the LocationAutofiller on save."""
-    user_location = ProfessionalLocation()
-    user_location.professional = professionals[0]
-    user_location.country = countries[0]
-    user_location.city = cities[1]
-    user_location.save()
+    professional_location = ProfessionalLocation()
+    professional_location.professional = professionals[0]
+    professional_location.country = countries[0]
+    professional_location.city = cities[1]
+    professional_location.save()
 
-    assert user_location.country == cities[1].country
-    assert user_location.region == cities[1].region
-    assert user_location.subregion == cities[1].subregion
-    assert user_location.city == cities[1]
+    assert professional_location.country == cities[1].country
+    assert professional_location.region == cities[1].region
+    assert professional_location.subregion == cities[1].subregion
+    assert professional_location.city == cities[1]
+
+
+def test_professional_location_save_copy_autofill(
+    professionals: QuerySet,
+    user_locations: QuerySet
+):
+    """Should call the LocationCopyAutofiller on save."""
+    professional_location = ProfessionalLocation()
+    professional_location.professional = professionals[0]
+    professional_location.user_location = user_locations[0]
+    professional_location.save()
+
+    assert professional_location.country == user_locations[0].country
+    assert professional_location.address == user_locations[0].address

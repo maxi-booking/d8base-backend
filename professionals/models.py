@@ -14,6 +14,7 @@ from users.models import User, UserLocation
 from .managers import (CategoryManager, ProfessionalContactManager,
                        ProfessionalLocationManager, ProfessionalManager,
                        ProfessionalTagManager, SubcategoryManager)
+from .services import LocationCopyAutofiller
 from .validators import validate_user_location
 
 
@@ -79,14 +80,6 @@ class Subcategory(BaseCategory, SortableMixin):
 
 class Professional(CommonInfo):
     """The professional profile class."""
-
-    # reviews and rating
-    # services
-    # work experience *
-    # education *
-    # certifications *
-    # portfolio/photos
-    # payments
 
     objects = ProfessionalManager()
 
@@ -214,6 +207,7 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
 
     objects = ProfessionalLocationManager()
     autofiller = LocationAutofiller
+    copy_autofiller = LocationCopyAutofiller
     validators = [validate_user_location]
 
     professional = models.ForeignKey(
@@ -239,6 +233,7 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
 
     def save(self, **kwargs):
         """Save the object."""
+        self.copy_autofiller(self, self.user_location).autofill_location()
         self.autofiller(self).autofill_location()
         super().save(**kwargs)
 
