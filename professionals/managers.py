@@ -57,7 +57,13 @@ class ProfessionalManager(models.Manager):
 
     def get_list(self) -> QuerySet:
         """Return a list of professionals."""
-        return self.all().select_related('created_by', 'modified_by', 'user')
+        return self.all().select_related(
+            'created_by',
+            'modified_by',
+            'user',
+            'subcategory',
+            'subcategory__category',
+        )
 
     def get_user_list(self, user: User) -> QuerySet:
         """Return a list of professionals filtered by user."""

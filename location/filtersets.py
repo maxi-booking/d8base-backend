@@ -6,6 +6,10 @@ from django_filters import rest_framework as filters
 from location.repositories import CityRepository
 
 
+class NumberInFilter(filters.BaseInFilter, filters.NumberFilter):
+    """The number in filter class."""
+
+
 class CityFilterSet(filters.FilterSet):
     """The filter class for the city viewset class."""
 

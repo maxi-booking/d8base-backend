@@ -2,9 +2,9 @@
 from rest_framework.routers import SimpleRouter
 
 from .views import (CategoryViewSet, ProfessionalContactViewSet,
-                    ProfessionalLocationViewSet, ProfessionalTagListViewSet,
-                    ProfessionalTagViewSet, ProfessionalViewSet,
-                    SubcategoryViewSet)
+                    ProfessionalListViewSet, ProfessionalLocationViewSet,
+                    ProfessionalTagListViewSet, ProfessionalTagViewSet,
+                    ProfessionalViewSet, SubcategoryViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -15,6 +15,8 @@ def get_router() -> SimpleRouter:
                     'subcategories')
     router.register(r'professionals/tags', ProfessionalTagListViewSet,
                     'professional-tags')
+    router.register(r'professionals/professionals', ProfessionalListViewSet,
+                    'professionals')
     router.register(r'accounts/professionals', ProfessionalViewSet,
                     'user-professionals')
     router.register(r'accounts/professional-tags', ProfessionalTagViewSet,

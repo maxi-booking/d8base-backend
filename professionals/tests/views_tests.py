@@ -73,7 +73,7 @@ def test_user_professionals_detail(
 ):
     """Should return a user professional."""
     obj = professionals.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professionals-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -87,7 +87,7 @@ def test_user_professionals_detail_restricted_entry(
 ):
     """Should deny access to someone else's record."""
     obj = professionals.filter(user=admin).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professionals-detail', args=[obj.pk]))
     assert response.status_code == 404
 
@@ -188,7 +188,7 @@ def test_user_professional_tags_detail(
 ):
     """Should return a user professional tag."""
     obj = professional_tags.filter(professional__user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professional-tags-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -202,7 +202,7 @@ def test_user_professional_tags_detail_restricted_entry(
 ):
     """Should deny access to someone else's record."""
     obj = professional_tags.filter(professional__user=admin).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professional-tags-detail', args=[obj.pk]))
     assert response.status_code == 404
 
@@ -317,7 +317,7 @@ def test_user_professional_contact_detail(
 ):
     """Should return a user professional contact."""
     obj = professional_contacts.filter(professional__user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professional-contacts-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -331,7 +331,7 @@ def test_user_professional_tags_contact_restricted_entry(
 ):
     """Should deny access to someone else's record."""
     obj = professional_contacts.filter(professional__user=admin).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professional-contacts-detail', args=[obj.pk]))
     assert response.status_code == 404
 
@@ -436,7 +436,7 @@ def test_user_professional_locations_detail(
 ):
     """Should return a user professional location."""
     obj = professional_locations.filter(professional__user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-professional-locations-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -529,3 +529,29 @@ def test_user_professional_locations_delete_restricted_entry(
     response = client_with_token.delete(
         reverse('user-professional-locations-detail', args=[obj.pk]))
     assert response.status_code == 404
+
+
+def test_professionals_list(
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should return a professionals list."""
+    obj = professionals.filter().first()
+    response = client_with_token.get(reverse('professionals-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 4
+    assert data['results'][0]['name'] == obj.name
+
+
+def test_professional_detail(
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should return a user professional object."""
+    obj = professionals.filter().first()
+    response = client_with_token.get(
+        reverse('professionals-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['experience'] == obj.experience

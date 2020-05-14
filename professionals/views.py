@@ -5,11 +5,13 @@ from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from d8b.viewsets import AllowAnyViewSetMixin
 
 from .filtersets import (ProfessionalContactFilterSet,
+                         ProfessionalListFilterSet,
                          ProfessionalLocationFilterSet,
                          ProfessionalTagFilterSet)
 from .models import (Category, Professional, ProfessionalContact,
                      ProfessionalLocation, ProfessionalTag, Subcategory)
 from .serializers import (CategorySerializer, ProfessionalContactSerializer,
+                          ProfessionalListSerializer,
                           ProfessionalLocationSerializer,
                           ProfessionalSerializer,
                           ProfessionalTagListSerializer,
@@ -54,6 +56,15 @@ class ProfessionalTagListViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProfessionalTagListSerializer
     queryset = ProfessionalTag.objects.get_names()
     search_fields = ('name', )
+
+
+class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The professional list viewset."""
+
+    serializer_class = ProfessionalListSerializer
+    queryset = Professional.objects.get_list()
+    search_fields = ('=id', 'name', 'user__email')
+    filterset_class = ProfessionalListFilterSet
 
 
 class ProfessionalViewSet(viewsets.ModelViewSet):

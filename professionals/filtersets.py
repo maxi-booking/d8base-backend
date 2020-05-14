@@ -5,6 +5,8 @@ from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
+from d8b.filtersets import NumberInFilter
+
 from .models import (Professional, ProfessionalContact, ProfessionalLocation,
                      ProfessionalTag)
 
@@ -16,6 +18,22 @@ def _get_professionals(request: HttpRequest) -> QuerySet:
     return Professional.objects.get_user_list(user=request.user)
 
 
+class ProfessionalListFilterSet(filters.FilterSet):
+    """The filter class for the professional list viewset class."""
+
+    pk_in = NumberInFilter(field_name='id', lookup_expr='in')
+    experience = filters.NumericRangeFilter(
+        field_name='experience',
+        lookup_expr='range',
+    )
+
+    class Meta:
+        """The professional list filterset class serializer META class."""
+
+        model = Professional
+        fields = ('pk_in', 'subcategory', 'subcategory__category', 'level')
+
+
 class ProfessionalLocationFilterSet(filters.FilterSet):
     """The filter class for the professional location viewset class."""
 
@@ -24,7 +42,6 @@ class ProfessionalLocationFilterSet(filters.FilterSet):
         queryset=_get_professionals,
     )
 
-    @staticmethod
     class Meta:
         """The professional filterset class serializer META class."""
 
@@ -40,7 +57,6 @@ class ProfessionalContactFilterSet(filters.FilterSet):
         queryset=_get_professionals,
     )
 
-    @staticmethod
     class Meta:
         """The professional filterset class serializer META class."""
 
@@ -56,7 +72,6 @@ class ProfessionalTagFilterSet(filters.FilterSet):
         queryset=_get_professionals,
     )
 
-    @staticmethod
     class Meta:
         """The professional filterset class serializer META class."""
 

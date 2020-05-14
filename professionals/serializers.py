@@ -70,20 +70,28 @@ class ProfessionalTagListSerializer(
         fields = ('name', )
 
 
-class ProfessionalSerializer(
-        UserHiddenFieldMixin,
-        serializers.ModelSerializer,
-):
-    """The professional serializer."""
+class ProfessionalListSerializer(serializers.ModelSerializer):
+    """The professional list serializer."""
 
     class Meta:
-        """The professional class serializer META class."""
+        """The professional list class serializer META class."""
 
         model = Professional
         fields = ('id', 'user', 'name', 'description', 'company', 'experience',
                   'level', 'is_auto_order_confirmation', 'subcategory',
                   'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class ProfessionalSerializer(
+        ProfessionalListSerializer,
+        UserHiddenFieldMixin,
+        serializers.ModelSerializer,
+):
+    """The professional serializer."""
+
+    class Meta(ProfessionalListSerializer.Meta):
+        """The professional class serializer META class."""
 
 
 class CategorySerializer(serializers.ModelSerializer):
