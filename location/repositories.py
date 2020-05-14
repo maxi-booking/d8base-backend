@@ -158,7 +158,7 @@ class LanguageRepository():
 
     def get_list(self) -> List[Language]:
         """Return the list of languages."""
-        return [Language(l[0], l[1]) for l in self.languages]
+        return [Language(r[0], r[1]) for r in self.languages]
 
     def get(self, code: str) -> Language:
         """Return a languages object."""
