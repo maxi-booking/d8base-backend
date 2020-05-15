@@ -13,7 +13,8 @@ from users.admin_fiters import UserFilter
 
 from .admin_fiters import ProfessionalFilter
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalLocation, ProfessionalTag, Subcategory)
+                     ProfessionalEducation, ProfessionalLocation,
+                     ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -85,6 +86,18 @@ class ProfessionalLocationInlineAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProfessionalEducationInlineAdmin(admin.StackedInline):
+    """The education inline admin."""
+
+    model = ProfessionalEducation
+    fields = ('id', 'university', 'deegree', 'field_of_study', 'is_still_here',
+              'start_date', 'end_date', 'description', 'created_by',
+              'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
+    extra = 1
+
+
 @admin.register(Professional)
 class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
@@ -101,6 +114,7 @@ class ProfessionalAdmin(VersionAdmin):
         ProfessionalTagInlineAdmin,
         ProfessionalContactInlineAdmin,
         ProfessionalLocationInlineAdmin,
+        ProfessionalEducationInlineAdmin,
     )
 
     fieldsets: Tuple = (
@@ -116,6 +130,39 @@ class ProfessionalAdmin(VersionAdmin):
         }),
     )
     list_select_related = ('created_by', 'subcategory', 'user')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(ProfessionalEducation)
+class ProfessionalEducationAdmin(VersionAdmin):
+    """The education admin class."""
+
+    model: Type = ProfessionalEducation
+    list_display = ('id', 'professional', 'university', 'deegree',
+                    'start_date', 'end_date', 'created', 'created_by')
+    list_display_links = ('id', 'professional')
+    list_filter = (ProfessionalFilter, )
+    search_fields = ('=id', 'professional__name', 'professional__user__email',
+                     'university', 'description')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', )
+    fieldsets: Tuple = (
+        ('General', {
+            'fields':
+                ('university', 'deegree', 'field_of_study', 'description')
+        }),
+        ('Dates', {
+            'fields': ('is_still_here', 'start_date', 'end_date')
+        }),
+        ('Options', {
+            'fields': ('professional', 'created', 'modified', 'created_by',
+                       'modified_by')
+        }),
+    )
+    list_select_related = ('professional', 'professional__user', 'created_by')
 
     class Media:
         """Required for the AutocompleteFilter."""

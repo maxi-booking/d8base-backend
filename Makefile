@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage
+.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage tox
 
 dockerc := docker-compose -f .docker/docker-compose.yml
 pgsql_env := pgsql-variables.env
@@ -69,6 +69,9 @@ django_superuser:
 coverage:
 	pytest  --cov=./ --cov-report html
 	${BROWSER} htmlcov/index.html
+tox:
+	@echo 'Start tests'
+	tox -r
 test:
 	@echo 'Start tests'
-	tox
+	pytest --pydocstyle --pycodestyle --flakes --mypy --pylint --cov=./

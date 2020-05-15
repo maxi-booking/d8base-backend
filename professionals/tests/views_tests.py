@@ -443,7 +443,7 @@ def test_user_professional_locations_detail(
     assert data['address'] == obj.address
 
 
-def test_user_professional_tags_location_restricted_entry(
+def test_user_professional_location_restricted_entry(
     admin: User,
     client_with_token: Client,
     professional_locations: QuerySet,
@@ -555,3 +555,120 @@ def test_professional_detail(
     data = response.json()
     assert response.status_code == 200
     assert data['experience'] == obj.experience
+
+
+def test_user_professional_education_list(
+    user: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should return a professional education list."""
+    obj = professional_educations.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-education-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 2
+    assert data['results'][0]['deegree'] == obj.deegree
+
+
+def test_user_professional_educations_detail(
+    user: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should return a user professional education."""
+    obj = professional_educations.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-education-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['university'] == obj.university
+
+
+def test_user_professional_education_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_educations.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-education-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_education_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional education object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-education-list'),
+        {
+            'university': 'test university',
+            'professional': obj.pk,
+        },
+    )
+    assert response.status_code == 201
+    assert obj.educations.first().university == 'test university'
+
+
+def test_user_professional_education_update(
+    user: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should be able to update a user professional education."""
+    obj = professional_educations.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-education-detail', args=[obj.pk]),
+        {
+            'university': 'new university',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.university == 'new university'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_education_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_educations.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-education-detail', args=[obj.pk]),
+        {'university': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_education_delete(
+    user: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should be able to delete a user professional location."""
+    obj = professional_educations.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-education-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_educations.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_education_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_educations: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_educations.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-education-detail', args=[obj.pk]))
+    assert response.status_code == 404

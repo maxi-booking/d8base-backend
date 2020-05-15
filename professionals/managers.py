@@ -25,11 +25,24 @@ class ProfessionalLocationManager(models.Manager):
         )
 
 
+class ProfessionalEducationManager(models.Manager):
+    """The professional education manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of professional educations."""
+        return self.all().select_related(
+            'professional',
+            'created_by',
+            'modified_by',
+            'professional__user',
+        )
+
+
 class ProfessionalContactManager(models.Manager):
     """The professional contact manager."""
 
     def get_list(self) -> QuerySet:
-        """Return a list of professionals contacts."""
+        """Return a list of professional contacts."""
         return self.all().select_related(
             'professional',
             'contact',

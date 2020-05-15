@@ -7,11 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 from contacts.models import ContactMixin
 from d8b.models import CommonInfo, ValidationMixin
+from d8b.validators import validate_date_in_past, validate_start_end_dates
 from location.models import LocationMixin
 from location.services import LocationAutofiller
 from users.models import User, UserLocation
 
 from .managers import (CategoryManager, ProfessionalContactManager,
+                       ProfessionalEducationManager,
                        ProfessionalLocationManager, ProfessionalManager,
                        ProfessionalTagManager, SubcategoryManager)
 from .services import LocationCopyAutofiller
@@ -145,10 +147,7 @@ class Professional(CommonInfo):
 class BaseTag(CommonInfo):
     """The base tag class."""
 
-    name = models.CharField(
-        _('name'),
-        max_length=255,
-    )
+    name = models.CharField(_('name'), max_length=255)
 
     def __str__(self) -> str:
         """Return the string representation."""
@@ -202,8 +201,70 @@ class ProfessionalContact(CommonInfo, ContactMixin):
         unique_together = (('value', 'professional', 'contact'), )
 
 
+class ProfessionalEducation(CommonInfo, ValidationMixin):
+    """The professional education class."""
+
+    objects = ProfessionalEducationManager()
+    validators = [validate_start_end_dates]
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='educations',
+        verbose_name=_('professional'),
+    )
+    university = models.CharField(
+        _('university'),
+        max_length=255,
+        help_text=_('school/university'),
+    )
+    deegree = models.CharField(
+        _('deegree'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    field_of_study = models.CharField(
+        _('field_of_study'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    is_still_here = models.BooleanField(
+        _('is_still_here'),
+        default=False,
+        help_text=_('Is the professional still learning here?'),
+    )
+    start_date = models.DateField(
+        _('start date'),
+        blank=True,
+        null=True,
+        validators=[validate_date_in_past],
+    )
+    end_date = models.DateField(
+        _('end date'),
+        blank=True,
+        null=True,
+        validators=[validate_date_in_past],
+    )
+    description = models.TextField(
+        _('description'),
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: {self.university}'
+
+    class Meta(CommonInfo.Meta):
+        """The Metainformation."""
+
+        abstract = False
+
+
 class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
-    """The user location class."""
+    """The professional location class."""
 
     objects = ProfessionalLocationManager()
     autofiller = LocationAutofiller

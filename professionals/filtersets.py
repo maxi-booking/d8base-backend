@@ -7,8 +7,8 @@ from django_filters import rest_framework as filters
 
 from d8b.filtersets import NumberInFilter
 
-from .models import (Professional, ProfessionalContact, ProfessionalLocation,
-                     ProfessionalTag)
+from .models import (Professional, ProfessionalContact, ProfessionalEducation,
+                     ProfessionalLocation, ProfessionalTag)
 
 
 def _get_professionals(request: HttpRequest) -> QuerySet:
@@ -46,6 +46,21 @@ class ProfessionalLocationFilterSet(filters.FilterSet):
         """The professional filterset class serializer META class."""
 
         model = ProfessionalLocation
+        fields = ('professional', )
+
+
+class ProfessionalEductationFilterSet(filters.FilterSet):
+    """The filter class for the professional education viewset class."""
+
+    professional = filters.ModelChoiceFilter(
+        label=_('professional'),
+        queryset=_get_professionals,
+    )
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalEducation
         fields = ('professional', )
 
 

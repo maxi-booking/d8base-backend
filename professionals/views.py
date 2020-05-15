@@ -5,12 +5,15 @@ from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from d8b.viewsets import AllowAnyViewSetMixin
 
 from .filtersets import (ProfessionalContactFilterSet,
+                         ProfessionalEductationFilterSet,
                          ProfessionalListFilterSet,
                          ProfessionalLocationFilterSet,
                          ProfessionalTagFilterSet)
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalLocation, ProfessionalTag, Subcategory)
+                     ProfessionalEducation, ProfessionalLocation,
+                     ProfessionalTag, Subcategory)
 from .serializers import (CategorySerializer, ProfessionalContactSerializer,
+                          ProfessionalEducationSerializer,
                           ProfessionalListSerializer,
                           ProfessionalLocationSerializer,
                           ProfessionalSerializer,
@@ -37,6 +40,17 @@ class ProfessionalContactViewSet(viewsets.ModelViewSet):
     queryset = ProfessionalContact.objects.get_list()
     search_fields = ('=id', 'contact__name', 'value')
     filterset_class = ProfessionalContactFilterSet
+
+
+class ProfessionalEducationViewSet(viewsets.ModelViewSet):
+    """The professional education viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'professional__user'
+    serializer_class = ProfessionalEducationSerializer
+    queryset = ProfessionalEducation.objects.get_list()
+    search_fields = ('=id', 'university', 'deegree', 'field_of_study')
+    filterset_class = ProfessionalEductationFilterSet
 
 
 class ProfessionalTagViewSet(viewsets.ModelViewSet):

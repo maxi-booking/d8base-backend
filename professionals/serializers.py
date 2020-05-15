@@ -7,7 +7,8 @@ from users.serializer_fields import AccountUserLocationForeignKey
 from users.serializers import UserHiddenFieldMixin
 
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalLocation, ProfessionalTag, Subcategory)
+                     ProfessionalEducation, ProfessionalLocation,
+                     ProfessionalTag, Subcategory)
 from .serializer_fields import AccountProfessionalForeignKey
 
 
@@ -29,8 +30,7 @@ class ProfessionalLocationSerializer(ModelCleanFieldsSerializer):
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
-class ProfessionalContactSerializer(
-        serializers.ModelSerializer, ):
+class ProfessionalContactSerializer(serializers.ModelSerializer):
     """The professional contact serializer."""
 
     professional = AccountProfessionalForeignKey()
@@ -44,8 +44,7 @@ class ProfessionalContactSerializer(
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
-class ProfessionalTagSerializer(
-        serializers.ModelSerializer, ):
+class ProfessionalTagSerializer(serializers.ModelSerializer):
     """The professional tag serializer."""
 
     professional = AccountProfessionalForeignKey()
@@ -59,8 +58,7 @@ class ProfessionalTagSerializer(
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
-class ProfessionalTagListSerializer(
-        serializers.ModelSerializer, ):
+class ProfessionalTagListSerializer(serializers.ModelSerializer):
     """The professional tag list serializer."""
 
     class Meta:
@@ -114,3 +112,19 @@ class SubcategorySerializer(serializers.ModelSerializer):
         model = Subcategory
         fields = ('id', 'category', 'name', 'description', 'order')
         read_only_fields = ('order', )
+
+
+class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
+    """The professional education serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalEducation
+        fields = ('id', 'professional', 'university', 'deegree',
+                  'field_of_study', 'is_still_here', 'start_date', 'end_date',
+                  'description', 'created', 'modified', 'created_by',
+                  'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')

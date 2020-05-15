@@ -2,14 +2,15 @@
 
 from typing import List
 
+import arrow
 import pytest
 from cities.models import PostalCode
 from django.db.models.query import QuerySet
 
 from conftest import OBJECTS_TO_CREATE
 from professionals.models import (Category, Professional, ProfessionalContact,
-                                  ProfessionalLocation, ProfessionalTag,
-                                  Subcategory)
+                                  ProfessionalEducation, ProfessionalLocation,
+                                  ProfessionalTag, Subcategory)
 from users.models import User
 
 # pylint: disable=redefined-outer-name
@@ -118,3 +119,19 @@ def professional_locations(
             address=f'test address {postal_codes[1]}',
         )
     return ProfessionalLocation.objects.get_list()
+
+
+@pytest.fixture
+def professional_educations(professionals: QuerySet, ) -> QuerySet:
+    """Return a professional educations queryset."""
+    for professional in professionals:
+        ProfessionalEducation.objects.create(
+            professional=professional,
+            university=f'university_{professional.pk}',
+            deegree=f'degree_{professional.pk}',
+            field_of_study=f'field_of_study_{professional.pk}',
+            description=f'description_{professional.pk}',
+            start_date=arrow.utcnow().shift(days=-3).date(),
+            end_date=arrow.utcnow().shift(days=-2).date(),
+        )
+    return ProfessionalEducation.objects.get_list()
