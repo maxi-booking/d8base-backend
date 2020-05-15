@@ -49,6 +49,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'change_professionaleducation',
     'delete_professionaleducation',
 
+    # professional experience
+    'add_professionalexperience',
+    'change_professionalexperience',
+    'delete_professionalexperience',
+
     # professional locations
     'add_professionallocation',
     'change_professionallocation',

@@ -9,7 +9,8 @@ from django.db.models.query import QuerySet
 
 from conftest import OBJECTS_TO_CREATE
 from professionals.models import (Category, Professional, ProfessionalContact,
-                                  ProfessionalEducation, ProfessionalLocation,
+                                  ProfessionalEducation,
+                                  ProfessionalExperience, ProfessionalLocation,
                                   ProfessionalTag, Subcategory)
 from users.models import User
 
@@ -122,7 +123,7 @@ def professional_locations(
 
 
 @pytest.fixture
-def professional_educations(professionals: QuerySet, ) -> QuerySet:
+def professional_educations(professionals: QuerySet) -> QuerySet:
     """Return a professional educations queryset."""
     for professional in professionals:
         ProfessionalEducation.objects.create(
@@ -135,3 +136,18 @@ def professional_educations(professionals: QuerySet, ) -> QuerySet:
             end_date=arrow.utcnow().shift(days=-2).date(),
         )
     return ProfessionalEducation.objects.get_list()
+
+
+@pytest.fixture
+def professional_experience(professionals: QuerySet) -> QuerySet:
+    """Return a professional experience queryset."""
+    for professional in professionals:
+        ProfessionalExperience.objects.create(
+            professional=professional,
+            title=f'title_{professional.pk}',
+            company=f'company_{professional.pk}',
+            description=f'description_{professional.pk}',
+            start_date=arrow.utcnow().shift(days=-3).date(),
+            end_date=arrow.utcnow().shift(days=-2).date(),
+        )
+    return ProfessionalExperience.objects.get_list()

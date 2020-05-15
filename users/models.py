@@ -45,14 +45,22 @@ class User(AbstractUser):
     objects: UserManager = UserManager()
 
     username = None
-    email = models.EmailField(_('email'), unique=True)
+    email = models.EmailField(
+        _('email'),
+        unique=True,
+        db_index=True,
+    )
     patronymic = models.CharField(
         _('patronymic'),
         max_length=150,
         blank=True,
         null=True,
     )
-    phone = PhoneNumberField(blank=True, null=True)
+    phone = PhoneNumberField(
+        blank=True,
+        null=True,
+        db_index=True,
+    )
     gender = models.PositiveIntegerField(
         _('gender'),
         choices=GENDER_CHOICES,
@@ -228,6 +236,7 @@ class UserLanguage(CommonInfo):
         default=True,
         help_text=_('is native language?'),
         verbose_name=_('is native'),
+        db_index=True,
     )
     user = models.ForeignKey(
         User,

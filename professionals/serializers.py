@@ -7,8 +7,8 @@ from users.serializer_fields import AccountUserLocationForeignKey
 from users.serializers import UserHiddenFieldMixin
 
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalEducation, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalEducation, ProfessionalExperience,
+                     ProfessionalLocation, ProfessionalTag, Subcategory)
 from .serializer_fields import AccountProfessionalForeignKey
 
 
@@ -127,4 +127,19 @@ class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
                   'field_of_study', 'is_still_here', 'start_date', 'end_date',
                   'description', 'created', 'modified', 'created_by',
                   'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class ProfessionalExperienceSerializer(ModelCleanFieldsSerializer):
+    """The professional experience serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalExperience
+        fields = ('id', 'professional', 'title', 'company', 'is_still_here',
+                  'start_date', 'end_date', 'description', 'created',
+                  'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')

@@ -13,8 +13,8 @@ from users.admin_fiters import UserFilter
 
 from .admin_fiters import ProfessionalFilter
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalEducation, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalEducation, ProfessionalExperience,
+                     ProfessionalLocation, ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -98,6 +98,17 @@ class ProfessionalEducationInlineAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProfessionalExperienceInlineAdmin(admin.StackedInline):
+    """The experience inline admin."""
+
+    model = ProfessionalExperience
+    fields = ('id', 'title', 'company', 'is_still_here', 'start_date',
+              'end_date', 'description', 'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
+    extra = 1
+
+
 @admin.register(Professional)
 class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
@@ -115,6 +126,7 @@ class ProfessionalAdmin(VersionAdmin):
         ProfessionalContactInlineAdmin,
         ProfessionalLocationInlineAdmin,
         ProfessionalEducationInlineAdmin,
+        ProfessionalExperienceInlineAdmin,
     )
 
     fieldsets: Tuple = (
@@ -153,6 +165,38 @@ class ProfessionalEducationAdmin(VersionAdmin):
         ('General', {
             'fields':
                 ('university', 'deegree', 'field_of_study', 'description')
+        }),
+        ('Dates', {
+            'fields': ('is_still_here', 'start_date', 'end_date')
+        }),
+        ('Options', {
+            'fields': ('professional', 'created', 'modified', 'created_by',
+                       'modified_by')
+        }),
+    )
+    list_select_related = ('professional', 'professional__user', 'created_by')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(ProfessionalExperience)
+class ProfessionalExperienceAdmin(VersionAdmin):
+    """The experience admin class."""
+
+    model: Type = ProfessionalExperience
+    list_display = ('id', 'professional', 'title', 'company', 'start_date',
+                    'end_date', 'created', 'created_by')
+    list_display_links = ('id', 'professional')
+    list_filter = (ProfessionalFilter, )
+    search_fields = ('=id', 'professional__name', 'professional__user__email',
+                     'title', 'company')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', )
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('title', 'company', 'description')
         }),
         ('Dates', {
             'fields': ('is_still_here', 'start_date', 'end_date')

@@ -18,6 +18,7 @@ class Contact(CommonInfo):
         max_length=150,
         blank=True,
         null=True,
+        db_index=True,
     )
     countries = models.ManyToManyField(
         Country,
@@ -48,6 +49,7 @@ class ContactMixin(models.Model):
     value = models.CharField(
         verbose_name=_('value'),
         max_length=255,
+        db_index=True,
     )
     contact = models.ForeignKey(
         Contact,

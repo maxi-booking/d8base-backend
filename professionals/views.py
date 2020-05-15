@@ -6,19 +6,19 @@ from d8b.viewsets import AllowAnyViewSetMixin
 
 from .filtersets import (ProfessionalContactFilterSet,
                          ProfessionalEductationFilterSet,
+                         ProfessionalExperienceFilterSet,
                          ProfessionalListFilterSet,
                          ProfessionalLocationFilterSet,
                          ProfessionalTagFilterSet)
 from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalEducation, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
-from .serializers import (CategorySerializer, ProfessionalContactSerializer,
-                          ProfessionalEducationSerializer,
-                          ProfessionalListSerializer,
-                          ProfessionalLocationSerializer,
-                          ProfessionalSerializer,
-                          ProfessionalTagListSerializer,
-                          ProfessionalTagSerializer, SubcategorySerializer)
+                     ProfessionalEducation, ProfessionalExperience,
+                     ProfessionalLocation, ProfessionalTag, Subcategory)
+from .serializers import (
+    CategorySerializer, ProfessionalContactSerializer,
+    ProfessionalEducationSerializer, ProfessionalExperienceSerializer,
+    ProfessionalListSerializer, ProfessionalLocationSerializer,
+    ProfessionalSerializer, ProfessionalTagListSerializer,
+    ProfessionalTagSerializer, SubcategorySerializer)
 
 
 class ProfessionalLocationViewSet(viewsets.ModelViewSet):
@@ -51,6 +51,17 @@ class ProfessionalEducationViewSet(viewsets.ModelViewSet):
     queryset = ProfessionalEducation.objects.get_list()
     search_fields = ('=id', 'university', 'deegree', 'field_of_study')
     filterset_class = ProfessionalEductationFilterSet
+
+
+class ProfessionalExperienceViewSet(viewsets.ModelViewSet):
+    """The professional education viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'professional__user'
+    serializer_class = ProfessionalExperienceSerializer
+    queryset = ProfessionalExperience.objects.get_list()
+    search_fields = ('=id', 'title', 'company')
+    filterset_class = ProfessionalExperienceFilterSet
 
 
 class ProfessionalTagViewSet(viewsets.ModelViewSet):

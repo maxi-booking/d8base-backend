@@ -15,6 +15,7 @@ from users.models import User, UserLocation
 
 from .managers import (CategoryManager, ProfessionalContactManager,
                        ProfessionalEducationManager,
+                       ProfessionalExperienceManager,
                        ProfessionalLocationManager, ProfessionalManager,
                        ProfessionalTagManager, SubcategoryManager)
 from .services import LocationCopyAutofiller
@@ -29,6 +30,7 @@ class BaseCategory(CommonInfo):
         max_length=255,
         blank=True,
         null=True,
+        db_index=True,
     )
     description = models.CharField(
         _('description'),
@@ -98,6 +100,7 @@ class Professional(CommonInfo):
     name = models.CharField(
         _('name'),
         max_length=255,
+        db_index=True,
     )
     slug = models.CharField(
         _('slug'),
@@ -123,6 +126,7 @@ class Professional(CommonInfo):
         _('years of experience'),
         null=True,
         blank=True,
+        db_index=True,
     )
     level = models.CharField(
         _('level'),
@@ -130,11 +134,13 @@ class Professional(CommonInfo):
         choices=LEVEL_CHOICES,
         null=True,
         blank=True,
+        db_index=True,
     )
     is_auto_order_confirmation = models.BooleanField(
         default=True,
         help_text=_('are orders confirmed automatically?'),
         verbose_name=_('is auto order confirmation?'),
+        db_index=True,
     )
     subcategory = models.ForeignKey(
         Subcategory,
@@ -162,7 +168,11 @@ class Professional(CommonInfo):
 class BaseTag(CommonInfo):
     """The base tag class."""
 
-    name = models.CharField(_('name'), max_length=255)
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+        db_index=True,
+    )
 
     def __str__(self) -> str:
         """Return the string representation."""
@@ -214,6 +224,59 @@ class ProfessionalContact(CommonInfo, ContactMixin):
 
         abstract = False
         unique_together = (('value', 'professional', 'contact'), )
+
+
+class ProfessionalExperience(CommonInfo, ValidationMixin):
+    """The professional experience class."""
+
+    validators = [validate_start_end_dates]
+    objects = ProfessionalExperienceManager()
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='experience_entries',
+        verbose_name=_('professional'),
+    )
+    title = models.CharField(
+        _('title'),
+        max_length=255,
+    )
+    company = models.CharField(
+        _('company'),
+        max_length=255,
+    )
+    is_still_here = models.BooleanField(
+        _('is_still_here'),
+        default=False,
+        help_text=_('Is the professional still working here?'),
+    )
+    start_date = models.DateField(
+        _('start date'),
+        blank=True,
+        null=True,
+        validators=[validate_date_in_past],
+    )
+    end_date = models.DateField(
+        _('end date'),
+        blank=True,
+        null=True,
+        validators=[validate_date_in_past],
+    )
+    description = models.TextField(
+        _('description'),
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: {self.title} {self.company}'
+
+    class Meta(CommonInfo.Meta):
+        """The Metainformation."""
+
+        abstract = False
 
 
 class ProfessionalEducation(CommonInfo, ValidationMixin):
@@ -296,6 +359,7 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
         default=False,
         help_text=_('is default location?'),
         verbose_name=_('is default'),
+        db_index=True,
     )
     user_location = models.ForeignKey(
         UserLocation,

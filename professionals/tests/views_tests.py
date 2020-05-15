@@ -654,7 +654,7 @@ def test_user_professional_education_delete(
     client_with_token: Client,
     professional_educations: QuerySet,
 ):
-    """Should be able to delete a user professional location."""
+    """Should be able to delete a user professional education."""
     obj = professional_educations.filter(professional__user=user).first()
     response = client_with_token.delete(
         reverse('user-professional-education-detail', args=[obj.pk]))
@@ -671,4 +671,122 @@ def test_user_professional_education_delete_restricted_entry(
     obj = professional_educations.filter(professional__user=admin).first()
     response = client_with_token.delete(
         reverse('user-professional-education-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_experience_list(
+    user: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should return a professional experience list."""
+    obj = professional_experience.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-experience-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 2
+    assert data['results'][0]['company'] == obj.company
+
+
+def test_user_professional_experience_detail(
+    user: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should return a user professional experience."""
+    obj = professional_experience.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-experience-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['title'] == obj.title
+
+
+def test_user_professional_experience_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_experience.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-experience-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_experience_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional experience object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-experience-list'),
+        {
+            'title': 'test title',
+            'company': 'test company',
+            'professional': obj.pk,
+        },
+    )
+    assert response.status_code == 201
+    assert obj.experience_entries.first().company == 'test company'
+
+
+def test_user_professional_experience_update(
+    user: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should be able to update a user professional experience."""
+    obj = professional_experience.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-experience-detail', args=[obj.pk]),
+        {
+            'company': 'new company',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.company == 'new company'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_experience_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_experience.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-experience-detail', args=[obj.pk]),
+        {'title': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_experience_delete(
+    user: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should be able to delete a user professional experience."""
+    obj = professional_experience.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-experience-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_experience.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_experience_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_experience: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_experience.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-experience-detail', args=[obj.pk]))
     assert response.status_code == 404
