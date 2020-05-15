@@ -103,8 +103,8 @@ class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
 
     model: Type = Professional
-    list_display = ('id', 'name', 'subcategory', 'level', 'experience', 'user',
-                    'created_by')
+    list_display = ('id', 'name', 'slug', 'subcategory', 'level', 'experience',
+                    'user', 'created_by')
     list_display_links = ('id', 'name')
     search_fields = ('=id', 'name', 'user__email', 'user__lastname')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
@@ -125,7 +125,7 @@ class ProfessionalAdmin(VersionAdmin):
             'fields': ('experience', 'level')
         }),
         ('Options', {
-            'fields': ('is_auto_order_confirmation', 'user', 'created',
+            'fields': ('is_auto_order_confirmation', 'slug', 'user', 'created',
                        'modified', 'created_by', 'modified_by')
         }),
     )

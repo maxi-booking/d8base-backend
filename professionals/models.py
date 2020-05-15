@@ -2,6 +2,7 @@
 
 from adminsortable.fields import SortableForeignKey
 from adminsortable.models import SortableMixin
+from django.core.validators import validate_slug
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -98,6 +99,15 @@ class Professional(CommonInfo):
         _('name'),
         max_length=255,
     )
+    slug = models.CharField(
+        _('slug'),
+        null=True,
+        blank=True,
+        max_length=255,
+        validators=[validate_slug],
+        unique=True,
+        db_index=True,
+    )
     description = models.TextField(
         _('description'),
         null=True,
@@ -142,6 +152,11 @@ class Professional(CommonInfo):
     def __str__(self) -> str:
         """Return the string representation."""
         return f'{self.user}: {self.name}'
+
+    class Meta(CommonInfo.Meta):
+        """The contact class META class."""
+
+        abstract = False
 
 
 class BaseTag(CommonInfo):
