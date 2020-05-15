@@ -26,6 +26,7 @@ def test_validate_star_end_dates():
     with pytest.raises(ValidationError):
         validate_start_end_dates(obj)
 
+    obj.start_date = arrow.utcnow().shift(days=-4).date()
     obj.is_still_here = True
 
     with pytest.raises(ValidationError):
