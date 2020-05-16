@@ -38,6 +38,19 @@ class ProfessionalEducationManager(models.Manager):
         )
 
 
+class ProfessionalCertificateManager(models.Manager):
+    """The professional certificate manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of professional certificates."""
+        return self.all().select_related(
+            'professional',
+            'created_by',
+            'modified_by',
+            'professional__user',
+        )
+
+
 class ProfessionalExperienceManager(models.Manager):
     """The professional education manager."""
 

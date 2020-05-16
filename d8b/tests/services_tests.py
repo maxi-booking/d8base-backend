@@ -19,8 +19,8 @@ def test_random_filename_generator():
 
     generator = RandomFilenameGenerator('test_path', 'test_field')
 
-    assert 'test_path/test id/' in generator(
-        MockInstance('test id'),
+    assert 'test_path/test-id/' in generator(
+        MockInstance('test-id'),
         'test.jpg',
     )
     path1 = generator(MockInstance('test id'), 'test.jpg')

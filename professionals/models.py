@@ -2,18 +2,23 @@
 
 from adminsortable.fields import SortableForeignKey
 from adminsortable.models import SortableMixin
+from django.conf import settings
 from django.core.validators import validate_slug
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFit, SmartResize
 
 from contacts.models import ContactMixin
 from d8b.models import CommonInfo, ValidationMixin
+from d8b.services import RandomFilenameGenerator
 from d8b.validators import validate_date_in_past, validate_start_end_dates
 from location.models import LocationMixin
 from location.services import LocationAutofiller
 from users.models import User, UserLocation
 
-from .managers import (CategoryManager, ProfessionalContactManager,
+from .managers import (CategoryManager, ProfessionalCertificateManager,
+                       ProfessionalContactManager,
                        ProfessionalEducationManager,
                        ProfessionalExperienceManager,
                        ProfessionalLocationManager, ProfessionalManager,
@@ -272,6 +277,78 @@ class ProfessionalExperience(CommonInfo, ValidationMixin):
     def __str__(self) -> str:
         """Return the string representation."""
         return f'{self.professional}: {self.title} {self.company}'
+
+    class Meta(CommonInfo.Meta):
+        """The Metainformation."""
+
+        abstract = False
+
+
+class ProfessionalCertificate(CommonInfo):
+    """The professional certificate class."""
+
+    objects = ProfessionalCertificateManager()
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='certificates',
+        verbose_name=_('professional'),
+    )
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+        db_index=True,
+    )
+    organization = models.CharField(
+        _('organization'),
+        max_length=255,
+    )
+    date = models.DateField(
+        _('date'),
+        blank=True,
+        null=True,
+        validators=[validate_date_in_past],
+    )
+    certificate_id = models.CharField(
+        _('certificate_id'),
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    url = models.URLField(
+        _('certificate url'),
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    photo = ProcessedImageField(
+        blank=True,
+        null=True,
+        upload_to=RandomFilenameGenerator('certificates', 'professional'),
+        processors=[
+            ResizeToFit(
+                width=settings.D8B_CERTIFICATE_WIDTH,
+                height=settings.D8B_CERTIFICATE_HEIGHT,
+                upscale=False,
+            )
+        ],
+        format='PNG',
+    )
+    photo_thumbnail = ImageSpecField(
+        source='photo',
+        processors=[
+            SmartResize(
+                width=settings.D8B_CERTIFICATE_THUMBNAIL_WIDTH,
+                height=settings.D8B_CERTIFICATE_THUMBNAIL_HEIGHT,
+            )
+        ],
+        format='PNG',
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: {self.name}'
 
     class Meta(CommonInfo.Meta):
         """The Metainformation."""

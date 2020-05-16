@@ -1,14 +1,16 @@
 """The users serializers module."""
 
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from d8b.serializers import ModelCleanFieldsSerializer
 from users.serializer_fields import AccountUserLocationForeignKey
 from users.serializers import UserHiddenFieldMixin
 
-from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalEducation, ProfessionalExperience,
-                     ProfessionalLocation, ProfessionalTag, Subcategory)
+from .models import (Category, Professional, ProfessionalCertificate,
+                     ProfessionalContact, ProfessionalEducation,
+                     ProfessionalExperience, ProfessionalLocation,
+                     ProfessionalTag, Subcategory)
 from .serializer_fields import AccountProfessionalForeignKey
 
 
@@ -112,6 +114,24 @@ class SubcategorySerializer(serializers.ModelSerializer):
         model = Subcategory
         fields = ('id', 'category', 'name', 'description', 'order')
         read_only_fields = ('order', )
+
+
+class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
+    """The professional certificate serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=False)
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalCertificate
+        fields = ('id', 'professional', 'name', 'organization', 'date',
+                  'certificate_id', 'url', 'photo', 'photo_thumbnail',
+                  'created', 'modified', 'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):

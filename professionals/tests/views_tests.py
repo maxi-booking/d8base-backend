@@ -3,6 +3,7 @@ import pytest
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
+from django.utils.text import slugify
 
 from conftest import OBJECTS_TO_CREATE
 from d8b.lang import select_locale
@@ -789,4 +790,135 @@ def test_user_professional_experience_delete_restricted_entry(
     obj = professional_experience.filter(professional__user=admin).first()
     response = client_with_token.delete(
         reverse('user-professional-experience-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_certificate_list(
+    user: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should return a professional certificates list."""
+    obj = professional_certificates.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-certificates-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 2
+    assert data['results'][0]['organization'] == obj.organization
+
+
+def test_user_professional_certificate_detail(
+    user: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should return a user professional certificates."""
+    obj = professional_certificates.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-certificates-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['name'] == obj.name
+
+
+def test_user_professional_certificate_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_certificates.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-certificates-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_certificate_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional certificates object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-certificates-list'),
+        {
+            'name':
+                'test name',
+            'organization':
+                'test organization',
+            'professional':
+                obj.pk,
+            'photo':
+                ('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAA'
+                 'AB/HNKOAAAAGFBMVEXMzMyWlpajo6O3t7fFxcWcnJyxsbG+vr50Rsl6AAAAC'
+                 'XBIWXMAAA7EAAAOxAGVKw4bAAAAJklEQVQImWNgwADKDAwsAQyuDAzMAgyMb'
+                 'OYMAgyuLApAUhnMRgIANvcCBwsFJwYAAAAASUVORK5CYII=')
+        },
+    )
+    certificate = obj.certificates.first()
+    photo_path = f'certificates/{slugify(obj)}'
+    assert response.status_code == 201
+    assert certificate.name == 'test name'
+    assert photo_path in certificate.photo.name
+    assert certificate.photo_thumbnail is not None
+    certificate.photo.delete()
+
+
+def test_user_professional_certificate_update(
+    user: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should be able to update a user professional certificates."""
+    obj = professional_certificates.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-certificates-detail', args=[obj.pk]),
+        {
+            'organization': 'new organization',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.organization == 'new organization'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_certificates_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_certificates.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-certificates-detail', args=[obj.pk]),
+        {'title': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_certificate_delete(
+    user: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should be able to delete a user professional certificates."""
+    obj = professional_certificates.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-certificates-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_certificates.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_certificates_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_certificates: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_certificates.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-certificates-detail', args=[obj.pk]))
     assert response.status_code == 404

@@ -10,6 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
+from django.utils.text import slugify
 from rest_framework.test import APIClient
 
 from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, USER_EMAIL, USER_PASSWORD
@@ -71,7 +72,7 @@ def test_accounts_profile_update(admin: User, admin_client: Client):
     )
     admin.refresh_from_db()
     data = response.json()
-    avatar_path = f'avatars/{ADMIN_EMAIL}'
+    avatar_path = f'avatars/{slugify(ADMIN_EMAIL)}'
     assert response.status_code == 200
     assert response.accepted_media_type == 'application/json'
     assert data['email'] == ADMIN_EMAIL

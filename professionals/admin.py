@@ -12,9 +12,10 @@ from location.admin_filters import CityFilter, DistrictFilter, RegionFilter
 from users.admin_fiters import UserFilter
 
 from .admin_fiters import ProfessionalFilter
-from .models import (Category, Professional, ProfessionalContact,
-                     ProfessionalEducation, ProfessionalExperience,
-                     ProfessionalLocation, ProfessionalTag, Subcategory)
+from .models import (Category, Professional, ProfessionalCertificate,
+                     ProfessionalContact, ProfessionalEducation,
+                     ProfessionalExperience, ProfessionalLocation,
+                     ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -109,6 +110,17 @@ class ProfessionalExperienceInlineAdmin(admin.StackedInline):
     extra = 1
 
 
+class ProfessionalCertificateInlineAdmin(admin.StackedInline):
+    """The certificate inline admin."""
+
+    model = ProfessionalCertificate
+    fields = ('id', 'name', 'organization', 'date', 'certificate_id', 'url',
+              'photo', 'created_by', 'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
+    extra = 1
+
+
 @admin.register(Professional)
 class ProfessionalAdmin(VersionAdmin):
     """The professional admin class."""
@@ -127,6 +139,7 @@ class ProfessionalAdmin(VersionAdmin):
         ProfessionalLocationInlineAdmin,
         ProfessionalEducationInlineAdmin,
         ProfessionalExperienceInlineAdmin,
+        ProfessionalCertificateInlineAdmin,
     )
 
     fieldsets: Tuple = (
@@ -200,6 +213,38 @@ class ProfessionalExperienceAdmin(VersionAdmin):
         }),
         ('Dates', {
             'fields': ('is_still_here', 'start_date', 'end_date')
+        }),
+        ('Options', {
+            'fields': ('professional', 'created', 'modified', 'created_by',
+                       'modified_by')
+        }),
+    )
+    list_select_related = ('professional', 'professional__user', 'created_by')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(ProfessionalCertificate)
+class ProfessionalCertificateAdmin(VersionAdmin):
+    """The certificate admin class."""
+
+    model: Type = ProfessionalCertificate
+    list_display = ('id', 'professional', 'name', 'organization', 'date',
+                    'created', 'created_by')
+    list_display_links = ('id', 'professional')
+    list_filter = (ProfessionalFilter, )
+    search_fields = ('=id', 'professional__name', 'professional__user__email',
+                     'name', 'organization')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', )
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('name', 'organization', 'date')
+        }),
+        ('Certificate', {
+            'fields': ('certificate_id', 'url', 'photo')
         }),
         ('Options', {
             'fields': ('professional', 'created', 'modified', 'created_by',

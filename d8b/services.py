@@ -4,6 +4,7 @@ import os
 import uuid
 
 from django.utils.deconstruct import deconstructible
+from django.utils.text import slugify
 
 from .interfaces import AbstractDefaultEntry
 
@@ -50,7 +51,7 @@ class RandomFilenameGenerator():
         extension = os.path.splitext(filename)[1]
 
         return self.path.format(
-            getattr(instance, self.id_field, '_'),
+            slugify(getattr(instance, self.id_field, '_'), True),
             uuid.uuid4(),
             extension,
         )

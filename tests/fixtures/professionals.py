@@ -8,7 +8,8 @@ from cities.models import PostalCode
 from django.db.models.query import QuerySet
 
 from conftest import OBJECTS_TO_CREATE
-from professionals.models import (Category, Professional, ProfessionalContact,
+from professionals.models import (Category, Professional,
+                                  ProfessionalCertificate, ProfessionalContact,
                                   ProfessionalEducation,
                                   ProfessionalExperience, ProfessionalLocation,
                                   ProfessionalTag, Subcategory)
@@ -151,3 +152,18 @@ def professional_experience(professionals: QuerySet) -> QuerySet:
             end_date=arrow.utcnow().shift(days=-2).date(),
         )
     return ProfessionalExperience.objects.get_list()
+
+
+@pytest.fixture
+def professional_certificates(professionals: QuerySet) -> QuerySet:
+    """Return a professional experience queryset."""
+    for professional in professionals:
+        ProfessionalCertificate.objects.create(
+            professional=professional,
+            name=f'title_{professional.pk}',
+            organization=f'company_{professional.pk}',
+            date=arrow.utcnow().shift(days=-3).date(),
+            certificate_id=f'certificate_id_{professional.pk}',
+            url=f'http://certificate.com//certificate_{professional.pk}',
+        )
+    return ProfessionalCertificate.objects.get_list()
