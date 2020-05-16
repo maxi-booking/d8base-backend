@@ -25,6 +25,19 @@ class ProfessionalLocationManager(models.Manager):
         )
 
 
+class ProfessionalPhotoManager(models.Manager):
+    """The professional photo manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of professional photos."""
+        return self.all().select_related(
+            'professional',
+            'created_by',
+            'modified_by',
+            'professional__user',
+        )
+
+
 class ProfessionalEducationManager(models.Manager):
     """The professional education manager."""
 

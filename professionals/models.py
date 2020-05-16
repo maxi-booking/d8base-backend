@@ -22,9 +22,59 @@ from .managers import (CategoryManager, ProfessionalCertificateManager,
                        ProfessionalEducationManager,
                        ProfessionalExperienceManager,
                        ProfessionalLocationManager, ProfessionalManager,
-                       ProfessionalTagManager, SubcategoryManager)
+                       ProfessionalPhotoManager, ProfessionalTagManager,
+                       SubcategoryManager)
 from .services import LocationCopyAutofiller
 from .validators import validate_user_location
+
+
+class PhotoMixin(CommonInfo):
+    """The photo mixin."""
+
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    description = models.CharField(
+        _('description'),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        db_index=True,
+    )
+    photo = ProcessedImageField(
+        upload_to=RandomFilenameGenerator('photos', 'professional'),
+        processors=[
+            ResizeToFit(
+                width=settings.D8B_IMAGE_WIDTH,
+                height=settings.D8B_IMAGE_HEIGHT,
+                upscale=False,
+            )
+        ],
+        format='PNG',
+    )
+    photo_thumbnail = ImageSpecField(
+        source='photo',
+        processors=[
+            ResizeToFit(
+                width=settings.D8B_IMAGE_THUMBNAIL_WIDTH,
+                height=settings.D8B_IMAGE_THUMBNAIL_HEIGHT,
+            )
+        ],
+        format='PNG',
+    )
+
+    class Meta(CommonInfo.Meta):
+        """The metainformation."""
+
+        ordering = ('order', '-modified', '-created')
+        abstract = True
 
 
 class BaseCategory(CommonInfo):
@@ -351,6 +401,28 @@ class ProfessionalCertificate(CommonInfo):
         return f'{self.professional}: {self.name}'
 
     class Meta(CommonInfo.Meta):
+        """The Metainformation."""
+
+        abstract = False
+
+
+class ProfessionalPhoto(PhotoMixin):
+    """The professional photo."""
+
+    objects = ProfessionalPhotoManager()
+
+    professional = models.ForeignKey(
+        Professional,
+        on_delete=models.CASCADE,
+        related_name='photos',
+        verbose_name=_('professional'),
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.professional}: {self.photo}'
+
+    class Meta(PhotoMixin.Meta):
         """The Metainformation."""
 
         abstract = False

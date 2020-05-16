@@ -12,7 +12,8 @@ from professionals.models import (Category, Professional,
                                   ProfessionalCertificate, ProfessionalContact,
                                   ProfessionalEducation,
                                   ProfessionalExperience, ProfessionalLocation,
-                                  ProfessionalTag, Subcategory)
+                                  ProfessionalPhoto, ProfessionalTag,
+                                  Subcategory)
 from users.models import User
 
 # pylint: disable=redefined-outer-name
@@ -160,10 +161,22 @@ def professional_certificates(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalCertificate.objects.create(
             professional=professional,
-            name=f'title_{professional.pk}',
+            name=f'name_{professional.pk}',
             organization=f'company_{professional.pk}',
             date=arrow.utcnow().shift(days=-3).date(),
             certificate_id=f'certificate_id_{professional.pk}',
             url=f'http://certificate.com//certificate_{professional.pk}',
         )
     return ProfessionalCertificate.objects.get_list()
+
+
+@pytest.fixture
+def professional_photos(professionals: QuerySet) -> QuerySet:
+    """Return a professional photo queryset."""
+    for professional in professionals:
+        ProfessionalPhoto.objects.create(
+            professional=professional,
+            name=f'name_{professional.pk}',
+            description=f'description_{professional.pk}',
+        )
+    return ProfessionalPhoto.objects.get_list()

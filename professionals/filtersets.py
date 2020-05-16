@@ -10,7 +10,7 @@ from d8b.filtersets import NumberInFilter
 from .models import (Professional, ProfessionalCertificate,
                      ProfessionalContact, ProfessionalEducation,
                      ProfessionalExperience, ProfessionalLocation,
-                     ProfessionalTag)
+                     ProfessionalPhoto, ProfessionalTag)
 
 
 def _get_professionals(request: HttpRequest) -> QuerySet:
@@ -48,6 +48,21 @@ class ProfessionalLocationFilterSet(filters.FilterSet):
         """The professional filterset class serializer META class."""
 
         model = ProfessionalLocation
+        fields = ('professional', )
+
+
+class ProfessionalPhotoFilterSet(filters.FilterSet):
+    """The filter class for the professional photo viewset class."""
+
+    professional = filters.ModelChoiceFilter(
+        label=_('professional'),
+        queryset=_get_professionals,
+    )
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalPhoto
         fields = ('professional', )
 
 

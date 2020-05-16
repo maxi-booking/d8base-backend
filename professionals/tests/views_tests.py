@@ -922,3 +922,133 @@ def test_user_professional_certificates_delete_restricted_entry(
     response = client_with_token.delete(
         reverse('user-professional-certificates-detail', args=[obj.pk]))
     assert response.status_code == 404
+
+
+def test_user_professional_photos_list(
+    user: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should return a professional photos list."""
+    obj = professional_photos.filter(professional__user=user).first()
+    response = client_with_token.get(reverse('user-professional-photos-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 2
+    assert data['results'][0]['name'] == obj.name
+
+
+def test_user_professional_photo_detail(
+    user: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should return a user professional photos."""
+    obj = professional_photos.filter(professional__user=user).first()
+    response = client_with_token.get(
+        reverse('user-professional-photos-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['description'] == obj.description
+
+
+def test_user_professional_photos_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_photos.filter(professional__user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-professional-photos-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_professional_photos_create(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user professional photos object."""
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse('user-professional-photos-list'),
+        {
+            'name':
+                'test name',
+            'description':
+                'test description',
+            'professional':
+                obj.pk,
+            'photo':
+                ('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAA'
+                 'AB/HNKOAAAAGFBMVEXMzMyWlpajo6O3t7fFxcWcnJyxsbG+vr50Rsl6AAAAC'
+                 'XBIWXMAAA7EAAAOxAGVKw4bAAAAJklEQVQImWNgwADKDAwsAQyuDAzMAgyMb'
+                 'OYMAgyuLApAUhnMRgIANvcCBwsFJwYAAAAASUVORK5CYII=')
+        },
+    )
+    photo = obj.photos.first()
+    photo_path = f'photos/{slugify(obj)}'
+    assert response.status_code == 201
+    assert photo.name == 'test name'
+    assert photo_path in photo.photo.name
+    assert photo.photo_thumbnail is not None
+    photo.photo.delete()
+
+
+def test_user_professional_photo_update(
+    user: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should be able to update a user professional photos."""
+    obj = professional_photos.filter(professional__user=user).first()
+    response = client_with_token.patch(
+        reverse('user-professional-photos-detail', args=[obj.pk]),
+        {
+            'name': 'new name',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.name == 'new name'
+    assert obj.professional.user == user
+    assert obj.modified_by == user
+
+
+def test_user_professional_photo_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_photos.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse('user-professional-photos-detail', args=[obj.pk]),
+        {'name': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_professional_photo_delete(
+    user: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should be able to delete a user professional photos."""
+    obj = professional_photos.filter(professional__user=user).first()
+    response = client_with_token.delete(
+        reverse('user-professional-photos-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert professional_photos.filter(pk=obj.pk).count() == 0
+
+
+def test_user_professional_photo_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = professional_photos.filter(professional__user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-professional-photos-detail', args=[obj.pk]))
+    assert response.status_code == 404

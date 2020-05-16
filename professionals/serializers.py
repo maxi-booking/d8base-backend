@@ -10,7 +10,7 @@ from users.serializers import UserHiddenFieldMixin
 from .models import (Category, Professional, ProfessionalCertificate,
                      ProfessionalContact, ProfessionalEducation,
                      ProfessionalExperience, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalPhoto, ProfessionalTag, Subcategory)
 from .serializer_fields import AccountProfessionalForeignKey
 
 
@@ -131,6 +131,24 @@ class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
         fields = ('id', 'professional', 'name', 'organization', 'date',
                   'certificate_id', 'url', 'photo', 'photo_thumbnail',
                   'created', 'modified', 'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+
+class ProfessionalPhotoSerializer(ModelCleanFieldsSerializer):
+    """The professional photo serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=True)
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalPhoto
+        fields = ('id', 'professional', 'name', 'description', 'order',
+                  'photo', 'photo_thumbnail', 'created', 'modified',
+                  'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

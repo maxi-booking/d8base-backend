@@ -8,18 +8,18 @@ from .filtersets import (
     ProfessionalCertificateFilterSet, ProfessionalContactFilterSet,
     ProfessionalEductationFilterSet, ProfessionalExperienceFilterSet,
     ProfessionalListFilterSet, ProfessionalLocationFilterSet,
-    ProfessionalTagFilterSet)
+    ProfessionalPhotoFilterSet, ProfessionalTagFilterSet)
 from .models import (Category, Professional, ProfessionalCertificate,
                      ProfessionalContact, ProfessionalEducation,
                      ProfessionalExperience, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalPhoto, ProfessionalTag, Subcategory)
 from .serializers import (
     CategorySerializer, ProfessionalCertificateSerializer,
     ProfessionalContactSerializer, ProfessionalEducationSerializer,
     ProfessionalExperienceSerializer, ProfessionalListSerializer,
-    ProfessionalLocationSerializer, ProfessionalSerializer,
-    ProfessionalTagListSerializer, ProfessionalTagSerializer,
-    SubcategorySerializer)
+    ProfessionalLocationSerializer, ProfessionalPhotoSerializer,
+    ProfessionalSerializer, ProfessionalTagListSerializer,
+    ProfessionalTagSerializer, SubcategorySerializer)
 
 
 class ProfessionalLocationViewSet(viewsets.ModelViewSet):
@@ -52,6 +52,17 @@ class ProfessionalEducationViewSet(viewsets.ModelViewSet):
     queryset = ProfessionalEducation.objects.get_list()
     search_fields = ('=id', 'university', 'deegree', 'field_of_study')
     filterset_class = ProfessionalEductationFilterSet
+
+
+class ProfessionalPhotoViewSet(viewsets.ModelViewSet):
+    """The professional photo viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'professional__user'
+    serializer_class = ProfessionalPhotoSerializer
+    queryset = ProfessionalPhoto.objects.get_list()
+    search_fields = ('=id', 'name', 'description')
+    filterset_class = ProfessionalPhotoFilterSet
 
 
 class ProfessionalCertificateViewSet(viewsets.ModelViewSet):

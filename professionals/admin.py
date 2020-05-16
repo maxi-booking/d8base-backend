@@ -4,6 +4,7 @@ from typing import Tuple, Type
 
 from adminsortable.admin import SortableAdmin, SortableTabularInline
 from django.contrib import admin
+from imagekit.admin import AdminThumbnail
 from modeltranslation.admin import (TabbedTranslationAdmin,
                                     TranslationTabularInline)
 from reversion.admin import VersionAdmin
@@ -15,7 +16,7 @@ from .admin_fiters import ProfessionalFilter
 from .models import (Category, Professional, ProfessionalCertificate,
                      ProfessionalContact, ProfessionalEducation,
                      ProfessionalExperience, ProfessionalLocation,
-                     ProfessionalTag, Subcategory)
+                     ProfessionalPhoto, ProfessionalTag, Subcategory)
 
 
 class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
@@ -249,6 +250,39 @@ class ProfessionalCertificateAdmin(VersionAdmin):
         ('Options', {
             'fields': ('professional', 'created', 'modified', 'created_by',
                        'modified_by')
+        }),
+    )
+    list_select_related = ('professional', 'professional__user', 'created_by')
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(ProfessionalPhoto)
+class ProfessionalPhotoAdmin(VersionAdmin):
+    """The photo admin class."""
+
+    model: Type = ProfessionalPhoto
+    photo_thumbnail = AdminThumbnail(image_field='photo_thumbnail')
+    list_display = ('id', 'photo_thumbnail', 'name', 'order', 'created',
+                    'created_by')
+    list_display_links = ('id', 'name')
+    list_filter = (ProfessionalFilter, )
+    search_fields = ('=id', 'professional__name', 'professional__user__email',
+                     'name', 'description')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', )
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('name', 'description')
+        }),
+        ('Photo', {
+            'fields': ('photo', )
+        }),
+        ('Options', {
+            'fields': ('professional', 'order', 'created', 'modified',
+                       'created_by', 'modified_by')
         }),
     )
     list_select_related = ('professional', 'professional__user', 'created_by')

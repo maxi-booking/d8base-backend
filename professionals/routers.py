@@ -4,9 +4,9 @@ from rest_framework.routers import SimpleRouter
 from .views import (CategoryViewSet, ProfessionalCertificateViewSet,
                     ProfessionalContactViewSet, ProfessionalEducationViewSet,
                     ProfessionalExperienceViewSet, ProfessionalListViewSet,
-                    ProfessionalLocationViewSet, ProfessionalTagListViewSet,
-                    ProfessionalTagViewSet, ProfessionalViewSet,
-                    SubcategoryViewSet)
+                    ProfessionalLocationViewSet, ProfessionalPhotoViewSet,
+                    ProfessionalTagListViewSet, ProfessionalTagViewSet,
+                    ProfessionalViewSet, SubcategoryViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -51,6 +51,11 @@ def get_router() -> SimpleRouter:
         r'accounts/professional-experience',
         ProfessionalExperienceViewSet,
         'user-professional-experience',
+    )
+    router.register(
+        r'accounts/professional-photos',
+        ProfessionalPhotoViewSet,
+        'user-professional-photos',
     )
     router.register(
         r'accounts/professional-certificates',
