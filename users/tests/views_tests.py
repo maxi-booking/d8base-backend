@@ -273,7 +273,7 @@ def test_user_languages_detail(
 ):
     """Should return a user language."""
     lang = user_languages.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-languages-detail', args=[lang.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -357,7 +357,7 @@ def test_user_location_detail(
 ):
     """Should return a user location."""
     obj = user_locations.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-locations-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -448,7 +448,7 @@ def test_user_contacts_detail(
 ):
     """Should return a user contact."""
     obj = user_contacts.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-contacts-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -530,7 +530,7 @@ def test_user_settings_detail(
 ):
     """Should return a user settings."""
     obj = user_settings.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-settings-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
@@ -608,7 +608,7 @@ def test_user_saved_professional_detail(
 ):
     """Should return a user saved professionals."""
     obj = user_saved_professionals.filter(user=user).first()
-    response = client_with_token.patch(
+    response = client_with_token.get(
         reverse('user-saved-professionals-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200

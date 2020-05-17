@@ -130,7 +130,7 @@ class ProfessionalAdmin(VersionAdmin):
     list_display = ('id', 'name', 'slug', 'subcategory', 'level', 'experience',
                     'user', 'created_by')
     list_display_links = ('id', 'name')
-    search_fields = ('=id', 'name', 'user__email', 'user__lastname')
+    search_fields = ('=id', 'name', 'user__email', 'user__last_name')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     list_filter = ('level', 'subcategory', UserFilter)
     autocomplete_fields = ('user', )

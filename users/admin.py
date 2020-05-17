@@ -109,7 +109,7 @@ class UserContactAdmin(admin.ModelAdmin):
     model: Type = UserContact
     list_display = ('id', 'contact', 'value', 'user', 'created_by')
     list_display_links = ('id', 'contact')
-    search_fields = ('=id', 'contact', 'user__email', 'user__lastname')
+    search_fields = ('=id', 'contact', 'user__email', 'user__last_name')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
     list_filter = ('contact', UserFilter)
     autocomplete_fields = ('user', 'contact')

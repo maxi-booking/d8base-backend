@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'location',
     'contacts',
     'professionals',
+    'communication',
 ]
 
 SITE_ID = 1

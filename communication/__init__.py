@@ -1,0 +1,1 @@
+"""The communication initialization module."""

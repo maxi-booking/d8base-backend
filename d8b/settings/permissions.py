@@ -72,6 +72,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     # contact
     'change_contact',
 
+    # message
+    'change_message',
+    'add_message',
+    'delete_message',
+
     # location
     'change_continent',
     'change_country',

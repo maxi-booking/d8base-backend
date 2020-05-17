@@ -400,5 +400,6 @@ exclude_dirs:
 - contacts/tests
 - location/tests
 - professionals/tests
+- communication/tests
 - .tox
 - conftest.py
