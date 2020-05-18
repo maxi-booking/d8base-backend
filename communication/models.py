@@ -6,13 +6,12 @@ from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
 from .managers import MessagesManager
+from .services import notify_new_message
 from .validators import validate_message_parent, validate_message_recipient
 
 
 class Message(CommonInfo, ValidationMixin):
     """The message class."""
-
-    # notifications about new message
 
     validators = [validate_message_recipient, validate_message_parent]
     objects = MessagesManager()
@@ -82,6 +81,11 @@ class Message(CommonInfo, ValidationMixin):
         null=True,
         editable=False,
     )
+
+    def save(self, **kwargs):
+        """Save the object."""
+        notify_new_message(self)
+        super().save(**kwargs)
 
     def __str__(self) -> str:
         """Return the string representation."""

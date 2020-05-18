@@ -186,17 +186,16 @@ LOCALE_PATHS = (
     os.path.join(os.path.dirname(__file__), 'app_locale'),
 )
 
-EMAIL_SUBJECT_PREFIX = 'd8b: '
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 # Logs
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['file', 'mail_admins']
-    },
+    # 'root': {
+    #     'level': 'WARNING',
+    #     'handlers': ['file', 'mail_admins']
+    # },
     'formatters': {
         'verbose': {
             'format': ('[%(asctime)s] %(levelname)s '

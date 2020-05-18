@@ -1,0 +1,7 @@
+{% extends 'emails/base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+    {{ text|safe }}
+{% endblock %}

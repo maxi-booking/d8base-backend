@@ -4,11 +4,19 @@ from typing import List
 
 import pytest
 from cities.models import City, Country
+from django.conf import settings
 from django.db.models.query import QuerySet
 
-from users.models import User, UserLocation
+from users.models import User, UserLocation, UserSettings
 
 pytestmark = pytest.mark.django_db
+
+
+def test_user_preferred_language(user: User):
+    """Should return a users prefferred language."""
+    assert user.preferred_language == settings.LANGUAGE_CODE
+    UserSettings.objects.create(user=user, language='de')
+    assert user.preferred_language == 'de'
 
 
 def test_user_location_save_autofill(

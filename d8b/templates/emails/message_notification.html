@@ -1,0 +1,10 @@
+{% extends 'emails/base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+    <p>A new message notification.</p>
+    <p>sender: {{ sender }}</p>
+    <p>subject: {{ subject }}</p>
+    <p>body: {{ body }}</p>
+{% endblock %}

@@ -117,6 +117,15 @@ class User(AbstractUser):
         format='PNG',
     )
 
+    @property
+    def preferred_language(self) -> str:
+        """Get the user prefferred language."""
+        try:
+            # pylint: disable=no-member
+            return self.settings.language
+        except UserSettings.DoesNotExist:
+            return settings.LANGUAGE_CODE
+
     def __str__(self):
         """Return a string representation of the object."""
         return self.email

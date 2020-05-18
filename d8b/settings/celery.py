@@ -16,3 +16,4 @@ CELERYBEAT_SCHEDULE = {
         'schedule': 60 * 60 * 24
     }
 }
+CELERY_IMPORTS = ('communication.notifications.tasks', )

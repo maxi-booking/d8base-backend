@@ -1,1 +1,1 @@
-"""The communication initialization module."""
+"""The communication tests initialization module."""
