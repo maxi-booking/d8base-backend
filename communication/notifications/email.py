@@ -1,5 +1,4 @@
 """The notifications email module."""
-from django.conf import settings
 from django.core.mail import mail_managers as base_mail_managers
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -7,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from d8b.lang import select_locale
 from d8b.logging import log
+from d8b.settings import get_settings
 from users.models import User
 
 
@@ -26,13 +26,13 @@ def mail_managers(
 def mail_user(user: User, subject: str, template: str, data: dict):
     """Send an email to the user."""
     with select_locale(user.preferred_language):
-        subject_text = settings.EMAIL_SUBJECT_PREFIX
+        subject_text = get_settings('EMAIL_SUBJECT_PREFIX')
         subject_text += str(_(subject))
         template_path = f'emails/{template}.html'
 
         send_mail(
             recipient_list=[user.email],
-            from_email=settings.DEFAULT_FROM_EMAIL,
+            from_email=get_settings('DEFAULT_FROM_EMAIL'),
             subject=subject_text,
             message='',
             html_message=render_to_string(template_path, data),

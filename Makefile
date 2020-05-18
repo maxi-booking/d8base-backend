@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage tox
+.PHONY := docker_stop docker_start docker_down django_manage django_migration check_env test coverage tox quick_test
 
 dockerc := docker-compose -f .docker/docker-compose.yml
 pgsql_env := pgsql-variables.env
@@ -75,3 +75,7 @@ tox:
 test:
 	@echo 'Start tests'
 	pytest --pydocstyle --pycodestyle --flakes --mypy --pylint --cov=./
+
+quick_test:
+	@echo 'Start tests in parallel'
+	pytest -n auto --cov=./
