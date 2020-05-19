@@ -3,6 +3,7 @@ import pytest
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
+from push_notifications.models import GCMDevice
 
 from users.models import User
 
@@ -177,3 +178,24 @@ def test_sent_unread_message_delete(
         reverse('messages-sent-detail', args=[obj.pk]))
     assert response.status_code == 204
     assert messages.filter(pk=obj.pk).count() == 0
+
+
+def test_device_fcm_create(
+    user: User,
+    client_with_token: Client,
+):
+    """Should create a fcm device."""
+    response = client_with_token.post(
+        reverse('communication-devices-fmc-list'),
+        {
+            'registration_id': 'test id',
+            'name': 'test device',
+            'cloud_message_type': 'FCM',
+        },
+    )
+    data = response.json()
+    device = GCMDevice.objects.first()
+    assert response.status_code == 201
+    assert data['name'] == 'test device'
+    assert device.user == user
+    assert device.registration_id == 'test id'

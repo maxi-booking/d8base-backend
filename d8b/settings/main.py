@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'adminsortable',
     'djmoney',
     'djmoney.contrib.exchange',
+    'push_notifications',
 
     # d8base apps
     'd8b',
@@ -379,3 +380,10 @@ BASE_CURRENCY = DEFAULT_CURRENCY
 # CURRENCIES = ('RUB', 'EUR', 'CAD', 'USD')
 EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
 FIXER_ACCESS_KEY = ENV.str('FIXER_ACCESS_KEY')
+
+# Push notifications
+PUSH_NOTIFICATIONS_SETTINGS = {
+    'FCM_API_KEY': ENV.str('FCM_API_KEY'),
+    'UPDATE_ON_DUPLICATE_REG_ID': True,
+    'UNIQUE_REG_ID': True,
+}

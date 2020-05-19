@@ -1,4 +1,5 @@
 """The professionals routers module."""
+from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet
 from rest_framework.routers import SimpleRouter
 
 from .views import ReceivedMessagesViewSet, SentMessagesViewSet
@@ -8,12 +9,17 @@ def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
     router.register(
-        r'messages/sent',
+        r'communication/devices/fcm',
+        GCMDeviceAuthorizedViewSet,
+        'communication-devices-fmc',
+    )
+    router.register(
+        r'communication/messages/sent',
         SentMessagesViewSet,
         'messages-sent',
     )
     router.register(
-        r'messages/received',
+        r'communication/messages/received',
         ReceivedMessagesViewSet,
         'messages-received',
     )

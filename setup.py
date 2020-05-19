@@ -51,6 +51,7 @@ setup(
         'django-oauth-toolkit==1.3.2',
         'django-admin-autocomplete-filter==0.4',
         'django-imagekit==4.0.2',
+        'django-push-notifications==2.0.0',
         'drf-yasg==1.17.1',
         'celery==4.4.0',
         'Werkzeug==1.0.0',

@@ -2,10 +2,27 @@
 from typing import Tuple, Type
 
 from django.contrib import admin
+from push_notifications.admin import GCMDeviceAdmin as BaseGCMDeviceAdmin
+from push_notifications.models import GCMDevice
 from reversion.admin import VersionAdmin
+
+from users.admin_fiters import UserFilter
 
 from .admin_fiters import RecipientFilter, SenderFilter
 from .models import Message
+
+admin.site.unregister(GCMDevice)
+
+
+@admin.register(GCMDevice)
+class GCMDeviceAdmin(VersionAdmin, BaseGCMDeviceAdmin):
+    """The groups admin class."""
+
+    list_filter = (UserFilter, 'active', 'cloud_message_type')
+    autocomplete_fields = ('user', )
+
+    class Media:
+        """Required for the AutocompleteFilter."""
 
 
 @admin.register(Message)
