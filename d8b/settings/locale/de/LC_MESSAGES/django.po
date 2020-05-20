@@ -1,0 +1,815 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-20 14:07+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: build/lib/contacts/filtersets.py:14 contacts/filtersets.py:14
+msgid "For country"
+msgstr ""
+
+#: build/lib/contacts/models.py:17 build/lib/professionals/models.py:19
+#: build/lib/professionals/models.py:100 build/lib/professionals/models.py:153
+#: contacts/models.py:17 professionals/models.py:35 professionals/models.py:84
+#: professionals/models.py:156 professionals/models.py:227
+#: professionals/models.py:349
+msgid "name"
+msgstr ""
+
+#: build/lib/contacts/models.py:25 build/lib/users/models.py:192
+#: contacts/models.py:26 location/models.py:26
+msgid "country"
+msgstr "staat"
+
+#: build/lib/contacts/models.py:31 contacts/models.py:32
+msgid "excluded countries"
+msgstr ""
+
+#: build/lib/d8b/fields.py:11 d8b/fields.py:11
+msgid "Language code"
+msgstr ""
+
+#: build/lib/d8b/fields.py:23 d8b/fields.py:23
+msgid "Units"
+msgstr ""
+
+#: build/lib/d8b/fields.py:35 d8b/fields.py:35
+msgid "Timezone"
+msgstr ""
+
+#: build/lib/d8b/models.py:23 d8b/models.py:40
+msgid "created by"
+msgstr ""
+
+#: build/lib/d8b/models.py:33 d8b/models.py:50
+msgid "modified by"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:15 d8b/settings/languages.py:15
+msgid "Afrikaans"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:16 d8b/settings/languages.py:16
+msgid "Albanian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:17 d8b/settings/languages.py:17
+msgid "Amharic"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:18 d8b/settings/languages.py:18
+msgid "Arabic"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:19 d8b/settings/languages.py:19
+msgid "Armenian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:20 d8b/settings/languages.py:20
+msgid "Azerbaijani"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:21 d8b/settings/languages.py:21
+msgid "Basque"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:22 d8b/settings/languages.py:22
+msgid "Belarusian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:23 d8b/settings/languages.py:23
+msgid "Bengali"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:24 d8b/settings/languages.py:24
+msgid "Bosnian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:25 d8b/settings/languages.py:25
+msgid "Bulgarian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:26 d8b/settings/languages.py:26
+msgid "Catalan"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:27 d8b/settings/languages.py:27
+msgid "Chinese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:28 d8b/settings/languages.py:28
+msgid "Corsican"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:29 d8b/settings/languages.py:29
+msgid "Croatian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:30 d8b/settings/languages.py:30
+msgid "Czech"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:31 d8b/settings/languages.py:31
+msgid "Danish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:32 d8b/settings/languages.py:32
+msgid "Dutch"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:33 d8b/settings/languages.py:33
+msgid "English"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:34 d8b/settings/languages.py:34
+msgid "Esperanto"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:35 d8b/settings/languages.py:35
+msgid "Estonian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:36 d8b/settings/languages.py:36
+msgid "Filipino"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:37 d8b/settings/languages.py:37
+msgid "Finnish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:38 d8b/settings/languages.py:38
+msgid "French"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:39 d8b/settings/languages.py:39
+msgid "Frisian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:40 d8b/settings/languages.py:40
+msgid "Galician"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:41 d8b/settings/languages.py:41
+msgid "Georgian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:42 d8b/settings/languages.py:42
+msgid "German"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:43 d8b/settings/languages.py:43
+msgid "Greek"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:44 d8b/settings/languages.py:44
+msgid "Gujarati"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:45 d8b/settings/languages.py:45
+msgid "Haitian Creole"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:46 d8b/settings/languages.py:46
+msgid "Hausa"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:47 d8b/settings/languages.py:47
+msgid "Hebrew"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:48 d8b/settings/languages.py:48
+msgid "Hindi"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:49 d8b/settings/languages.py:49
+msgid "Hungarian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:50 d8b/settings/languages.py:50
+msgid "Icelandic"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:51 d8b/settings/languages.py:51
+msgid "Indonesian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:52 d8b/settings/languages.py:52
+msgid "Irish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:53 d8b/settings/languages.py:53
+msgid "Italian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:54 d8b/settings/languages.py:54
+msgid "Japanese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:55 d8b/settings/languages.py:55
+msgid "Javanese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:56 d8b/settings/languages.py:56
+msgid "Kannada"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:57 d8b/settings/languages.py:57
+msgid "Kazakh"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:58 d8b/settings/languages.py:58
+msgid "Khmer"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:59 d8b/settings/languages.py:59
+msgid "Korean"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:60 d8b/settings/languages.py:60
+msgid "Kurdish (Kurmanji)"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:61 d8b/settings/languages.py:61
+msgid "Kyrgyz"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:62 d8b/settings/languages.py:62
+msgid "Lao"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:63 d8b/settings/languages.py:63
+msgid "Latin"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:64 d8b/settings/languages.py:64
+msgid "Latvian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:65 d8b/settings/languages.py:65
+msgid "Lithuanian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:66 d8b/settings/languages.py:66
+msgid "Luxembourgish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:67 d8b/settings/languages.py:67
+msgid "Macedonian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:68 d8b/settings/languages.py:68
+msgid "Malagasy"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:69 d8b/settings/languages.py:69
+msgid "Malay"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:70 d8b/settings/languages.py:70
+msgid "Malayalam"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:71 d8b/settings/languages.py:71
+msgid "Maltese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:72 d8b/settings/languages.py:72
+msgid "Maori"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:73 d8b/settings/languages.py:73
+msgid "Marathi"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:74 d8b/settings/languages.py:74
+msgid "Mongolian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:75 d8b/settings/languages.py:75
+msgid "Myanmar (Burmese)"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:76 d8b/settings/languages.py:76
+msgid "Nepali"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:77 d8b/settings/languages.py:77
+msgid "Norwegian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:78 d8b/settings/languages.py:78
+msgid "Persian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:79 d8b/settings/languages.py:79
+msgid "Polish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:80 d8b/settings/languages.py:80
+msgid "Portuguese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:81 d8b/settings/languages.py:81
+msgid "Romanian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:82 d8b/settings/languages.py:82
+msgid "Russian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:83 d8b/settings/languages.py:83
+msgid "Samoan"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:84 d8b/settings/languages.py:84
+msgid "Serbian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:85 d8b/settings/languages.py:85
+msgid "Shona"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:86 d8b/settings/languages.py:86
+msgid "Sindhi"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:87 d8b/settings/languages.py:87
+msgid "Slovak"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:88 d8b/settings/languages.py:88
+msgid "Slovenian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:89 d8b/settings/languages.py:89
+msgid "Somali"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:90 d8b/settings/languages.py:90
+msgid "Spanish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:91 d8b/settings/languages.py:91
+msgid "Sundanese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:92 d8b/settings/languages.py:92
+msgid "Swahili"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:93 d8b/settings/languages.py:93
+msgid "Swedish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:94 d8b/settings/languages.py:94
+msgid "Tajik"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:95 d8b/settings/languages.py:95
+msgid "Tamil"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:96 d8b/settings/languages.py:96
+msgid "Telugu"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:97 d8b/settings/languages.py:97
+msgid "Thai"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:98 d8b/settings/languages.py:98
+msgid "Turkish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:99 d8b/settings/languages.py:99
+msgid "Ukrainian"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:100 d8b/settings/languages.py:100
+msgid "Urdu"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:101 d8b/settings/languages.py:101
+msgid "Uzbek"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:102 d8b/settings/languages.py:102
+msgid "Vietnamese"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:103 d8b/settings/languages.py:103
+msgid "Welsh"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:104 d8b/settings/languages.py:104
+msgid "Xhosa"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:105 d8b/settings/languages.py:105
+msgid "Yiddish"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:106 d8b/settings/languages.py:106
+msgid "Yoruba"
+msgstr ""
+
+#: build/lib/d8b/settings/languages.py:107 d8b/settings/languages.py:107
+msgid "Zulu"
+msgstr ""
+
+#: build/lib/d8b/settings/units.py:6 d8b/settings/units.py:6
+msgid "metric"
+msgstr ""
+
+#: build/lib/d8b/settings/units.py:6 d8b/settings/units.py:6
+msgid "imperial/US"
+msgstr ""
+
+#: build/lib/location/filtersets.py:15 location/filtersets.py:19
+msgid "By name"
+msgstr ""
+
+#: build/lib/professionals/filtersets.py:22
+#: build/lib/professionals/models.py:176 build/lib/users/models.py:36
+#: build/lib/users/models.py:133 professionals/filtersets.py:43
+#: professionals/filtersets.py:58 professionals/filtersets.py:73
+#: professionals/filtersets.py:88 professionals/filtersets.py:103
+#: professionals/filtersets.py:118 professionals/filtersets.py:133
+#: professionals/models.py:251 professionals/models.py:270
+#: professionals/models.py:294 professionals/models.py:346
+#: professionals/models.py:418 professionals/models.py:441
+#: professionals/models.py:505 users/models.py:35 users/models.py:149
+msgid "professional"
+msgstr ""
+
+#: build/lib/professionals/models.py:25 build/lib/professionals/models.py:104
+#: professionals/models.py:42 professionals/models.py:91
+#: professionals/models.py:170 professionals/models.py:322
+#: professionals/models.py:478
+msgid "description"
+msgstr ""
+
+#: build/lib/professionals/models.py:55 professionals/models.py:121
+msgid "categories"
+msgstr ""
+
+#: build/lib/professionals/models.py:72 professionals/models.py:138
+msgid "subcategories"
+msgstr ""
+
+#: build/lib/professionals/models.py:94 professionals/models.py:150
+msgid "junior"
+msgstr ""
+
+#: build/lib/professionals/models.py:95 professionals/models.py:151
+msgid "middle"
+msgstr ""
+
+#: build/lib/professionals/models.py:96 professionals/models.py:152
+msgid "senior"
+msgstr ""
+
+#: build/lib/professionals/models.py:109 professionals/models.py:175
+#: professionals/models.py:301
+msgid "company"
+msgstr ""
+
+#: build/lib/professionals/models.py:115 professionals/models.py:181
+msgid "years of experience"
+msgstr ""
+
+#: build/lib/professionals/models.py:120 professionals/models.py:187
+msgid "level"
+msgstr ""
+
+#: build/lib/professionals/models.py:128 professionals/models.py:196
+msgid "are orders confirmed automatically?"
+msgstr ""
+
+#: build/lib/professionals/models.py:129 professionals/models.py:197
+msgid "is auto order confirmation?"
+msgstr ""
+
+#: build/lib/professionals/models.py:135 professionals/models.py:204
+msgid "subcategory"
+msgstr ""
+
+#: build/lib/professionals/models.py:141 build/lib/users/models.py:35
+#: build/lib/users/models.py:139 build/lib/users/models.py:175
+#: build/lib/users/models.py:264 build/lib/users/models.py:301
+#: build/lib/users/models.py:339 professionals/models.py:210 users/models.py:34
+#: users/models.py:155 users/models.py:191 users/models.py:216
+#: users/models.py:254 users/models.py:282
+msgid "user"
+msgstr ""
+
+#: build/lib/users/admin.py:168 users/admin.py:198
+msgid "Personal info"
+msgstr ""
+
+#: build/lib/users/admin.py:172 users/admin.py:202
+msgid "Permissions"
+msgstr ""
+
+#: build/lib/users/admin.py:176 users/admin.py:206
+msgid "Dates"
+msgstr ""
+
+#: build/lib/users/managers.py:141 users/managers.py:148
+msgid "The email must be set"
+msgstr ""
+
+#: build/lib/users/managers.py:163 users/managers.py:170
+msgid "Superuser must have is_staff=True."
+msgstr ""
+
+#: build/lib/users/managers.py:165 users/managers.py:172
+msgid "Superuser must have is_superuser=True."
+msgstr ""
+
+#: build/lib/users/models.py:41 users/models.py:40
+msgid "male"
+msgstr ""
+
+#: build/lib/users/models.py:41 users/models.py:40
+msgid "female"
+msgstr ""
+
+#: build/lib/users/models.py:49 users/models.py:49
+msgid "email"
+msgstr ""
+
+#: build/lib/users/models.py:51 users/models.py:54
+msgid "patronymic"
+msgstr ""
+
+#: build/lib/users/models.py:58 users/models.py:65
+msgid "gender"
+msgstr ""
+
+#: build/lib/users/models.py:64 users/models.py:71
+msgid "birthday"
+msgstr ""
+
+#: build/lib/users/models.py:71 users/models.py:78
+msgid "nationality"
+msgstr ""
+
+#: build/lib/users/models.py:78 users/models.py:85
+msgid "account type"
+msgstr ""
+
+#: build/lib/users/models.py:85 users/models.py:92
+msgid "is account confirmed?"
+msgstr ""
+
+#: build/lib/users/models.py:86 users/models.py:93
+msgid "is confirmed"
+msgstr ""
+
+#: build/lib/users/models.py:124 users/models.py:140
+msgid "note"
+msgstr ""
+
+#: build/lib/users/models.py:159 build/lib/users/models.py:291
+#: users/models.py:175 users/models.py:243
+msgid "language"
+msgstr ""
+
+#: build/lib/users/models.py:166 users/models.py:182
+msgid "currency"
+msgstr ""
+
+#: build/lib/users/models.py:200 location/models.py:34
+msgid "region"
+msgstr ""
+
+#: build/lib/users/models.py:208 location/models.py:42
+msgid "subregion"
+msgstr ""
+
+#: build/lib/users/models.py:216 location/models.py:50
+msgid "city"
+msgstr ""
+
+#: build/lib/users/models.py:224 location/models.py:58
+msgid "district"
+msgstr ""
+
+#: build/lib/users/models.py:232 location/models.py:66
+msgid "postal code"
+msgstr ""
+
+#: build/lib/users/models.py:239 location/models.py:73
+msgid "address"
+msgstr ""
+
+#: build/lib/users/models.py:245 location/models.py:79
+msgid "coordinates"
+msgstr ""
+
+#: build/lib/users/models.py:251 professionals/models.py:509
+#: users/models.py:209
+msgid "is default location?"
+msgstr ""
+
+#: build/lib/users/models.py:252 professionals/models.py:510
+#: users/models.py:210
+msgid "is default"
+msgstr ""
+
+#: build/lib/users/models.py:254 location/models.py:83 users/models.py:193
+msgid "units"
+msgstr ""
+
+#: build/lib/users/models.py:256 location/models.py:85
+msgid "timezone"
+msgstr ""
+
+#: build/lib/users/models.py:294 users/models.py:246
+msgid "is native language?"
+msgstr ""
+
+#: build/lib/users/models.py:295 users/models.py:247
+msgid "is native"
+msgstr ""
+
+#: build/lib/users/models.py:326 contacts/models.py:50
+msgid "value"
+msgstr ""
+
+#: build/lib/users/models.py:333 contacts/models.py:58
+msgid "contact"
+msgstr ""
+
+#: build/lib/users/validators.py:14 users/validators.py:14
+#, python-format
+msgid "Minimal age is %(min_age)s years old."
+msgstr ""
+
+#: communication/models.py:29
+msgid "sender"
+msgstr ""
+
+#: communication/models.py:35
+msgid "recipient"
+msgstr ""
+
+#: communication/models.py:38
+msgid "subject"
+msgstr ""
+
+#: communication/models.py:44
+msgid "body"
+msgstr ""
+
+#: communication/models.py:48
+msgid "Has the message been read?"
+msgstr ""
+
+#: communication/models.py:49
+msgid "is read?"
+msgstr ""
+
+#: communication/models.py:53
+msgid "read date"
+msgstr ""
+
+#: communication/models.py:61
+msgid "Has the message been deleted from sender?"
+msgstr ""
+
+#: communication/models.py:62
+msgid "is deleted from sender?"
+msgstr ""
+
+#: communication/models.py:66
+msgid "delete from sender datetime "
+msgstr ""
+
+#: communication/models.py:74
+msgid "Has the message been deleted from recipient?"
+msgstr ""
+
+#: communication/models.py:75
+msgid "is deleted from recipient?"
+msgstr ""
+
+#: communication/models.py:79
+msgid "delete from recipient datetime "
+msgstr ""
+
+#: communication/services.py:19
+msgid "You have new messages"
+msgstr ""
+
+#: communication/validators.py:15
+msgid "Sender and recipient is the same user."
+msgstr ""
+
+#: communication/validators.py:22
+msgid "Invalid parent message."
+msgstr ""
+
+#: d8b/templates/admin/filter.html:3
+#, python-format
+msgid "%(filter_title)s"
+msgstr ""
+
+#: d8b/validators.py:16
+msgid "Start date is greater thant the end date."
+msgstr ""
+
+#: d8b/validators.py:20
+msgid "Either the_end date or is_still_here must be filled in."
+msgstr ""
+
+#: d8b/validators.py:27
+msgid "The date must be in the past."
+msgstr ""
+
+#: professionals/models.py:161
+msgid "slug"
+msgstr ""
+
+#: professionals/models.py:297
+msgid "title"
+msgstr ""
+
+#: professionals/models.py:305 professionals/models.py:461
+msgid "is_still_here"
+msgstr ""
+
+#: professionals/models.py:307
+msgid "Is the professional still working here?"
+msgstr ""
+
+#: professionals/models.py:310 professionals/models.py:466
+msgid "start date"
+msgstr ""
+
+#: professionals/models.py:316 professionals/models.py:472
+msgid "end date"
+msgstr ""
+
+#: professionals/models.py:354
+msgid "organization"
+msgstr ""
+
+#: professionals/models.py:358
+msgid "date"
+msgstr ""
+
+#: professionals/models.py:364
+msgid "certificate_id"
+msgstr ""
+
+#: professionals/models.py:370
+msgid "certificate url"
+msgstr ""
+
+#: professionals/models.py:444
+msgid "university"
+msgstr ""
+
+#: professionals/models.py:446
+msgid "school/university"
+msgstr ""
+
+#: professionals/models.py:449
+msgid "deegree"
+msgstr ""
+
+#: professionals/models.py:455
+msgid "field_of_study"
+msgstr ""
+
+#: professionals/models.py:463
+msgid "Is the professional still learning here?"
+msgstr ""
+
+#: professionals/models.py:519
+msgid "user location"
+msgstr ""
+
+#: professionals/models.py:520
+msgid "user location to copy the location"
+msgstr ""
+
+#: professionals/validators.py:11
+msgid "User location from the another user."
+msgstr ""
