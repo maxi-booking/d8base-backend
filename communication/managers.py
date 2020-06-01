@@ -23,11 +23,12 @@ class ReviewManager(models.Manager):
             'modified_by',
         )
 
-    # TODO: Test it
-    def get_professional_rating(self, professional: 'Professional') -> Decimal:
+    def get_professional_rating(
+            self, professional: 'Professional') -> Optional[Decimal]:
         """Get the average professional rating."""
-        return self.filter(professional=professional).\
+        result = self.filter(professional=professional).\
             aggregate(models.Avg('rating'))['rating__avg']
+        return Decimal(round(result, 2)) if result else None
 
 
 class MessagesManager(models.Manager):

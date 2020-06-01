@@ -41,7 +41,6 @@ class LocationCopyAutofiller(BaseLocationAutofiller):
         return self.destination
 
 
-# TODO: Test it
 def update_professional_rating(professional: 'Professional'):
     """Update the professional rating."""
     rating = Review.objects.get_professional_rating(professional)

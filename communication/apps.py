@@ -9,4 +9,5 @@ class CommunicationConfig(AppConfig):
 
     def ready(self):
         """Ready."""
+        # pylint: disable=all
         import communication.signals

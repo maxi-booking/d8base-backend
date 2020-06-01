@@ -24,9 +24,7 @@ def validate_message_parent(obj: 'Message'):
 
 def validate_review_user(obj: 'Review'):
     """Validate the review user."""
-    if obj.user == obj.professional.user:
+    if obj.user_id and obj.professional and obj.user == obj.professional.user:
         raise ValidationError({
             'user': _('The review user and the professional user are equal.')
         })
-
-    return obj

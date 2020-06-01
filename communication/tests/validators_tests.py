@@ -3,11 +3,25 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.db.models.query import QuerySet
 
+from communication.models import Review
 from communication.validators import (validate_message_parent,
-                                      validate_message_recipient)
+                                      validate_message_recipient,
+                                      validate_review_user)
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_validate_review_user(admin: User, professionals: QuerySet):
+    """Should validate the review user."""
+    review = Review()
+    review.user = admin
+    review.professional = professionals.filter(user=admin).first()
+    review.rating = 3  # type: ignore
+    review.description = 'description'
+
+    with pytest.raises(ValidationError):
+        validate_review_user(review)
 
 
 def test_validate_message_recipient(admin: User, messages: QuerySet):

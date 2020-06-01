@@ -11,7 +11,6 @@ from .models import Review
 # pylint: disable=unused-argument
 
 
-# TODO: Test it
 @receiver(
     post_save,
     sender=Review,
