@@ -6,3 +6,7 @@ class CommunicationConfig(AppConfig):
     """The communication app configuration."""
 
     name: str = 'communication'
+
+    def ready(self):
+        """Ready."""
+        import communication.signals

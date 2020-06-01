@@ -1,7 +1,11 @@
 """The professionals services module."""
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
+from communication.models import Review
 from location.interfaces import AbstractLocation, BaseLocationAutofiller
+
+if TYPE_CHECKING:
+    from .models import Professional
 
 
 class LocationCopyAutofiller(BaseLocationAutofiller):
@@ -35,3 +39,11 @@ class LocationCopyAutofiller(BaseLocationAutofiller):
             self._copy_value(name)
 
         return self.destination
+
+
+# TODO: Test it
+def update_professional_rating(professional: 'Professional'):
+    """Update the professional rating."""
+    rating = Review.objects.get_professional_rating(professional)
+    professional.rating = rating
+    professional.save()

@@ -6,10 +6,11 @@ from push_notifications.admin import GCMDeviceAdmin as BaseGCMDeviceAdmin
 from push_notifications.models import GCMDevice
 from reversion.admin import VersionAdmin
 
+from professionals.admin_fiters import ProfessionalFilter
 from users.admin_fiters import UserFilter
 
 from .admin_fiters import RecipientFilter, SenderFilter
-from .models import Message
+from .models import Message, Review
 
 admin.site.unregister(GCMDevice)
 
@@ -20,6 +21,36 @@ class GCMDeviceAdmin(VersionAdmin, BaseGCMDeviceAdmin):
 
     list_filter = (UserFilter, 'active', 'cloud_message_type')
     autocomplete_fields = ('user', )
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(Review)
+class ReviewAdmin(VersionAdmin):
+    """The review admin class."""
+
+    model: Type = Review
+    list_display = ('id', 'user', 'professional', 'title', 'rating', 'created',
+                    'created_by')
+    list_display_links = ('id', 'user', 'professional')
+    list_filter = (ProfessionalFilter, UserFilter, 'rating', 'created')
+    search_fields = ('=id', 'title', 'description')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    autocomplete_fields = ('professional', 'user')
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('user', 'professional')
+        }),
+        ('Review', {
+            'fields': ('rating', 'title', 'description')
+        }),
+        ('Options', {
+            'fields': ('created', 'modified', 'created_by', 'modified_by')
+        }),
+    )
+    list_select_related = ('user', 'professional', 'created_by')
 
     class Media:
         """Required for the AutocompleteFilter."""

@@ -7,10 +7,22 @@ from rest_framework.mixins import (DestroyModelMixin, ListModelMixin,
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Message
-from .serializers import ReceivedMessageSerializer, SentMessageSerializer
+from .models import Message, Review
+from .serializers import (ReceivedMessageSerializer, ReviewSerializer,
+                          SentMessageSerializer)
 from .services import (delete_message_from_recipient,
                        delete_message_from_sender, mark_message_read)
+
+
+class UserReviewViewSet(viewsets.ModelViewSet):
+    """The user review viewset."""
+
+    is_owner_filter_enabled = True
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.get_list()
+    filterset_fields = ('rating', 'created', 'modified')
+    search_fields = ('=id', 'professional__name', 'professional__description',
+                     'title', 'description')
 
 
 class ReceivedMessagesViewSet(RetrieveModelMixin, ListModelMixin,

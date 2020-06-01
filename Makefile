@@ -74,7 +74,7 @@ tox:
 	tox -r
 test:
 	@echo 'Start tests'
-	pytest --pydocstyle --pycodestyle --flakes --mypy --pylint --cov=./
+	pytest --pycodestyle --flakes --mypy --pylint --cov=./
 
 quick_test:
 	@echo 'Start tests in parallel'

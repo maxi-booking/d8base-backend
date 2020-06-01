@@ -1,17 +1,40 @@
 """The communication managers module."""
-from typing import Optional
+from decimal import Decimal
+from typing import TYPE_CHECKING, Optional
 
 from django.db import models
 from django.db.models.query import QuerySet
 
 from users.models import User
 
+if TYPE_CHECKING:
+    from professionals.models import Professional
+
+
+class ReviewManager(models.Manager):
+    """The review manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of reviews."""
+        return self.all().select_related(
+            'user',
+            'professional',
+            'created_by',
+            'modified_by',
+        )
+
+    # TODO: Test it
+    def get_professional_rating(self, professional: 'Professional') -> Decimal:
+        """Get the average professional rating."""
+        return self.filter(professional=professional).\
+            aggregate(models.Avg('rating'))['rating__avg']
+
 
 class MessagesManager(models.Manager):
     """The messages manager."""
 
     def get_list(self) -> QuerySet:
-        """Return a list of user contacts."""
+        """Return a list of messages."""
         return self.all().select_related(
             'sender',
             'recipient',
