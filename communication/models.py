@@ -1,13 +1,60 @@
 """The communication models module."""
+from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from d8b.fields import RatingField
 from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
-from .managers import MessagesManager
+from .managers import MessagesManager, ReviewManager
 from .services import notify_new_message
-from .validators import validate_message_parent, validate_message_recipient
+from .validators import (validate_message_parent, validate_message_recipient,
+                         validate_review_user)
+
+
+class Review(CommonInfo, ValidationMixin):
+    """The message class."""
+
+    validators = [validate_review_user]
+    objects = ReviewManager()
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name=_('user'),
+    )
+    professional = models.ForeignKey(
+        'professionals.Professional',
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name=_('professional'),
+    )
+    title = models.CharField(
+        _('title'),
+        max_length=255,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+    description = models.TextField(
+        _('description'),
+        db_index=True,
+        validators=[MinLengthValidator(settings.D8B_REVIEW_MIN_LENGTH)],
+    )
+    rating = RatingField()
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.user}->{self.professional}: review {self.title}'
+
+    class Meta(CommonInfo.Meta):
+        """The metainformation."""
+
+        abstract = False
+        unique_together = (('user', 'professional'), )
 
 
 class Message(CommonInfo, ValidationMixin):

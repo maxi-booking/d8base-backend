@@ -152,6 +152,15 @@ class Professional(CommonInfo):
         (LEVEL_SENIOR, _('senior')),
     ]
 
+    rating = models.DecimalField(
+        _('rating'),
+        max_digits=3,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        editable=False,
+        db_index=True,
+    )
     name = models.CharField(
         _('name'),
         max_length=255,

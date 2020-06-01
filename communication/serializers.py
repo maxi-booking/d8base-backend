@@ -2,9 +2,23 @@
 from rest_framework import serializers
 
 from d8b.serializers import ModelCleanFieldsSerializer
+from users.serializers import UserHiddenFieldMixin
 
-from .models import Message
+from .models import Message, Review
 from .serializer_fields import ParentMessageForeignKey
+
+
+class ReviewSerializer(ModelCleanFieldsSerializer, UserHiddenFieldMixin):
+    """The review serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = Review
+
+        fields = ('id', 'user', 'professional', 'title', 'description',
+                  'rating', 'created', 'modified', 'created_by', 'modified_by')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class SentMessageSerializer(ModelCleanFieldsSerializer):

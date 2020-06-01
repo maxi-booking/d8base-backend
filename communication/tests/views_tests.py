@@ -199,3 +199,123 @@ def test_device_fcm_create(
     assert data['name'] == 'test device'
     assert device.user == user
     assert device.registration_id == 'test id'
+
+
+def test_user_reviews_list(
+    user: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should return a user reviews list."""
+    obj = reviews.filter(user=user).first()
+    response = client_with_token.get(reverse('user-reviews-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 1
+    assert data['results'][0]['title'] == obj.title
+
+
+def test_user_review_detail(
+    user: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should return a user review."""
+    obj = reviews.filter(user=user).first()
+    response = client_with_token.get(
+        reverse('user-reviews-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['description'] == obj.description
+
+
+def test_user_review_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = reviews.filter(user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-reviews-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_review_create(
+    user: User,
+    admin: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+):
+    """Should be able to create a user review object."""
+    professional = professionals.filter(user=admin).first()
+    response = client_with_token.post(
+        reverse('user-reviews-list'),
+        {
+            'title': 'test title',
+            'description': 'test description',
+            'rating': 4,
+            'professional': professional.pk,
+            'user': user,
+        },
+    )
+    review = user.reviews.first()
+    assert response.status_code == 201
+    assert review.title == 'test title'
+
+
+def test_user_professional_photo_update(
+    user: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should be able to update a user review."""
+    obj = reviews.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-reviews-detail', args=[obj.pk]),
+        {
+            'title': 'new title',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.title == 'new title'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_review_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = reviews.filter(user=admin).first()
+    response = client_with_token.post(
+        reverse('user-reviews-detail', args=[obj.pk]), {'name': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_review_delete(
+    user: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should be able to delete a user review."""
+    obj = reviews.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-reviews-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert reviews.filter(pk=obj.pk).count() == 0
+
+
+def test_user_review_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = reviews.filter(user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-reviews-detail', args=[obj.pk]))
+    assert response.status_code == 404

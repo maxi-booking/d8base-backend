@@ -1,14 +1,37 @@
 """The location services test module."""
+from decimal import Decimal
 from typing import List
 
 import pytest
 from cities.models import (City, Country, District, PostalCode, Region,
                            Subregion)
+from django.db.models.query import QuerySet
 
+from communication.models import Review
 from location.interfaces import AbstractLocation
-from professionals.services import LocationCopyAutofiller
+from professionals.services import (LocationCopyAutofiller,
+                                    update_professional_rating)
+from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_update_professional_rating(
+    admin: User,
+    professionals: QuerySet,
+):
+    """Should update the professional rating."""
+    professional = professionals.first()
+    manager = Review.objects
+    manager.create(
+        user=admin,
+        professional=professional,
+        description='description',
+        rating=4,
+    )
+    update_professional_rating(professional)
+    professional.refresh_from_db()
+    assert professional.rating == Decimal(4.00)
 
 
 def test_location_autofiller_set_from_region(

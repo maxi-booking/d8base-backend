@@ -5,6 +5,32 @@ from django.utils.translation import gettext_lazy as _
 from pytz import common_timezones
 
 
+class RatingField(PositiveSmallIntegerField):
+    """The rating field for Django models."""
+
+    POOR: int = 1
+    AVERAGE: int = 2
+    GOOD: int = 3
+    VERY_GOOD: int = 4
+    EXCELLENT: int = 5
+
+    CHOICES = [
+        (POOR, _('poor')),
+        (AVERAGE, _('average')),
+        (GOOD, _('good')),
+        (VERY_GOOD, _('very good')),
+        (EXCELLENT, _('excellent')),
+    ]
+
+    description = _('Rating')
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the object."""
+        kwargs.setdefault('choices', self.CHOICES)
+        kwargs.setdefault('verbose_name', _('rating'))
+        super().__init__(*args, **kwargs)
+
+
 class LanguageField(CharField):
     """The language field for Django models."""
 
