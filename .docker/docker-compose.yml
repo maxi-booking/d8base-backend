@@ -34,6 +34,22 @@ services:
     networks:
       - d8b-network
 
+  mail:
+    image: mailhog/mailhog
+    hostname: mail
+    ports:
+    - "8025:8025"
+    networks:
+      - d8b-network
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6380:6379"
+    networks:
+      - d8b-network
+
   memcached:
     image: memcached:alpine
     networks:
@@ -55,9 +71,7 @@ services:
       - rabbitmq
       - memcached
     networks:
-      d8b-network:
-        aliases:
-          - backend
+      - d8b-network
 
 volumes:
   pgdata:
