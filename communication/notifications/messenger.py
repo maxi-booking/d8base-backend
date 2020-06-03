@@ -12,10 +12,11 @@ class Messenger():
     """The messanger class."""
 
     # firebase
-    messengers: List[Task] = []
+    messengers: List[Task]
 
     def __init__(self):
         """Construct the object."""
+        self.messengers = []
         for name in get_settings('D8B_MESSENGER_TASKS'):
             self.messengers.append(import_string(name))
 
