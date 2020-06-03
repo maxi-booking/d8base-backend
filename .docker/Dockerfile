@@ -1,5 +1,5 @@
 FROM python:3
-ENV PYTHONUNBUFFERED 1
+
 RUN apt update && apt install -y gettext sqlite3 libsqlite3-dev libpq-dev binutils libproj-dev gdal-bin
 
 WORKDIR /usr/src/app
@@ -9,6 +9,7 @@ RUN pip install -e .
 RUN pip install --no-cache-dir -r ./requirements/dev.txt
 
 COPY . .
+COPY .docker/entrypoint.sh /entrypoint.sh
+RUN chmod  +x /entrypoint.sh
 
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["/entrypoint.sh"]
