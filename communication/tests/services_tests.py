@@ -1,13 +1,60 @@
 """The services tests module."""
+from typing import List
+
 import arrow
 import pytest
+from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
 
+from communication.models import Message, Review
 from communication.services import (delete_message_from_recipient,
                                     delete_message_from_sender,
-                                    mark_message_read)
+                                    mark_message_read, notify_new_message,
+                                    notify_new_review)
+from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_notify_new_message(
+    user: User,
+    admin: User,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should notify about a new message."""
+    message = Message()
+    message.recipient = user
+    message.sender = admin
+    message.subject = 'subject'
+    message.body = 'body'
+
+    notify_new_message(message)
+    assert len(mailoutbox) == 1
+    assert user.email in mailoutbox[0].recipients()
+
+    notify_new_message(message)
+    assert len(mailoutbox) == 2
+
+
+def test_notify_new_review(
+    user: User,
+    professionals: QuerySet,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should notify about a new review."""
+    professional = professionals.exclude(user=user).first()
+    review = Review()
+    review.user = user
+    review.professional = professional
+    review.title = 'title'
+    review.description = 'description'
+
+    notify_new_review(review)
+    assert len(mailoutbox) == 1
+    assert professional.user.email in mailoutbox[0].recipients()
+
+    notify_new_review(review)
+    assert len(mailoutbox) == 2
 
 
 def test_mark_message_read(messages: QuerySet):

@@ -9,7 +9,7 @@ from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
 from .managers import MessagesManager, ReviewManager
-from .services import notify_new_message
+from .services import notify_new_message, notify_new_review
 from .validators import (validate_message_parent, validate_message_recipient,
                          validate_review_user)
 
@@ -45,6 +45,11 @@ class Review(CommonInfo, ValidationMixin):
         validators=[MinLengthValidator(settings.D8B_REVIEW_MIN_LENGTH)],
     )
     rating = RatingField()
+
+    def save(self, **kwargs):
+        """Save the object."""
+        notify_new_review(self)
+        super().save(**kwargs)
 
     def __str__(self) -> str:
         """Return the string representation."""

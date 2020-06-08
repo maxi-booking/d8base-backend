@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class ValidationMixin(models.Model):
     """The validation mixin to validate multiple dependent fields."""
 
-    validators: List[Callable[[models.Model], None]] = []
+    validators: List[Callable[[models.Model], None]]
 
     def clean(self):
         """Validate the object."""
