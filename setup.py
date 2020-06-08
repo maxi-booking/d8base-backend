@@ -28,7 +28,7 @@ setup(
         exclude=['tests', '*.tests', '*.tests.*', 'tests.*']),
     include_package_data=True,
     install_requires=[
-        'Django>=3.0.7'
+        'Django>=3.0.7',
         'django-environ==0.4.5',
         'django-cors-headers==3.2.1',
         'django-modeltranslation==0.14.4',
