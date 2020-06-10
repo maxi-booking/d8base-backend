@@ -82,6 +82,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'add_review',
     'delete_review',
 
+    # review
+    'change_reviewcomment',
+    'add_reviewcomment',
+    'delete_reviewcomment',
+
     # location
     'change_continent',
     'change_country',

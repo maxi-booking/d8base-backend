@@ -1,4 +1,4 @@
-"""The services tests module."""
+"""The emails tests module."""
 import pytest
 from tests.fixtures.auth import USER_EMAIL
 

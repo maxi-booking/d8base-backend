@@ -1,0 +1,10 @@
+{% extends 'emails/base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+    <p>A new review comment notification.</p>
+    <p>title: {{ title }}</p>
+    <p>description: {{ description }}</p>
+    <p>review: {{ review }}</p>
+{% endblock %}

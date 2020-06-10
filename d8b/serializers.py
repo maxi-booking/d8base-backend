@@ -11,5 +11,8 @@ class ModelCleanFieldsSerializer(
         """Validate the object."""
         # pylint: disable=no-member
         instance = self.Meta.model(**attrs)
-        instance.clean()
+        if not self.instance:
+            instance.full_clean()
+        else:
+            instance.clean()
         return super().validate(attrs)

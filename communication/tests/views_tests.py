@@ -264,7 +264,7 @@ def test_user_review_create(
     assert review.title == 'test title'
 
 
-def test_user_professional_photo_update(
+def test_user_review_update(
     user: User,
     client_with_token: Client,
     reviews: QuerySet,
@@ -318,4 +318,122 @@ def test_user_review_delete_restricted_entry(
     obj = reviews.filter(user=admin).first()
     response = client_with_token.delete(
         reverse('user-reviews-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_review_comments_list(
+    user: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should return a user review comments list."""
+    obj = review_comments.filter(user=user).first()
+    response = client_with_token.get(reverse('user-review-comments-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 1
+    assert data['results'][0]['title'] == obj.title
+
+
+def test_user_review_comment_detail(
+    user: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should return a user review comment."""
+    obj = review_comments.filter(user=user).first()
+    response = client_with_token.get(
+        reverse('user-review-comments-detail', args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['description'] == obj.description
+
+
+def test_user_review_comment_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = review_comments.filter(user=admin).first()
+    response = client_with_token.patch(
+        reverse('user-review-comments-detail', args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_review_comment_create(
+    user: User,
+    client_with_token: Client,
+    reviews: QuerySet,
+):
+    """Should be able to create a user review comment object."""
+    review = reviews.filter(professional__user=user).first()
+    response = client_with_token.post(
+        reverse('user-review-comments-list'),
+        {
+            'title': 'test title',
+            'description': 'test description',
+            'review': review.pk,
+            'user': user,
+        },
+    )
+    review = user.review_comments.first()
+    assert response.status_code == 201
+    assert review.title == 'test title'
+
+
+def test_user_review_comment_update(
+    user: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should be able to update a user review comment."""
+    obj = review_comments.filter(user=user).first()
+    response = client_with_token.patch(
+        reverse('user-review-comments-detail', args=[obj.pk]),
+        {
+            'title': 'new title',
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.title == 'new title'
+    assert obj.user == user
+    assert obj.modified_by == user
+
+
+def test_user_review_comment_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = review_comments.filter(user=admin).first()
+    response = client_with_token.post(
+        reverse('user-review-comments-detail', args=[obj.pk]), {'name': 'x'})
+    assert response.status_code == 405
+
+
+def test_user_review_comment_delete(
+    user: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should be able to delete a user review."""
+    obj = review_comments.filter(user=user).first()
+    response = client_with_token.delete(
+        reverse('user-review-comments-detail', args=[obj.pk]))
+    assert response.status_code == 204
+    assert review_comments.filter(pk=obj.pk).count() == 0
+
+
+def test_user_review_comment_delete_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should deny access to someone else's record."""
+    obj = review_comments.filter(user=admin).first()
+    response = client_with_token.delete(
+        reverse('user-review-comments-detail', args=[obj.pk]))
     assert response.status_code == 404

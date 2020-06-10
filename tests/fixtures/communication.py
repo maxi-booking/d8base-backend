@@ -3,7 +3,7 @@
 import pytest
 from django.db.models.query import QuerySet
 
-from communication.models import Message, Review
+from communication.models import Message, Review, ReviewComment
 from conftest import OBJECTS_TO_CREATE
 from users.models import User
 
@@ -50,3 +50,23 @@ def reviews(admin: User, user: User, professionals: QuerySet) -> QuerySet:
         rating=5,
     )
     return Review.objects.get_list()
+
+
+@pytest.fixture
+def review_comments(admin: User, user: User, reviews: QuerySet) -> QuerySet:
+    """Return a reviews queryset."""
+    admin_review = reviews.filter(professional__user=admin).first()
+    user_review = reviews.filter(professional__user=user).first()
+    ReviewComment.objects.create(
+        user=user,
+        review=user_review,
+        title='title user',
+        description='description user',
+    )
+    ReviewComment.objects.create(
+        user=admin,
+        review=admin_review,
+        title='title admin',
+        description='description admin',
+    )
+    return ReviewComment.objects.get_list()

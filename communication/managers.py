@@ -11,6 +11,22 @@ if TYPE_CHECKING:
     from professionals.models import Professional
 
 
+class ReviewCommentManager(models.Manager):
+    """The review comment manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of review comments."""
+        return self.all().select_related(
+            'user',
+            'review',
+            'review__professional',
+            'review__professional__user',
+            'review__user',
+            'created_by',
+            'modified_by',
+        )
+
+
 class ReviewManager(models.Manager):
     """The review manager."""
 
@@ -29,6 +45,10 @@ class ReviewManager(models.Manager):
         result = self.filter(professional=professional).\
             aggregate(models.Avg('rating'))['rating__avg']
         return Decimal(round(result, 2)) if result else None
+
+    def get_user_list(self, user: User) -> QuerySet:
+        """Return a list filtered by the user."""
+        return self.get_list().filter(professional__user=user)
 
 
 class MessagesManager(models.Manager):

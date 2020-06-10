@@ -7,7 +7,24 @@ from django.utils.translation import gettext_lazy as _
 from communication.notifications import Messenger
 
 if TYPE_CHECKING:
-    from .models import Message, Review
+    from .models import Message, Review, ReviewComment
+
+
+def notify_new_review_comment(comment: 'ReviewComment') -> None:
+    """Notify about a new review comment."""
+    if comment.pk:
+        return None
+    Messenger().send(
+        user=comment.review.user,
+        subject=_('You have new review comments'),
+        template='review_comment_notification',
+        context={
+            'title': comment.title,
+            'description': comment.description,
+            'review': str(comment.review),
+        },
+    )
+    return None
 
 
 def notify_new_review(review: 'Review') -> None:

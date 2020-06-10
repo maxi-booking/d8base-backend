@@ -6,14 +6,37 @@ import pytest
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
 
-from communication.models import Message, Review
+from communication.models import Message, Review, ReviewComment
 from communication.services import (delete_message_from_recipient,
                                     delete_message_from_sender,
                                     mark_message_read, notify_new_message,
-                                    notify_new_review)
+                                    notify_new_review,
+                                    notify_new_review_comment)
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_notify_new_review_comment(
+    user: User,
+    reviews: QuerySet,
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should notify about a new review comment."""
+    mailoutbox.clear()
+    review = reviews.exclude(professional__user=user).first()
+    comment = ReviewComment()
+    comment.user = user
+    comment.review = review
+    comment.title = 'title'
+    comment.description = 'description'
+
+    notify_new_review_comment(comment)
+    assert len(mailoutbox) == 1
+    assert review.user.email in mailoutbox[0].recipients()
+
+    notify_new_review_comment(comment)
+    assert len(mailoutbox) == 2
 
 
 def test_notify_new_message(

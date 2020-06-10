@@ -11,6 +11,17 @@ from users.models import User
 pytestmark = pytest.mark.django_db
 
 
+def test_review_manager_get_user_list(
+    user: User,
+    reviews: QuerySet,
+):
+    """Should return a professional list filtered by a the user."""
+    assert reviews.count() == 2
+    result = Review.objects.get_user_list(user)
+    assert result.count() == 1
+    assert result.first().professional.user == user
+
+
 def test_review_manager_get_professional_rating(
     admin: User,
     professionals: QuerySet,

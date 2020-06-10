@@ -10,7 +10,7 @@ from professionals.admin_fiters import ProfessionalFilter
 from users.admin_fiters import UserFilter
 
 from .admin_fiters import RecipientFilter, SenderFilter
-from .models import Message, Review
+from .models import Message, Review, ReviewComment
 
 admin.site.unregister(GCMDevice)
 
@@ -26,6 +26,17 @@ class GCMDeviceAdmin(VersionAdmin, BaseGCMDeviceAdmin):
         """Required for the AutocompleteFilter."""
 
 
+class ReviewCommentInlineAdmin(admin.StackedInline):
+    """The review comment inline admin."""
+
+    model = ReviewComment
+    fields = ('id', 'user', 'title', 'description', 'created_by',
+              'modified_by')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    autocomplete_fields = ('user', )
+    classes = ['collapse']
+
+
 @admin.register(Review)
 class ReviewAdmin(VersionAdmin):
     """The review admin class."""
@@ -37,6 +48,8 @@ class ReviewAdmin(VersionAdmin):
     list_filter = (ProfessionalFilter, UserFilter, 'rating', 'created')
     search_fields = ('=id', 'title', 'description')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    inlines = (ReviewCommentInlineAdmin, )
 
     autocomplete_fields = ('professional', 'user')
     fieldsets: Tuple = (
