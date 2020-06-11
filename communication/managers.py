@@ -88,3 +88,15 @@ class MessagesManager(models.Manager):
         if is_read is not None:
             query = query.filter(is_read=is_read)
         return query
+
+    def get_latest_distinct_received_messages(
+        self,
+        user: Optional[User] = None,
+    ) -> QuerySet:
+        """Return a list of user latest distinct received messages."""
+        subquery = models.Subquery(self.all().distinct('sender__pk').values(
+            'pk').order_by('sender__pk'))
+        query = self.get_received_messages(user).\
+            filter(pk__in=subquery).order_by('-created')
+
+        return query

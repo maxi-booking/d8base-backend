@@ -92,5 +92,29 @@ def test_get_received_messages(admin: User, messages: QuerySet):
     message = query.first()
     message.is_read = True
     message.save()
-    assert num - 2 == manager.get_received_messages(admin,
-                                                    is_read=False).count()
+    assert num - 2 == manager.get_received_messages(
+        admin,
+        is_read=False,
+    ).count()
+
+
+def test_get_latest_distinct_received_messages(
+    user: User,
+    admin: User,
+    messages: QuerySet,
+):
+    """Should return received messages."""
+    manager = Message.objects
+    assert manager.get_received_messages(admin).count() == messages.filter(
+        recipient=admin).count()
+    assert manager.get_latest_distinct_received_messages(admin).count() == 1
+
+    Message.objects.create(
+        sender=user,
+        recipient=admin,
+        subject='latest subject',
+        body='latest body',
+    )
+    result = manager.get_latest_distinct_received_messages(admin)
+    assert result.count() == 1
+    assert result.first().subject == 'latest subject'

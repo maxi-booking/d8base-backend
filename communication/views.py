@@ -9,7 +9,8 @@ from rest_framework.viewsets import GenericViewSet
 
 from .filtersets import ReviewCommentFilterSet
 from .models import Message, Review, ReviewComment
-from .serializers import (ReceivedMessageSerializer, ReviewCommentSerializer,
+from .serializers import (LatestReceivedMessageSerializer,
+                          ReceivedMessageSerializer, ReviewCommentSerializer,
                           ReviewSerializer, SentMessageSerializer)
 from .services import (delete_message_from_recipient,
                        delete_message_from_sender, mark_message_read)
@@ -35,6 +36,17 @@ class UserReviewViewSet(viewsets.ModelViewSet):
     filterset_fields = ('rating', 'created', 'modified')
     search_fields = ('=id', 'professional__name', 'professional__description',
                      'title', 'description')
+
+
+class LatestReceivedMessagesViewSet(viewsets.ReadOnlyModelViewSet):
+    """The latest received messages list viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = 'recipient'
+    serializer_class = LatestReceivedMessageSerializer
+    queryset = Message.objects.get_latest_distinct_received_messages()
+    search_fields = ('=id', 'subject', 'body', 'sender__email',
+                     'sender__last_name')
 
 
 class ReceivedMessagesViewSet(RetrieveModelMixin, ListModelMixin,

@@ -437,3 +437,18 @@ def test_user_review_comment_delete_restricted_entry(
     response = client_with_token.delete(
         reverse('user-review-comments-detail', args=[obj.pk]))
     assert response.status_code == 404
+
+
+def test_latest_distinct_recivied_messages_list(
+    user: User,
+    client_with_token: Client,
+    messages: QuerySet,
+):
+    """Should return a latest distinct received messages list."""
+    obj = messages.filter(recipient=user).last()
+    response = client_with_token.get(reverse('messages-latest-received-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert data['count'] == 1
+    assert data['results'][0]['subject'] == obj.subject
+    assert data['results'][0]['sender']['email'] == obj.sender.email

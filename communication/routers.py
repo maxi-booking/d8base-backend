@@ -2,8 +2,9 @@
 from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet
 from rest_framework.routers import SimpleRouter
 
-from .views import (ReceivedMessagesViewSet, SentMessagesViewSet,
-                    UserReviewCommentViewSet, UserReviewViewSet)
+from .views import (LatestReceivedMessagesViewSet, ReceivedMessagesViewSet,
+                    SentMessagesViewSet, UserReviewCommentViewSet,
+                    UserReviewViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -23,6 +24,11 @@ def get_router() -> SimpleRouter:
         r'communication/devices/fcm',
         GCMDeviceAuthorizedViewSet,
         'communication-devices-fmc',
+    )
+    router.register(
+        r'communication/messages/latest-received',
+        LatestReceivedMessagesViewSet,
+        'messages-latest-received',
     )
     router.register(
         r'communication/messages/sent',
