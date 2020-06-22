@@ -15,10 +15,18 @@ from users.models import (User, UserContact, UserLanguage, UserLocation,
 @pytest.fixture
 def contacts(countries: List[Country]) -> QuerySet:
     """Return a contacts queryset."""
-    telegram, _ = Contact.objects.get_or_create(name='telegram')
-    icq, _ = Contact.objects.get_or_create(name='icq')
-    whatsapp, _ = Contact.objects.get_or_create(name='whatsapp')
-
+    telegram, _ = Contact.objects.get_or_create(
+        name='telegram',
+        code='telegram_code',
+    )
+    icq, _ = Contact.objects.get_or_create(
+        name='icq',
+        code='icq_code',
+    )
+    whatsapp, _ = Contact.objects.get_or_create(
+        name='whatsapp',
+        code='whatsapp_code',
+    )
     telegram.countries.add(countries[0])
     icq.excluded_countries.add(countries[1])
     whatsapp.excluded_countries.add(countries[0])

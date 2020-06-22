@@ -15,5 +15,5 @@ class ContactViewSet(
 
     serializer_class = ContactSerializer
     queryset = Contact.objects.get_list()
-    search_fields = ('=id', 'name')
+    search_fields = ('=id', 'name', 'code')
     filterset_class = ContactFilterSet

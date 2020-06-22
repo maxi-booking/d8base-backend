@@ -25,4 +25,5 @@ class ContactFilterSet(filters.FilterSet):
         """The contact filter class serializer META class."""
 
         model = Contact
-        fields = ('by_country', 'countries', 'excluded_countries')
+        fields = ('by_country', 'countries', 'excluded_countries',
+                  'is_default')

@@ -20,6 +20,19 @@ class Contact(CommonInfo):
         null=True,
         db_index=True,
     )
+    code = models.CharField(
+        _('code'),
+        max_length=150,
+        blank=True,
+        null=True,
+        unique=True,
+        db_index=True,
+    )
+    is_default = models.BooleanField(
+        _('is_default'),
+        default=False,
+        help_text=_('Does the contact appear in the default list?'),
+    )
     countries = models.ManyToManyField(
         Country,
         blank=True,
@@ -62,6 +75,11 @@ class ContactMixin(models.Model):
     def contact_display(self) -> str:
         """Return the name of the contact."""
         return self.contact.name
+
+    @property
+    def contact_code(self) -> str:
+        """Return the code of the contact."""
+        return self.contact.code
 
     class Meta():
         """The contact mixin class META class."""

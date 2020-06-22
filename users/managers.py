@@ -90,6 +90,7 @@ class UserContactManager(models.Manager):
         """Return a list of user contacts."""
         return self.all().select_related(
             'user',
+            'contact',
             'created_by',
             'modified_by',
         )

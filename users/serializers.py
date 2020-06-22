@@ -129,8 +129,8 @@ class UserContactSerializer(
 
         model = UserContact
 
-        fields = ('id', 'user', 'contact', 'contact_display', 'value',
-                  'created', 'modified', 'created_by', 'modified_by')
+        fields = ('id', 'user', 'contact', 'contact_display', 'contact_code',
+                  'value', 'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
