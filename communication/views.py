@@ -4,12 +4,14 @@ from typing import Optional
 from rest_framework import status, viewsets
 from rest_framework.mixins import (DestroyModelMixin, ListModelMixin,
                                    RetrieveModelMixin)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .filtersets import ReviewCommentFilterSet
+from .filtersets import (MessagesListFilterSet, ReciviedMessagesFilterSet,
+                         ReviewCommentFilterSet, SentMessagesFilterSet)
 from .models import Message, Review, ReviewComment
-from .serializers import (LatestReceivedMessageSerializer,
+from .serializers import (LatestMessageSerializer, MessageSerializer,
                           ReceivedMessageSerializer, ReviewCommentSerializer,
                           ReviewSerializer, SentMessageSerializer)
 from .services import (delete_message_from_recipient,
@@ -38,15 +40,49 @@ class UserReviewViewSet(viewsets.ModelViewSet):
                      'title', 'description')
 
 
-class LatestReceivedMessagesViewSet(viewsets.ReadOnlyModelViewSet):
-    """The latest received messages list viewset."""
+class LatestMessagesViewSet(viewsets.ViewSet):
+    """The latest messages list viewset."""
 
-    is_owner_filter_enabled = True
-    owner_filter_field = 'recipient'
-    serializer_class = LatestReceivedMessageSerializer
-    queryset = Message.objects.get_latest_distinct_received_messages()
-    search_fields = ('=id', 'subject', 'body', 'sender__email',
-                     'sender__last_name')
+    permission_classes = [IsAuthenticated]
+    serializer_class = LatestMessageSerializer
+
+    def list(self, request):
+        """Get a list."""
+        queryset = Message.objects.get_latest_distinct_messages(
+            interlocutor=request.user)
+        serializer = self.serializer_class(list(queryset), many=True)
+        return Response(serializer.data)
+
+
+class MessagesListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The readonly messages viewset."""
+
+    serializer_class = MessageSerializer
+    queryset = Message.objects.get_list()
+    search_fields = ('=id', 'subject', 'body', 'sender__last_name',
+                     'sender__email', 'recipient__email',
+                     'recipient__last_name')
+
+    filterset_class = MessagesListFilterSet
+
+    def mark_read(self, query):
+        """Mark messages as read."""
+        sender = self.request.GET.get('interlocutor')
+        if sender:
+            Message.objects.mark_read(
+                recipient=self.request.user,
+                sender=sender,
+                query=query,
+            )
+
+    def get_queryset(self):
+        """Return the queryset."""
+        query = Message.objects.get_by_interlocutor(
+            interlocutor=self.request.user,
+            queryset=super().get_queryset(),
+        )
+        self.mark_read(query)
+        return query
 
 
 class ReceivedMessagesViewSet(RetrieveModelMixin, ListModelMixin,
@@ -57,8 +93,10 @@ class ReceivedMessagesViewSet(RetrieveModelMixin, ListModelMixin,
     owner_filter_field = 'recipient'
     serializer_class = ReceivedMessageSerializer
     queryset = Message.objects.get_received_messages()
-    search_fields = ('=id', 'subject', 'sender__last_name', 'sender__email')
+    search_fields = ('=id', 'subject', 'body', 'sender__last_name',
+                     'sender__email')
     filterset_fields = ('is_read', )
+    filterset_class = ReciviedMessagesFilterSet
     delete_service = delete_message_from_recipient
     read_service = mark_message_read
 
@@ -83,9 +121,9 @@ class SentMessagesViewSet(viewsets.ModelViewSet):
     owner_filter_field = 'sender'
     serializer_class = SentMessageSerializer
     queryset = Message.objects.get_sent_messages()
-    search_fields = ('=id', 'subject', 'recipient__last_name',
+    search_fields = ('=id', 'subject', 'body', 'recipient__last_name',
                      'recipient__email')
-    filterset_fields = ('is_read', )
+    filterset_class = SentMessagesFilterSet
     delete_service = delete_message_from_sender
 
     def _check_update_permission(self) -> Optional[Response]:

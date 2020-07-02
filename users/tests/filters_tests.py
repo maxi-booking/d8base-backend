@@ -10,16 +10,19 @@ from users.models import User
 pytestmark = pytest.mark.django_db
 
 
-def test_owner_filter(user: User, user_languages: QuerySet,
-                      professional_tags: QuerySet):
+class MockView():
+    """The mock view class."""
+
+    is_owner_filter_enabled = False
+    owner_filter_field = 'user'
+
+
+def test_owner_filter_field(
+    user: User,
+    user_languages: QuerySet,
+    professional_tags: QuerySet,
+):
     """Should filter a queryset by user."""
-
-    class MockView():
-        """The mock view class."""
-
-        is_owner_filter_enabled = False
-        owner_filter_field = 'user'
-
     request = HttpRequest()
     request.user = user
     view = MockView()

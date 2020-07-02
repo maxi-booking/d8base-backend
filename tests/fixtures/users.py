@@ -6,6 +6,7 @@ from cities.models import Country, PostalCode
 from django.contrib.gis.geos import Point
 from django.db.models.query import QuerySet
 
+from conftest import OBJECTS_TO_CREATE
 from contacts.models import Contact
 from users.models import (User, UserContact, UserLanguage, UserLocation,
                           UserSavedProfessional, UserSettings)
@@ -32,6 +33,19 @@ def contacts(countries: List[Country]) -> QuerySet:
     whatsapp.excluded_countries.add(countries[0])
 
     return Contact.objects.get_list()
+
+
+@pytest.fixture
+def users() -> QuerySet:
+    """Return a users queryset."""
+    for i in range(0, OBJECTS_TO_CREATE):
+        User.objects.create_user(
+            email=f'user_{i}@example.com',
+            password='pass',
+            first_name='user_first_name_{i}',
+            last_name='user_last_name_{i}',
+        )
+    return User.objects.filter(email__startswith='user_')
 
 
 @pytest.fixture

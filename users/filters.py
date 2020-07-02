@@ -10,6 +10,5 @@ class OwnerFilter(BaseFilterBackend):
         if not getattr(view, 'is_owner_filter_enabled', False):
             return queryset
         field_name = getattr(view, 'owner_filter_field', 'user')
-        return queryset.filter(**{
-            field_name: request.user
-        }).select_related(field_name)
+        user = request.user
+        return queryset.filter(**{field_name: user}).select_related(field_name)

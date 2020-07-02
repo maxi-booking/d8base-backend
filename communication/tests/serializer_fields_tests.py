@@ -33,6 +33,6 @@ def test_parent_message_foreign_key(messages: QuerySet):
     obj._context = {'request': request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
-    assert messages.count() == OBJECTS_TO_CREATE * 2
+    assert messages.count() == OBJECTS_TO_CREATE * 4
     assert result.count() == OBJECTS_TO_CREATE
     assert result.first().recipient == user

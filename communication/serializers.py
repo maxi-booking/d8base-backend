@@ -40,8 +40,8 @@ class ReviewSerializer(ModelCleanFieldsSerializer, UserHiddenFieldMixin):
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
-class SenderSerializer(serializers.ModelSerializer):
-    """The message sender serializer."""
+class UserSerializer(serializers.ModelSerializer):
+    """The message sender or recipient serializer."""
 
     avatar_thumbnail = serializers.ImageField(read_only=True)
     avatar = serializers.ImageField(read_only=True)
@@ -55,10 +55,11 @@ class SenderSerializer(serializers.ModelSerializer):
                   'avatar_thumbnail')
 
 
-class LatestReceivedMessageSerializer(serializers.ModelSerializer):
+class LatestMessageSerializer(serializers.ModelSerializer):
     """The latest received message serializer."""
 
-    sender = SenderSerializer(many=False, read_only=True)
+    sender = UserSerializer(many=False, read_only=True)
+    recipient = UserSerializer(many=False, read_only=True)
 
     class Meta:
         """The professional list class serializer META class."""
@@ -70,6 +71,21 @@ class LatestReceivedMessageSerializer(serializers.ModelSerializer):
                   'modified_by')
         read_only_fields = ('read_datetime', 'is_read', 'created', 'modified',
                             'created_by', 'modified_by')
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    """The message serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = Message
+
+        fields = ('id', 'sender', 'recipient', 'parent', 'subject', 'body',
+                  'is_read', 'read_datetime', 'created', 'modified',
+                  'created_by', 'modified_by')
+        read_only_fields = ('sender', 'recipient', 'read_datetime', 'is_read',
+                            'created', 'modified', 'created_by', 'modified_by')
 
 
 class SentMessageSerializer(ModelCleanFieldsSerializer):

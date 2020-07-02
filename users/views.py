@@ -55,6 +55,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
 
     is_owner_filter_enabled = True
     serializer_class = UserLocationSerializer
+    filterset_fields = ('is_default', )
     queryset = UserLocation.objects.get_list()
 
 

@@ -11,8 +11,11 @@ from users.models import User
 
 
 @pytest.fixture
-def messages(admin: User, user: User) -> QuerySet:
+def messages(admin: User, user: User, users: QuerySet) -> QuerySet:
     """Return a messages queryset."""
+    user_one = users.first()
+    user_two = users[1]
+
     for i in range(0, OBJECTS_TO_CREATE):
         Message.objects.create(
             sender=admin,
@@ -26,6 +29,20 @@ def messages(admin: User, user: User) -> QuerySet:
             recipient=admin,
             subject=f'subject {i}',
             body=f'message body {i}',
+        )
+    for i in range(0, OBJECTS_TO_CREATE):
+        Message.objects.create(
+            sender=user_one,
+            recipient=user_two,
+            subject=f'subject user {i}',
+            body=f'message body user {i}',
+        )
+    for i in range(0, OBJECTS_TO_CREATE):
+        Message.objects.create(
+            sender=user_two,
+            recipient=user_one,
+            subject=f'subject user {i}',
+            body=f'message body user {i}',
         )
     return Message.objects.get_list()
 

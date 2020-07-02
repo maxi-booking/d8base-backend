@@ -10,7 +10,7 @@ from d8b.fields import RatingField
 from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
-from .managers import MessagesManager, ReviewCommentManager, ReviewManager
+from .managers import MessageManager, ReviewCommentManager, ReviewManager
 from .services import (notify_new_message, notify_new_review,
                        notify_new_review_comment)
 from .validators import (validate_message_parent, validate_message_recipient,
@@ -119,7 +119,7 @@ class Message(CommonInfo, ValidationMixin):
 
     validators = [validate_message_recipient, validate_message_parent]
     notifier: Callable[['Review'], None] = notify_new_message
-    objects = MessagesManager()
+    objects = MessageManager()
 
     parent = models.ForeignKey(
         'self',
