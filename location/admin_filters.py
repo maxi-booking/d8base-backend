@@ -5,8 +5,8 @@ from admin_auto_filters.filters import AutocompleteFilter
 class RegionFilter(AutocompleteFilter):
     """The admin region filter."""
 
-    title = 'city'
-    field_name = 'city'
+    title = 'region'
+    field_name = 'region'
 
 
 class CityFilter(AutocompleteFilter):
@@ -20,4 +20,4 @@ class DistrictFilter(AutocompleteFilter):
     """The admin district filter."""
 
     title = 'district'
-    field_name = 'city'
+    field_name = 'district'
