@@ -10,11 +10,42 @@ from d8b.fields import RatingField
 from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
-from .managers import MessageManager, ReviewCommentManager, ReviewManager
+from .managers import (MessageManager, ReviewCommentManager, ReviewManager,
+                       SuggestedMessageManager)
 from .services import (notify_new_message, notify_new_review,
                        notify_new_review_comment)
 from .validators import (validate_message_parent, validate_message_recipient,
                          validate_review_comment_user, validate_review_user)
+
+
+class SuggestedMessage(CommonInfo):
+    """The suggestion class."""
+
+    objects = SuggestedMessageManager()
+
+    subcategory = models.ForeignKey(
+        'professionals.Subcategory',
+        on_delete=models.SET_NULL,
+        related_name='suggested_answers',
+        verbose_name=_('subcategory'),
+        null=True,
+        blank=True,
+    )
+    name = models.CharField(
+        _('name'),
+        max_length=255,
+        db_index=True,
+    )
+    body = models.TextField(_('body'))
+    is_enabled = models.BooleanField(
+        default=True,
+        verbose_name=_('is enabled?'),
+        db_index=True,
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f'{self.name}'
 
 
 class Review(CommonInfo, ValidationMixin):

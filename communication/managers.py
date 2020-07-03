@@ -14,6 +14,18 @@ if TYPE_CHECKING:
     from .models import Message
 
 
+class SuggestedMessageManager(models.Manager):
+    """The suggested answer manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of objects."""
+        return self.all().select_related(
+            'subcategory',
+            'created_by',
+            'modified_by',
+        )
+
+
 class ReviewCommentManager(models.Manager):
     """The review comment manager."""
 

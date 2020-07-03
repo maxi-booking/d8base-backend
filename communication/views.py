@@ -10,12 +10,22 @@ from rest_framework.viewsets import GenericViewSet
 
 from .filtersets import (MessagesListFilterSet, ReciviedMessagesFilterSet,
                          ReviewCommentFilterSet, SentMessagesFilterSet)
-from .models import Message, Review, ReviewComment
+from .models import Message, Review, ReviewComment, SuggestedMessage
 from .serializers import (LatestMessageSerializer, MessageSerializer,
                           ReceivedMessageSerializer, ReviewCommentSerializer,
-                          ReviewSerializer, SentMessageSerializer)
+                          ReviewSerializer, SentMessageSerializer,
+                          SuggestedMessageSerializer)
 from .services import (delete_message_from_recipient,
                        delete_message_from_sender, mark_message_read)
+
+
+class SuggestedMessageViewSet(viewsets.ReadOnlyModelViewSet):
+    """The suggested answer viewset."""
+
+    serializer_class = SuggestedMessageSerializer
+    queryset = SuggestedMessage.objects.get_list()
+    filterset_fields = ('subcategory', 'is_enabled')
+    search_fields = ('=id', 'name', 'body')
 
 
 class UserReviewCommentViewSet(viewsets.ModelViewSet):

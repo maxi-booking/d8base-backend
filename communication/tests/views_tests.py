@@ -8,9 +8,40 @@ from push_notifications.models import GCMDevice
 
 from communication.models import Message
 from conftest import OBJECTS_TO_CREATE
+from d8b.lang import select_locale
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_suggested_messages_list(
+    client_with_token: Client,
+    suggested_messages: QuerySet,
+):
+    """Should return a list of suggested messages."""
+    message = suggested_messages.first()
+    response = client_with_token.get(reverse('messages-suggested-list'))
+
+    assert response.status_code == 200
+    assert response.accepted_media_type == 'application/json'
+    assert response.json()['count'] == suggested_messages.count()
+    assert response.json()['results'][0]['name'] == message.name
+
+
+def test_suggested_messages_list_de(
+    client_with_token: Client,
+    suggested_messages: QuerySet,
+):
+    """Should return a list of suggested messages."""
+    message = suggested_messages.first()
+
+    with select_locale('de'):
+        response = client_with_token.get(reverse('messages-suggested-list'))
+
+    assert response.status_code == 200
+    assert response.accepted_media_type == 'application/json'
+    assert response.json()['count'] == suggested_messages.count()
+    assert response.json()['results'][0]['body'] == message.body_de
 
 
 def test_received_messages_list(

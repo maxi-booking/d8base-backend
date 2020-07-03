@@ -1,12 +1,28 @@
 """The communication serializers module."""
 from rest_framework import serializers
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.serializers import ModelCleanFieldsSerializer
 from users.models import User
 from users.serializers import UserHiddenFieldMixin
 
-from .models import Message, Review, ReviewComment
+from .models import Message, Review, ReviewComment, SuggestedMessage
 from .serializer_fields import ParentMessageForeignKey, UserReviewForeignKey
+
+
+class SuggestedMessageSerializer(
+        serializers.ModelSerializer,
+        CacheResponseMixin,
+):
+    """The suggested answer serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = SuggestedMessage
+
+        fields = ('id', 'name', 'body', 'subcategory', 'is_enabled')
+        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 
 class ReviewCommentSerializer(

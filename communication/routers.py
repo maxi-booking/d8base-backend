@@ -4,7 +4,8 @@ from rest_framework.routers import SimpleRouter
 
 from .views import (LatestMessagesViewSet, MessagesListViewSet,
                     ReceivedMessagesViewSet, SentMessagesViewSet,
-                    UserReviewCommentViewSet, UserReviewViewSet)
+                    SuggestedMessageViewSet, UserReviewCommentViewSet,
+                    UserReviewViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -24,6 +25,11 @@ def get_router() -> SimpleRouter:
         r'communication/devices/fcm',
         GCMDeviceAuthorizedViewSet,
         'communication-devices-fmc',
+    )
+    router.register(
+        r'communication/messages/suggested',
+        SuggestedMessageViewSet,
+        'messages-suggested',
     )
     router.register(
         r'communication/messages/latest',

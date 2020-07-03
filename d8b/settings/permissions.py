@@ -77,6 +77,9 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'add_message',
     'delete_message',
 
+    # suggested message
+    'change_suggestedmessage',
+
     # review
     'change_review',
     'add_review',

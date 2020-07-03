@@ -3,11 +3,27 @@
 import pytest
 from django.db.models.query import QuerySet
 
-from communication.models import Message, Review, ReviewComment
+from communication.models import (Message, Review, ReviewComment,
+                                  SuggestedMessage)
 from conftest import OBJECTS_TO_CREATE
 from users.models import User
 
 # pylint: disable=redefined-outer-name
+
+
+@pytest.fixture
+def suggested_messages(subcategories: QuerySet) -> QuerySet:
+    """Return a subcategories queryset."""
+    cat = subcategories.first()
+    for i in range(0, OBJECTS_TO_CREATE):
+        SuggestedMessage.objects.create(
+            subcategory=cat,
+            name_en=f'name {i}',
+            body_en=f'description {i}',
+            name_de=f'der name {i}',
+            body_de=f'beschreibung {i}',
+        )
+    return SuggestedMessage.objects.get_list()
 
 
 @pytest.fixture

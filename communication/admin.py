@@ -2,6 +2,7 @@
 from typing import Tuple, Type
 
 from django.contrib import admin
+from modeltranslation.admin import TabbedTranslationAdmin
 from push_notifications.admin import GCMDeviceAdmin as BaseGCMDeviceAdmin
 from push_notifications.models import GCMDevice
 from reversion.admin import VersionAdmin
@@ -10,7 +11,7 @@ from professionals.admin_fiters import ProfessionalFilter
 from users.admin_fiters import UserFilter
 
 from .admin_fiters import RecipientFilter, SenderFilter
-from .models import Message, Review, ReviewComment
+from .models import Message, Review, ReviewComment, SuggestedMessage
 
 admin.site.unregister(GCMDevice)
 
@@ -21,6 +22,33 @@ class GCMDeviceAdmin(VersionAdmin, BaseGCMDeviceAdmin):
 
     list_filter = (UserFilter, 'active', 'cloud_message_type')
     autocomplete_fields = ('user', )
+
+    class Media:
+        """Required for the AutocompleteFilter."""
+
+
+@admin.register(SuggestedMessage)
+class SuggestedMessageAdmin(VersionAdmin, TabbedTranslationAdmin):
+    """The suggested answer admin class."""
+
+    model: Type = SuggestedMessage
+    list_display = ('id', 'name', 'subcategory', 'body', 'is_enabled',
+                    'created', 'created_by')
+    list_display_links = ('id', 'name')
+    list_filter = ('subcategory', 'is_enabled')
+    search_fields = ('=id', 'name', 'body')
+    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+
+    fieldsets: Tuple = (
+        ('General', {
+            'fields': ('name', 'body')
+        }),
+        ('Options', {
+            'fields': ('subcategory', 'is_enabled', 'created', 'modified',
+                       'created_by', 'modified_by')
+        }),
+    )
+    list_select_related = ('subcategory', 'created_by')
 
     class Media:
         """Required for the AutocompleteFilter."""
