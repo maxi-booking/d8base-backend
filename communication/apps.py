@@ -1,4 +1,4 @@
-"""The communication app module."""
+"""The communication apps module."""
 from django.apps import AppConfig
 
 

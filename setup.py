@@ -38,7 +38,7 @@ setup(
         'djangorestframework-gis==0.15',
         'django-rest-registration==0.5.6',
         'django-extra-fields==2.0.5',
-        'django-extensions==2.2.8',  # pinned
+        'django-extensions==2.2.8',  # rq.filter: >=2.0.0,<3.0.0
         'django-debug-toolbar==2.2',
         'django-reversion==3.0.7',
         'django-filter==2.3.0',

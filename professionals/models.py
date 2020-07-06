@@ -249,7 +249,7 @@ class BaseTag(CommonInfo):
 
 
 class ProfessionalTag(BaseTag):
-    """The base tag class."""
+    """The professional tag class."""
 
     objects = ProfessionalTagManager()
 

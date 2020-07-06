@@ -53,7 +53,7 @@ class CategoryAdmin(SortableAdmin, VersionAdmin, TabbedTranslationAdmin):
 
 
 class ProfessionalTagInlineAdmin(admin.TabularInline):
-    """The subcategories admin class."""
+    """The professional tag admin class."""
 
     model = ProfessionalTag
     fields = ('id', 'name', 'created', 'modified', 'created_by', 'modified_by')
@@ -265,8 +265,8 @@ class ProfessionalPhotoAdmin(VersionAdmin):
 
     model: Type = ProfessionalPhoto
     photo_thumbnail = AdminThumbnail(image_field='photo_thumbnail')
-    list_display = ('id', 'photo_thumbnail', 'name', 'order', 'created',
-                    'created_by')
+    list_display = ('id', 'photo_thumbnail', 'name', 'order', 'professional',
+                    'created', 'created_by')
     list_display_links = ('id', 'name')
     list_filter = (ProfessionalFilter, )
     search_fields = ('=id', 'professional__name', 'professional__user__email',

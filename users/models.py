@@ -190,6 +190,11 @@ class UserSettings(CommonInfo):
         related_name='settings',
         verbose_name=_('user'),
     )
+    is_last_name_hidden = models.BooleanField(
+        default=False,
+        help_text=_('Is the last name hidden from other users?'),
+        verbose_name=_('is the last name hidden?'),
+    )
     units = UnitsField(verbose_name=_('units'))
 
     def __str__(self) -> str:
