@@ -113,7 +113,7 @@ class ServiceLocation(CommonInfo, ValidationMixin):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='location',
+        related_name='locations',
         verbose_name=_('service'),
     )
     location = models.ForeignKey(
@@ -182,8 +182,8 @@ class Price(CommonInfo, ValidationMixin):
         verbose_name=_('service'),
     )
     price = MoneyField(
-        max_digits=19,
-        decimal_places=4,
+        max_digits=settings.D8B_MONEY_MAX_DIGITS,
+        decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
         verbose_name=_('price'),
         null=True,
         blank=True,
@@ -191,8 +191,8 @@ class Price(CommonInfo, ValidationMixin):
         db_index=True,
     )
     start_price = MoneyField(
-        max_digits=19,
-        decimal_places=4,
+        max_digits=settings.D8B_MONEY_MAX_DIGITS,
+        decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
         verbose_name=_('start price'),
         null=True,
         blank=True,
@@ -200,8 +200,8 @@ class Price(CommonInfo, ValidationMixin):
         db_index=True,
     )
     end_price = MoneyField(
-        max_digits=19,
-        decimal_places=4,
+        max_digits=settings.D8B_MONEY_MAX_DIGITS,
+        decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
         verbose_name=_('end price'),
         null=True,
         blank=True,

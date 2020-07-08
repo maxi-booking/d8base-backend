@@ -1,4 +1,4 @@
-"""The users serializers module."""
+"""The professionals serializers module."""
 
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers

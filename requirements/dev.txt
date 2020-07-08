@@ -17,7 +17,6 @@ pytest-lazy-fixture
 yapf
 twine
 jedi
-isort
 pyflakes
 coverage
 flake8

@@ -24,6 +24,11 @@ class ProfessionalLocationManager(models.Manager):
             'modified_by',
         )
 
+    # TODO: test it
+    def get_user_list(self, user: User) -> QuerySet:
+        """Return a list of professional localizations filtered by user."""
+        return self.get_list().filter(professional__user=user)
+
 
 class ProfessionalPhotoManager(models.Manager):
     """The professional photo manager."""

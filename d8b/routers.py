@@ -5,6 +5,7 @@ from communication.routers import get_router as get_communication_router
 from contacts.routers import get_router as get_contacts_router
 from location.routers import get_router as get_location_router
 from professionals.routers import get_router as get_professionals_router
+from services.routers import get_router as get_services_router
 from users.routers import get_router as get_users_router
 
 
@@ -25,4 +26,5 @@ def get_router_urls() -> list:
     router.extend(get_contacts_router())
     router.extend(get_professionals_router())
     router.extend(get_communication_router())
+    router.extend(get_services_router())
     return router.urls

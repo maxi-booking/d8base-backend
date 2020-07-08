@@ -2,6 +2,8 @@
 from django.db import models
 from django.db.models.query import QuerySet
 
+from users.models import User
+
 
 class ServiceManager(models.Manager):
     """The service manager."""
@@ -11,9 +13,15 @@ class ServiceManager(models.Manager):
         return self.all().select_related(
             'professional__user',
             'professional',
+            'price',
             'created_by',
             'modified_by',
         )
+
+    # TODO: test it
+    def get_user_list(self, user: User) -> QuerySet:
+        """Return a list of services filtered by user."""
+        return self.get_list().filter(professional__user=user)
 
 
 class ServiceTagManager(models.Manager):
@@ -22,10 +30,17 @@ class ServiceTagManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
+            'service__professional',
+            'service__professional__user',
             'service',
             'created_by',
             'modified_by',
         )
+
+    # TODO: test it
+    def get_names(self) -> QuerySet:
+        """Return a list of professional tags names."""
+        return self.all().distinct('name').order_by('name').values('name')
 
 
 class ServiceLocationManager(models.Manager):
@@ -34,6 +49,8 @@ class ServiceLocationManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
+            'service__professional',
+            'service__professional__user',
             'service',
             'created_by',
             'modified_by',
@@ -46,6 +63,8 @@ class ServicePhotoManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
+            'service__professional',
+            'service__professional__user',
             'service',
             'created_by',
             'modified_by',
@@ -58,6 +77,8 @@ class ServicePriceManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
+            'service__professional',
+            'service__professional__user',
             'service',
             'created_by',
             'modified_by',

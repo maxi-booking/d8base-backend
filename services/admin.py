@@ -35,6 +35,7 @@ class ServiceLocationInlineAdmin(admin.TabularInline):
     fields = ('id', 'location', 'max_distance', 'created', 'modified',
               'created_by', 'modified_by')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    classes = ['collapse']
 
 
 @admin.register(ServicePhoto)

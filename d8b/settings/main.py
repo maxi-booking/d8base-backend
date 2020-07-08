@@ -378,7 +378,7 @@ SWAGGER_SETTINGS = {
 # Django money
 DEFAULT_CURRENCY = 'USD'
 BASE_CURRENCY = DEFAULT_CURRENCY
-# CURRENCIES = ('RUB', 'EUR', 'CAD', 'USD')
+CURRENCIES = ('RUB', 'EUR', 'CAD', 'USD')
 EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
 FIXER_ACCESS_KEY = ENV.str('FIXER_ACCESS_KEY')
 

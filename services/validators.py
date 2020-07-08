@@ -8,7 +8,6 @@ if TYPE_CHECKING:
     from .models import Price, ServiceLocation
 
 
-# TODO: test it
 def validate_service_location(location: 'ServiceLocation'):
     """Validate the service location."""
     if location.service.professional != location.location.professional:
