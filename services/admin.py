@@ -24,7 +24,8 @@ class PriceInlineAdmin(admin.StackedInline):
 
     model = Price
     fields = ('id', 'price', 'is_price_fixed', 'start_price', 'end_price',
-              'created', 'modified', 'created_by', 'modified_by')
+              'payment_types', 'created', 'modified', 'created_by',
+              'modified_by')
     readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

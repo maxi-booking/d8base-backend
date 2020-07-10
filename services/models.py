@@ -1,5 +1,6 @@
 """The services models module."""
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -174,6 +175,13 @@ class Price(CommonInfo, ValidationMixin):
     validators = [validate_service_price]
     objects = ServicePriceManager()
 
+    TYPE_CASH: str = 'cash'
+    TYPE_ONLINE: str = 'online'
+    PAYMENT_TYPE_CHOICES = [
+        (TYPE_CASH, _('cash')),
+        (TYPE_ONLINE, _('online')),
+    ]
+
     service = models.OneToOneField(
         Service,
         on_delete=models.CASCADE,
@@ -211,6 +219,15 @@ class Price(CommonInfo, ValidationMixin):
         default=True,
         verbose_name=_('is the price fixed?'),
         db_index=True,
+    )
+    payment_types = ArrayField(
+        models.CharField(
+            max_length=10,
+            choices=PAYMENT_TYPE_CHOICES,
+        ),
+        verbose_name=_('payment types'),
+        db_index=True,
+        help_text='available payment methods',
     )
 
     def __str__(self) -> str:
