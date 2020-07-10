@@ -48,8 +48,8 @@ class PriceSerializer(ModelCleanFieldsSerializer):
         model = Price
         fields = ('id', 'service', 'price', 'price_currency', 'start_price',
                   'start_price_currency', 'end_price', 'end_price_currency',
-                  'is_price_fixed', 'payment_types', 'modified', 'created_by',
-                  'modified_by')
+                  'is_price_fixed', 'payment_methods', 'modified',
+                  'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
 

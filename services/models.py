@@ -177,7 +177,7 @@ class Price(CommonInfo, ValidationMixin):
 
     TYPE_CASH: str = 'cash'
     TYPE_ONLINE: str = 'online'
-    PAYMENT_TYPE_CHOICES = [
+    PAYMENT_METHODS_CHOICES = [
         (TYPE_CASH, _('cash')),
         (TYPE_ONLINE, _('online')),
     ]
@@ -220,12 +220,12 @@ class Price(CommonInfo, ValidationMixin):
         verbose_name=_('is the price fixed?'),
         db_index=True,
     )
-    payment_types = ArrayField(
+    payment_methods = ArrayField(
         models.CharField(
             max_length=10,
-            choices=PAYMENT_TYPE_CHOICES,
+            choices=PAYMENT_METHODS_CHOICES,
         ),
-        verbose_name=_('payment types'),
+        verbose_name=_('payment methods'),
         db_index=True,
         help_text='available payment methods',
     )
