@@ -121,7 +121,7 @@ class RateSerializer(serializers.ModelSerializer):
         """Get the currency sign."""
         result = _FORMATTER.get_sign_definition(rate.currency, get_language())
 
-        return result[1] or result[0]
+        return result[1].strip() or result[0].strip()
 
     @staticmethod
     def get_countries(rate: Rate) -> List[str]:
@@ -133,7 +133,7 @@ class RateSerializer(serializers.ModelSerializer):
     def get_title(rate: Rate) -> str:
         """Get the currency title."""
         currency = CURRENCIES.get(rate.currency)
-        return _(getattr(currency, 'name', '-'))
+        return _(getattr(currency, 'name', '-').strip())
 
     class Meta:
         """The metainformation."""

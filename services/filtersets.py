@@ -9,7 +9,6 @@ from professionals.filtersets import _get_professionals
 from .models import Price, Service, ServiceLocation, ServicePhoto, ServiceTag
 
 
-# TODO: test it
 def _get_services(request: HttpRequest) -> QuerySet:
     """Get a list of services."""
     if not request:

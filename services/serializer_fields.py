@@ -7,7 +7,6 @@ from professionals.models import ProfessionalLocation
 from .models import Service
 
 
-# TODO: test it
 class AccountServiceForeignKey(serializers.PrimaryKeyRelatedField):
     """The service field filtered by the request user."""
 

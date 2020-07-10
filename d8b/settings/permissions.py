@@ -99,4 +99,32 @@ GROUP_USER_PERMISSIONS: List[str] = [
     'change_district',
     'change_postalcode',
     'change_alternativename',
+
+    # rates
+    'change_rate',
+
+    # services
+    'change_service',
+    'add_service',
+    'delete_service',
+
+    # prices
+    'change_price',
+    'add_price',
+    'delete_price',
+
+    # serice tags
+    'change_servicetag',
+    'add_servicetag',
+    'delete_servicetag',
+
+    # serice locations
+    'change_servicelocation',
+    'add_servicelocation',
+    'delete_servicelocation',
+
+    # serice photos
+    'change_servicephoto',
+    'add_servicephoto',
+    'delete_servicephoto',
 ]

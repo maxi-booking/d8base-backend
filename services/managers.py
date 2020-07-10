@@ -18,7 +18,6 @@ class ServiceManager(models.Manager):
             'modified_by',
         )
 
-    # TODO: test it
     def get_user_list(self, user: User) -> QuerySet:
         """Return a list of services filtered by user."""
         return self.get_list().filter(professional__user=user)
@@ -37,7 +36,6 @@ class ServiceTagManager(models.Manager):
             'modified_by',
         )
 
-    # TODO: test it
     def get_names(self) -> QuerySet:
         """Return a list of professional tags names."""
         return self.all().distinct('name').order_by('name').values('name')

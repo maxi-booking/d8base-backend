@@ -2,11 +2,23 @@
 
 import pytest
 from django.db.models.query import QuerySet
+from djmoney.contrib.exchange.models import ExchangeBackend, Rate
 from moneyed import EUR, USD, Money
 
 from services.models import Price, Service
 
 # pylint: disable=redefined-outer-name
+
+
+@pytest.fixture
+def rates() -> QuerySet:
+    """Return a rates queryset."""
+    backend = ExchangeBackend.objects.create(name='test', base_currency='USD')
+    Rate.objects.create(currency='USD', value='10.5', backend=backend)
+    Rate.objects.create(currency='EUR', value='1.5', backend=backend)
+    Rate.objects.create(currency='CAD', value='0.5', backend=backend)
+
+    return Rate.objects.all()
 
 
 @pytest.fixture
