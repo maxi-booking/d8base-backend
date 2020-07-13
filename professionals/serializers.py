@@ -78,8 +78,8 @@ class ProfessionalListSerializer(serializers.ModelSerializer):
 
         model = Professional
         fields = ('id', 'user', 'name', 'description', 'company', 'experience',
-                  'level', 'rating', 'subcategory', 'created', 'modified',
-                  'created_by', 'modified_by')
+                  'level', 'rating', 'subcategory', 'is_last_name_hidden',
+                  'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('rating', 'created', 'modified', 'created_by',
                             'modified_by')
 

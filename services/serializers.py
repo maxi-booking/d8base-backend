@@ -22,7 +22,6 @@ from .serializer_fields import (AccountProfessionalLocationForeignKey,
 class PriceSerializer(ModelCleanFieldsSerializer):
     """The price serializer."""
 
-    # TODO: make is_price_fixed required
     service = AccountServiceForeignKey()
     price = MoneyField(
         max_digits=settings.D8B_MONEY_MAX_DIGITS,
@@ -52,6 +51,7 @@ class PriceSerializer(ModelCleanFieldsSerializer):
                   'is_price_fixed', 'payment_methods', 'modified',
                   'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        extra_kwargs = {'is_price_fixed': {'required': True}}
 
 
 class ServiceTagSerializer(serializers.ModelSerializer):

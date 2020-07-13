@@ -212,6 +212,11 @@ class Professional(CommonInfo):
         related_name='professionals',
         verbose_name=_('user'),
     )
+    is_last_name_hidden = models.BooleanField(
+        _('is last name hidden?'),
+        default=False,
+        help_text=_('Is the last name hidden?'),
+    )
 
     def __str__(self) -> str:
         """Return the string representation."""
@@ -305,7 +310,7 @@ class ProfessionalExperience(CommonInfo, ValidationMixin):
         max_length=255,
     )
     is_still_here = models.BooleanField(
-        _('is_still_here'),
+        _('is still here?'),
         default=False,
         help_text=_('Is the professional still working here?'),
     )
