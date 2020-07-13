@@ -69,6 +69,12 @@ class Service(CommonInfo):
         verbose_name=_('is the base schedule used?'),
         db_index=True,
     )
+    is_auto_order_confirmation = models.BooleanField(
+        default=True,
+        help_text=_('are orders confirmed automatically?'),
+        verbose_name=_('is auto order confirmation?'),
+        db_index=True,
+    )
     is_enabled = models.BooleanField(
         default=False,
         verbose_name=_('is enabled?'),

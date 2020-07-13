@@ -89,7 +89,8 @@ class ServiceSerializer(serializers.ModelSerializer):
 
         model = Service
         fields = ('id', 'professional', 'name', 'description', 'duration',
-                  'service_type', 'is_base_schedule', 'is_enabled', 'price',
+                  'service_type', 'is_base_schedule',
+                  'is_auto_order_confirmation', 'is_enabled', 'price',
                   'created', 'modified', 'created_by', 'modified_by')
         read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
 
@@ -115,7 +116,6 @@ class RateSerializer(serializers.ModelSerializer):
     """The rate model serializer."""
 
     title = serializers.SerializerMethodField()
-
     countries = serializers.SerializerMethodField()
     sign = serializers.SerializerMethodField()
 

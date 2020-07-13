@@ -152,8 +152,8 @@ class ProfessionalAdmin(VersionAdmin):
             'fields': ('experience', 'level', 'rating')
         }),
         ('Options', {
-            'fields': ('is_auto_order_confirmation', 'slug', 'user', 'created',
-                       'modified', 'created_by', 'modified_by')
+            'fields': ('slug', 'user', 'created', 'modified', 'created_by',
+                       'modified_by')
         }),
     )
     list_select_related = ('created_by', 'subcategory', 'user')

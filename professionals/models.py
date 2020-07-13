@@ -200,12 +200,6 @@ class Professional(CommonInfo):
         blank=True,
         db_index=True,
     )
-    is_auto_order_confirmation = models.BooleanField(
-        default=True,
-        help_text=_('are orders confirmed automatically?'),
-        verbose_name=_('is auto order confirmation?'),
-        db_index=True,
-    )
     subcategory = models.ForeignKey(
         Subcategory,
         on_delete=models.PROTECT,

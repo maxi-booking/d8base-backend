@@ -78,8 +78,9 @@ class ServiceAdmin(VersionAdmin):
     """The service admin class."""
 
     model: Type = Service
-    list_display = ('id', 'name', 'duration', 'service_type', 'is_enabled',
-                    'professional', 'created', 'modified')
+    list_display = ('id', 'name', 'duration', 'service_type',
+                    'is_auto_order_confirmation', 'is_enabled', 'professional',
+                    'created', 'modified')
     list_display_links = ('id', 'name')
     search_fields = ('=id', 'name', 'description', 'professional__name',
                      'professional__user__email')
@@ -97,9 +98,9 @@ class ServiceAdmin(VersionAdmin):
             'fields': ('professional', 'name', 'description')
         }),
         ('Options', {
-            'fields':
-                ('duration', 'service_type', 'is_base_schedule', 'is_enabled',
-                 'created', 'modified', 'created_by', 'modified_by')
+            'fields': ('duration', 'service_type', 'is_base_schedule',
+                       'is_auto_order_confirmation', 'is_enabled', 'created',
+                       'modified', 'created_by', 'modified_by')
         }),
     )
     list_select_related = ('professional', 'professional__user')
