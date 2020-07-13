@@ -1,7 +1,7 @@
 """The services validators module."""
 from typing import TYPE_CHECKING
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
 
 if TYPE_CHECKING:
@@ -10,9 +10,12 @@ if TYPE_CHECKING:
 
 def validate_service_location(location: 'ServiceLocation'):
     """Validate the service location."""
-    if location.service.professional != location.location.professional:
-        raise ValidationError(
-            {'location': _('Location from the other professional.')})
+    try:
+        if location.service.professional != location.location.professional:
+            raise ValidationError(
+                {'location': _('Location from the other professional.')})
+    except ObjectDoesNotExist:
+        pass
 
 
 def validate_service_price(price: 'Price'):

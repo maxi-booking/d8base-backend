@@ -1,7 +1,7 @@
 """The services models module."""
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
@@ -122,12 +122,15 @@ class ServiceLocation(CommonInfo, ValidationMixin):
         related_name='service_locations',
         verbose_name=_('location'),
     )
-    max_distance = models.PositiveIntegerField(
+    max_distance = models.DecimalField(
         _('maximum distance'),
+        max_digits=5,
+        decimal_places=1,
         db_index=True,
         null=True,
         blank=True,
         help_text=_('maximum travel distance from the location'),
+        validators=[MinValueValidator(0.1)],
     )
 
     class Meta(CommonInfo.Meta):

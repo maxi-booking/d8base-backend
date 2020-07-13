@@ -22,6 +22,7 @@ from .serializer_fields import (AccountProfessionalLocationForeignKey,
 class PriceSerializer(ModelCleanFieldsSerializer):
     """The price serializer."""
 
+    # TODO: make is_price_fixed required
     service = AccountServiceForeignKey()
     price = MoneyField(
         max_digits=settings.D8B_MONEY_MAX_DIGITS,
@@ -96,6 +97,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ServiceLocationSerializer(ModelCleanFieldsSerializer):
     """The service location serializer."""
 
+    # TODO: convert miles to km
     service = AccountServiceForeignKey()
     location = AccountProfessionalLocationForeignKey(required=False)
 

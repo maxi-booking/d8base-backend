@@ -81,4 +81,4 @@ class RateViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
     pagination_class = None
     queryset = Rate.objects.all().order_by('currency')
     serializer_class = RateSerializer
-    filter_fields = ('currency', )
+    filterset_fields = ('currency', )
