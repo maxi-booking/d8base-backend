@@ -127,5 +127,4 @@ node_modules
 /d8b/settings/.env_test
 logs/*
 !logs/.gitkeep
-d8b/services.py
 media/*

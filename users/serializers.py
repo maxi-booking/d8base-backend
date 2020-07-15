@@ -11,6 +11,15 @@ from .models import (User, UserContact, UserLanguage, UserLocation,
 from .registration import get_auth_tokens
 
 
+class UserCalculatedUnitsSerializer(serializers.Serializer):
+    """The user calculated units serializer."""
+
+    # pylint: disable=abstract-method
+    is_imperial_units = serializers.BooleanField()
+    timezone = serializers.CharField()
+    distance = serializers.ChoiceField(choices=settings.UNITS)
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     """The profile serializer."""
 

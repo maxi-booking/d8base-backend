@@ -1,14 +1,16 @@
 """The users routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import (UserContactViewSet, UserLanguageViewSet,
-                    UserLocationViewSet, UserSavedProfessionalViewSet,
-                    UserSettingsViewSet)
+from .views import (UserCalculatedUnitsViewSet, UserContactViewSet,
+                    UserLanguageViewSet, UserLocationViewSet,
+                    UserSavedProfessionalViewSet, UserSettingsViewSet)
 
 
 def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
+    router.register(r'users/units', UserCalculatedUnitsViewSet,
+                    'user-calculated-units')
     router.register(r'accounts/settings', UserSettingsViewSet, 'user-settings')
     router.register(r'accounts/languages', UserLanguageViewSet,
                     'user-languages')

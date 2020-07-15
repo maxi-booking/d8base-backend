@@ -14,10 +14,32 @@ from django.utils.text import slugify
 from rest_framework.test import APIClient
 
 from conftest import ADMIN_EMAIL, ADMIN_PASSWORD, USER_EMAIL, USER_PASSWORD
-from users.models import User
+from users.models import User, UserLocation, UserSettings
 from users.repositories import OauthRepository
 
 pytestmark = pytest.mark.django_db
+
+
+def test_user_calculated_units(
+    client_with_token: APIClient,
+    user: User,
+):
+    """Should return the user's units."""
+    response = client_with_token.get(reverse('user-calculated-units-list'))
+    data = response.json()
+    assert response.status_code == 200
+    assert not data['is_imperial_units']
+    assert data['distance'] == 'km'
+    assert data['timezone'] == 'UTC'
+
+    UserSettings.objects.create(user=user, units=settings.UNITS_IMPERIAL)
+    UserLocation.objects.create(user=user, timezone='America/Toronto')
+    user.refresh_from_db()
+    response = client_with_token.get(reverse('user-calculated-units-list'))
+    data = response.json()
+    assert data['is_imperial_units']
+    assert data['distance'] == 'mi'
+    assert data['timezone'] == 'America/Toronto'
 
 
 def test_auth_get_token(user: User, client: Client):

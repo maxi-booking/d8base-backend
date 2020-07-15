@@ -1,4 +1,5 @@
 """The services models module."""
+
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinLengthValidator, MinValueValidator
@@ -130,7 +131,7 @@ class ServiceLocation(CommonInfo, ValidationMixin):
     )
     max_distance = models.DecimalField(
         _('maximum distance'),
-        max_digits=5,
+        max_digits=7,
         decimal_places=1,
         db_index=True,
         null=True,
@@ -143,6 +144,7 @@ class ServiceLocation(CommonInfo, ValidationMixin):
         """The Metainformation."""
 
         abstract = False
+        unique_together = (('location', 'service'), )
 
 
 class ServicePhoto(PhotoMixin):

@@ -81,6 +81,7 @@ class LocationMixin(models.Model):
         blank=True,
     )
     units = UnitsField(verbose_name=_('units'))
+
     timezone = TimezoneField(
         verbose_name=_('timezone'),
         null=True,

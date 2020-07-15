@@ -11,6 +11,7 @@ from moneyed import CURRENCIES
 from moneyed.localization import _FORMATTER
 from rest_framework import serializers
 
+from d8b.serializer_fields import DistanceField
 from d8b.serializers import ModelCleanFieldsSerializer
 from professionals.serializer_fields import AccountProfessionalForeignKey
 
@@ -98,9 +99,14 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ServiceLocationSerializer(ModelCleanFieldsSerializer):
     """The service location serializer."""
 
-    # TODO: convert miles to km
     service = AccountServiceForeignKey()
     location = AccountProfessionalLocationForeignKey(required=False)
+    max_distance = DistanceField(
+        max_digits=7,
+        decimal_places=1,
+        coerce_to_string=False,
+        user=serializers.CurrentUserDefault(),
+    )
 
     class Meta:
         """The metainformation."""

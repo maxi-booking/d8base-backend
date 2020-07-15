@@ -12,6 +12,14 @@ pytestmark = pytest.mark.django_db
 # pylint: disable=no-value-for-parameter
 
 
+def test_user_location_manager_get_user_location(user: User):
+    """Should a user timezone."""
+    manager = UserLocation.objects
+    assert manager.get_user_timezone(user) is None
+    user.locations.create(timezone='Europe/London')
+    assert manager.get_user_timezone(user) == 'Europe/London'
+
+
 def test_user_manager_create_user():
     """Should create a user."""
     user = User.objects.create_user(email='common@user.com', password='foo')

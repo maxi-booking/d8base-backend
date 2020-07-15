@@ -25,6 +25,10 @@ from .managers import (UserContactManager, UserLanguageManager,
 from .validators import validate_birthday
 
 
+class CalculatedUserUnits:
+    """The calculated user units."""
+
+
 class User(AbstractUser):
     """The user class."""
 

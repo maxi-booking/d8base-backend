@@ -1,16 +1,20 @@
 """The users views module."""
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_registration.utils.verification_notifications import \
     send_register_verification_email_notification
 
+from d8b.units import is_imperial_units
+
+from .interfaces import UserCalculatedUnits
 from .models import (UserContact, UserLanguage, UserLocation,
                      UserSavedProfessional, UserSettings)
-from .serializers import (UserContactSerializer, UserLanguageSerializer,
-                          UserLocationSerializer,
+from .serializers import (UserCalculatedUnitsSerializer, UserContactSerializer,
+                          UserLanguageSerializer, UserLocationSerializer,
                           UserSavedProfessionalSerializer,
                           UserSettingsSerializer)
 
@@ -24,6 +28,26 @@ def resend_verify_registration(request):
         raise NotFound('the user has already been confirmed')
     send_register_verification_email_notification(request, request.user)
     return Response({'detail': 'a message has been sent'})
+
+
+# TODO: test it
+class UserCalculatedUnitsViewSet(viewsets.ViewSet):
+    """The user calculated units viewset."""
+
+    serializer_class = UserCalculatedUnitsSerializer
+    permission_classes = (AllowAny, )
+
+    def list(self, request):
+        """Return units."""
+        is_imperial = is_imperial_units(request.user)
+
+        units = UserCalculatedUnits(
+            is_imperial_units=is_imperial,
+            distance='mi' if is_imperial else 'km',
+            timezone=timezone.get_current_timezone_name(),
+        )
+        serializer = self.serializer_class(instance=units, many=False)
+        return Response(serializer.data)
 
 
 class UserSettingsViewSet(viewsets.ModelViewSet):

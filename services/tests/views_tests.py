@@ -433,7 +433,7 @@ def test_user_service_locations_list(
     data = response.json()
     assert response.status_code == 200
     assert data['count'] == 2
-    assert data['results'][0]['max_distance'] == str(obj.max_distance)
+    assert data['results'][0]['max_distance'] == obj.max_distance
 
 
 def test_user_service_locations_detail(
@@ -447,7 +447,7 @@ def test_user_service_locations_detail(
         reverse('user-service-locations-detail', args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['max_distance'] == str(obj.max_distance)
+    assert data['max_distance'] == obj.max_distance
 
 
 def test_user_service_locations_detail_restricted_entry(

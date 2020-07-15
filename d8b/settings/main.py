@@ -102,6 +102,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'd8b.middleware.DisableAdminI18nMiddleware',
     'd8b.middleware.ThreadSafeUserMiddleware',
+    'users.middleware.UserTimezoneMiddleware',
     'reversion.middleware.RevisionMiddleware',
 ]
 

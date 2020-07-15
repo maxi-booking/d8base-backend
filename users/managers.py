@@ -1,5 +1,5 @@
 """The users managers module."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
@@ -59,10 +59,11 @@ class UserSettingsManager(models.Manager):
     ):
         """Update or create a user settings from the user location object."""
         country = user_location.country
-        settings, created = self.get_or_create(
-            user=user_location.user,
-            units=user_location.units,
-        )
+        settings, created = self.get_or_create(user=user_location.user)
+
+        if created:
+            settings.units = user_location.units
+            settings.save()
 
         if not country:
             return
@@ -128,6 +129,11 @@ class UserLocationManager(models.Manager):
     def get_user_list(self, user: 'User') -> QuerySet:
         """Return a list of user location filtered by user."""
         return self.get_list().filter(user=user)
+
+    def get_user_timezone(self, user: 'User') -> Optional[str]:
+        """Return the user timezone."""
+        location = self.filter(user=user).first()
+        return location.timezone if location else location
 
 
 class UserManager(BaseUserManager):
