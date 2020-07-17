@@ -1,5 +1,5 @@
 """The d8b models module."""
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Iterable, List, Optional
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -82,5 +82,5 @@ class CommonInfo(TimeStampedModel):
     class Meta(TimeStampedModel.Meta):
         """The metainformation."""
 
-        ordering = ("-modified", "-created")
+        ordering: Iterable[str] = ("-modified", "-created")
         abstract = True
