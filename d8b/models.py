@@ -82,4 +82,5 @@ class CommonInfo(TimeStampedModel):
     class Meta(TimeStampedModel.Meta):
         """The metainformation."""
 
+        ordering = ("-modified", "-created")
         abstract = True
