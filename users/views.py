@@ -11,12 +11,20 @@ from rest_registration.utils.verification_notifications import \
 from d8b.units import is_imperial_units
 
 from .interfaces import UserCalculatedUnits
-from .models import (UserContact, UserLanguage, UserLocation,
+from .models import (User, UserContact, UserLanguage, UserLocation,
                      UserSavedProfessional, UserSettings)
 from .serializers import (UserCalculatedUnitsSerializer, UserContactSerializer,
                           UserLanguageSerializer, UserLocationSerializer,
                           UserSavedProfessionalSerializer,
                           UserSettingsSerializer)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def is_user_registered(request):
+    """Check if a user registered."""
+    user = User.objects.filter(email=request.data.get('email')).first()
+    return Response({'is_registered': bool(user)})
 
 
 @api_view(['POST'])
@@ -30,7 +38,6 @@ def resend_verify_registration(request):
     return Response({'detail': 'a message has been sent'})
 
 
-# TODO: test it
 class UserCalculatedUnitsViewSet(viewsets.ViewSet):
     """The user calculated units viewset."""
 

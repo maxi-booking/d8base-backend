@@ -20,6 +20,37 @@ from users.repositories import OauthRepository
 pytestmark = pytest.mark.django_db
 
 
+def test_is_user_registered(
+    client: APIClient,
+    user: User,
+    admin: User,
+):
+    """Should check if a user registered."""
+    response = client.post(
+        reverse('is-user-registered'),
+        {'email': admin.email},
+        content_type='application/json',
+    )
+    assert response.status_code == 200
+    assert response.json()['is_registered']
+
+    response = client.post(
+        reverse('is-user-registered'),
+        {'email': user.email},
+        content_type='application/json',
+    )
+    assert response.status_code == 200
+    assert response.json()['is_registered']
+
+    response = client.post(
+        reverse('is-user-registered'),
+        {'email': 'invalid_email'},
+        content_type='application/json',
+    )
+    assert response.status_code == 200
+    assert not response.json()['is_registered']
+
+
 def test_user_calculated_units(
     client_with_token: APIClient,
     user: User,
