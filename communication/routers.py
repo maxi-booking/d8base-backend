@@ -12,43 +12,43 @@ def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
     router.register(
-        r'accounts/reviews',
+        r"accounts/reviews",
         UserReviewViewSet,
-        'user-reviews',
+        "user-reviews",
     )
     router.register(
-        r'accounts/review-comments',
+        r"accounts/review-comments",
         UserReviewCommentViewSet,
-        'user-review-comments',
+        "user-review-comments",
     )
     router.register(
-        r'communication/devices/fcm',
+        r"communication/devices/fcm",
         GCMDeviceAuthorizedViewSet,
-        'communication-devices-fmc',
+        "communication-devices-fmc",
     )
     router.register(
-        r'communication/messages/suggested',
+        r"communication/messages/suggested",
         SuggestedMessageViewSet,
-        'messages-suggested',
+        "messages-suggested",
     )
     router.register(
-        r'communication/messages/latest',
+        r"communication/messages/latest",
         LatestMessagesViewSet,
-        'messages-latest',
+        "messages-latest",
     )
     router.register(
-        r'communication/messages/sent',
+        r"communication/messages/sent",
         SentMessagesViewSet,
-        'messages-sent',
+        "messages-sent",
     )
     router.register(
-        r'communication/messages/received',
+        r"communication/messages/received",
         ReceivedMessagesViewSet,
-        'messages-received',
+        "messages-received",
     )
     router.register(
-        r'communication/messages/list',
+        r"communication/messages/list",
         MessagesListViewSet,
-        'messages-list',
+        "messages-list",
     )
     return router

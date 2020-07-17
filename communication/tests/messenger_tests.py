@@ -20,8 +20,8 @@ def test_messenger_send(user: User, mocker: MockFixture):
     messenger.messengers = mocks
     messenger.send(
         user=user,
-        subject='test subject',
-        template='message_notification',
+        subject="test subject",
+        template="message_notification",
         context={},
     )
     for mock in mocks:

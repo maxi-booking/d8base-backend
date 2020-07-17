@@ -16,8 +16,8 @@ class CityFilterSet(filters.FilterSet):
     repository: CityRepository = CityRepository()
 
     by_name = filters.CharFilter(
-        label=_('By name'),
-        method='filter_by_name',
+        label=_("By name"),
+        method="filter_by_name",
     )
 
     def filter_by_name(self, queryset, _, value):
@@ -29,4 +29,4 @@ class CityFilterSet(filters.FilterSet):
         """The city filter class serializer META class."""
 
         model = City
-        fields = ('by_name', 'country', 'region', 'subregion', 'timezone')
+        fields = ("by_name", "country", "region", "subregion", "timezone")

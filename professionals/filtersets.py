@@ -23,24 +23,24 @@ def _get_professionals(request: HttpRequest) -> QuerySet:
 class ProfessionalListFilterSet(filters.FilterSet):
     """The filter class for the professional list viewset class."""
 
-    pk_in = NumberInFilter(field_name='id', lookup_expr='in')
+    pk_in = NumberInFilter(field_name="id", lookup_expr="in")
     experience = filters.NumericRangeFilter(
-        field_name='experience',
-        lookup_expr='range',
+        field_name="experience",
+        lookup_expr="range",
     )
 
     class Meta:
         """The professional list filterset class serializer META class."""
 
         model = Professional
-        fields = ('pk_in', 'subcategory', 'subcategory__category', 'level')
+        fields = ("pk_in", "subcategory", "subcategory__category", "level")
 
 
 class ProfessionalLocationFilterSet(filters.FilterSet):
     """The filter class for the professional location viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -48,14 +48,14 @@ class ProfessionalLocationFilterSet(filters.FilterSet):
         """The professional filterset class serializer META class."""
 
         model = ProfessionalLocation
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalPhotoFilterSet(filters.FilterSet):
     """The filter class for the professional photo viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -63,14 +63,14 @@ class ProfessionalPhotoFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ProfessionalPhoto
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalCertificateFilterSet(filters.FilterSet):
     """The filter class for the professional certificate viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -78,14 +78,14 @@ class ProfessionalCertificateFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ProfessionalCertificate
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalExperienceFilterSet(filters.FilterSet):
     """The filter class for the professional experience viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -93,14 +93,14 @@ class ProfessionalExperienceFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ProfessionalExperience
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalEductationFilterSet(filters.FilterSet):
     """The filter class for the professional education viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -108,14 +108,14 @@ class ProfessionalEductationFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ProfessionalEducation
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalContactFilterSet(filters.FilterSet):
     """The filter class for the professional contact viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -123,14 +123,14 @@ class ProfessionalContactFilterSet(filters.FilterSet):
         """The professional filterset class serializer META class."""
 
         model = ProfessionalContact
-        fields = ('professional', )
+        fields = ("professional", )
 
 
 class ProfessionalTagFilterSet(filters.FilterSet):
     """The filter class for the professional tag viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -138,4 +138,4 @@ class ProfessionalTagFilterSet(filters.FilterSet):
         """The professional filterset class serializer META class."""
 
         model = ProfessionalTag
-        fields = ('professional', )
+        fields = ("professional", )

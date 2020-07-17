@@ -37,23 +37,23 @@ def test_review_manager_get_professional_rating(
     manager.create(
         user=admin,
         professional=professional,
-        description='description',
+        description="description",
         rating=4,
     )
     assert manager.get_professional_rating(professional) == Decimal(4.00)
 
     manager.create(
-        user=user_manager.create_user('one@example.com', 'pass'),
+        user=user_manager.create_user("one@example.com", "pass"),
         professional=professional,
-        description='description',
+        description="description",
         rating=5,
     )
     assert manager.get_professional_rating(professional) == Decimal(4.50)
 
     manager.create(
-        user=user_manager.create_user('two@example.com', 'pass'),
+        user=user_manager.create_user("two@example.com", "pass"),
         professional=professional,
-        description='description',
+        description="description",
         rating=1,
     )
     assert manager.get_professional_rating(professional) == Decimal(3.33)
@@ -164,7 +164,7 @@ def test_message_manager_get_interlocutors(
     Message.objects.create(
         sender=user_another,
         recipient=admin,
-        body='another->admin',
+        body="another->admin",
     )
     result = Message.objects.get_interlocutors(interlocutor=admin)
     assert result.count() == 2
@@ -186,7 +186,7 @@ def test_message_manager_get_latest_distinct_messages(
         return Message.objects.get_latest_distinct_messages(admin)
 
     obj = messages.filter(Q(recipient=admin) | Q(sender=admin)).\
-        order_by('-created').first()
+        order_by("-created").first()
     data = request()
     assert len(data) == 1
     assert data[0] == obj
@@ -194,23 +194,23 @@ def test_message_manager_get_latest_distinct_messages(
     Message.objects.create(
         sender=admin,
         recipient=user,
-        body='admin->user',
+        body="admin->user",
     )
 
     data = request()
     assert len(data) == 1
-    assert data[0].body == 'admin->user'
+    assert data[0].body == "admin->user"
     assert data[0].sender.email == admin.email
 
     # Send message to the user from the another user
     Message.objects.create(
         sender=user_another,
         recipient=admin,
-        body='another->user',
+        body="another->user",
     )
     data = request()
     assert len(data) == 2
-    assert data[0].body == 'another->user'
+    assert data[0].body == "another->user"
     assert data[0].sender.email == user_another.email
     assert data[0].recipient.email == admin.email
 

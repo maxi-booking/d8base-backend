@@ -25,7 +25,7 @@ def convert_mi_km(value: Decimal) -> Decimal:
     return Decimal(dist.km)
 
 
-def is_imperial_units(user: 'User') -> bool:
+def is_imperial_units(user: "User") -> bool:
     """Check the request user units."""
     units = None
     if user.is_authenticated:
@@ -45,7 +45,7 @@ def get_country_code_from_timezone(name: str) -> Optional[str]:
         timezones = country_timezones[countrycode]
         for val in timezones:
             timezone_country[val] = countrycode
-    result = timezone_country.get(name, '').lower()
+    result = timezone_country.get(name, "").lower()
     return result or None
 
 

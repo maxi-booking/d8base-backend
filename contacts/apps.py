@@ -5,4 +5,4 @@ from django.apps import AppConfig
 class ContactsConfig(AppConfig):
     """The contacts app configuration."""
 
-    name: str = 'contacts'
+    name: str = "contacts"

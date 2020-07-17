@@ -14,7 +14,7 @@ def test_account_professional_foreign_key(user_locations: QuerySet):
     request = HttpRequest()
     user = user_locations[0].user
     request.user = user
-    obj._context = {'request': request}  # pylint: disable=protected-access
+    obj._context = {"request": request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
     assert user_locations.count() == 4

@@ -42,10 +42,10 @@ class CountryViewSet(
     serializer_class = CountrySerializer
     queryset = CountryRepository().get_list()
 
-    search_fields = ('=id', 'name', 'alt_names__name', 'slug', 'code', 'code3',
-                     'tld', 'capital', 'language_codes')
+    search_fields = ("=id", "name", "alt_names__name", "slug", "code", "code3",
+                     "tld", "capital", "language_codes")
 
-    filterset_fields = ('currency', 'continent', 'code', 'code3', 'tld')
+    filterset_fields = ("currency", "continent", "code", "code3", "tld")
 
 
 class RegionViewSet(
@@ -58,10 +58,10 @@ class RegionViewSet(
     serializer_class = RegionSerializer
     queryset = RegionRepository().get_list()
 
-    search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
-                     'code')
+    search_fields = ("=id", "name", "name_std", "alt_names__name", "slug",
+                     "code")
 
-    filterset_fields = ('country', 'code')
+    filterset_fields = ("country", "code")
 
 
 class SubregionViewSet(
@@ -74,10 +74,10 @@ class SubregionViewSet(
     serializer_class = SubregionSerializer
     queryset = SubregionRepository().get_list()
 
-    search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
-                     'code', 'region__name', 'region__name_std')
+    search_fields = ("=id", "name", "name_std", "alt_names__name", "slug",
+                     "code", "region__name", "region__name_std")
 
-    filterset_fields = ('region', 'region__country')
+    filterset_fields = ("region", "region__country")
 
 
 class CityViewSet(
@@ -91,9 +91,9 @@ class CityViewSet(
     serializer_class = CitySerializer
     queryset = CityRepository().get_list()
 
-    search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
-                     'region__name', 'region__name_std', 'subregion__name',
-                     'subregion__name_std')
+    search_fields = ("=id", "name", "name_std", "alt_names__name", "slug",
+                     "region__name", "region__name_std", "subregion__name",
+                     "subregion__name_std")
 
     filterset_class = CityFilterSet
 
@@ -109,10 +109,10 @@ class DistrictViewSet(
     serializer_class = DistrictSerializer
     queryset = DistrictRepository().get_list()
 
-    search_fields = ('=id', 'name', 'name_std', 'alt_names__name', 'slug',
-                     'city_name', 'city__name_std')
+    search_fields = ("=id", "name", "name_std", "alt_names__name", "slug",
+                     "city_name", "city__name_std")
 
-    filterset_fields = ('city', )
+    filterset_fields = ("city", )
 
 
 class PostalCodeViewSet(
@@ -126,12 +126,12 @@ class PostalCodeViewSet(
     serializer_class = PostalCodeSerializer
     queryset = PostalCodeRepository().get_list()
 
-    search_fields = ('=id', 'name', 'alt_names__name', 'slug', 'region_name',
-                     'subregion_name', 'district_name', 'country__name',
-                     'region__name', 'subregion__name', 'city__name',
-                     'district__name')
+    search_fields = ("=id", "name", "alt_names__name", "slug", "region_name",
+                     "subregion_name", "district_name", "country__name",
+                     "region__name", "subregion__name", "city__name",
+                     "district__name")
 
-    filterset_fields = ('country', 'region', 'subregion', 'city', 'district')
+    filterset_fields = ("country", "region", "subregion", "city", "district")
 
 
 class AlternativeNameViewSet(
@@ -144,10 +144,10 @@ class AlternativeNameViewSet(
     serializer_class = AlternativeNameSerializer
     queryset = AlternativeNameRepository().get_list()
 
-    search_fields = ('=id', 'name', 'slug')
+    search_fields = ("=id", "name", "slug")
 
-    filterset_fields = ('kind', 'language_code', 'is_preferred', 'is_short',
-                        'is_colloquial', 'is_historic')
+    filterset_fields = ("kind", "language_code", "is_preferred", "is_short",
+                        "is_colloquial", "is_historic")
 
 
 class ListLanguagesView(CacheResponseMixin, viewsets.ViewSet):
@@ -165,7 +165,7 @@ class ListLanguagesView(CacheResponseMixin, viewsets.ViewSet):
     def retrieve(self, request, *args, **kwargs):
         """Return a language object."""
         try:
-            lang = LanguageRepository().get(kwargs['pk'])
+            lang = LanguageRepository().get(kwargs["pk"])
         except ObjectDoesNotExist:
             raise NotFound
         serializer = self.serializer(lang)

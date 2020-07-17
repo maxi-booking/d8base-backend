@@ -20,7 +20,7 @@ def test_review_post_save_and_delete(
     manager.create(
         user=admin,
         professional=professional,
-        description='description',
+        description="description",
         rating=4,
     )
     professional.refresh_from_db()

@@ -31,4 +31,4 @@ class DistanceField(serializers.DecimalField):
         value = super().to_internal_value(data)
         if self.is_imperial_units():
             value = convert_mi_km(value)
-        return value.quantize(Decimal('.0'))
+        return value.quantize(Decimal(".0"))

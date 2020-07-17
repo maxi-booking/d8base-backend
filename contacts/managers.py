@@ -11,9 +11,9 @@ class ContactsManager(models.Manager):
     """The contacts  manager."""
 
     def get_by_country(
-            self,
-            country: Country,
-            queryset: Optional[QuerySet] = None,
+        self,
+        country: Country,
+        queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
         """Return a list of contacts available for the specified country."""
         if not queryset:
@@ -25,5 +25,5 @@ class ContactsManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of contacts."""
         return self.all().\
-            select_related('created_by', 'modified_by').\
-            prefetch_related('countries', 'excluded_countries')
+            select_related("created_by", "modified_by").\
+            prefetch_related("countries", "excluded_countries")

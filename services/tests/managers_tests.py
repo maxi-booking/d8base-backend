@@ -20,5 +20,5 @@ def test_servive_tag_manager_get_names(services: QuerySet):
     """Should return the filtered list of service tags."""
     result = ServiceTag.objects.get_names()
     assert result.count() == ServiceTag.objects.\
-        distinct('name').order_by('name').count()
+        distinct("name").order_by("name").count()
     assert isinstance(result.first(), dict)

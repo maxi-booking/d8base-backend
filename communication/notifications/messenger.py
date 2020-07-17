@@ -17,7 +17,7 @@ class Messenger():
     def __init__(self):
         """Construct the object."""
         self.messengers = []
-        for name in get_settings('D8B_MESSENGER_TASKS'):
+        for name in get_settings("D8B_MESSENGER_TASKS"):
             self.messengers.append(import_string(name))
 
     def send(
@@ -29,10 +29,10 @@ class Messenger():
     ):
         """Send messages."""
         data = {
-            'user_id': user.pk,
-            'subject': subject,
-            'template': template,
-            'context': context,
+            "user_id": user.pk,
+            "subject": subject,
+            "template": template,
+            "context": context,
         }
         for messanger in self.messengers:
             messanger.apply_async(kwargs=data)

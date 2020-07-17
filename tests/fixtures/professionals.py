@@ -24,10 +24,10 @@ def categories() -> QuerySet:
     """Return a categories queryset."""
     for i in range(0, OBJECTS_TO_CREATE):
         Category.objects.create(
-            name_en=f'category {i}',
-            description_en=f'category {i} description',
-            name_de=f'kategorie {i}',
-            description_de=f'kategorie {i} beschreibung',
+            name_en=f"category {i}",
+            description_en=f"category {i} description",
+            name_de=f"kategorie {i}",
+            description_de=f"kategorie {i} beschreibung",
         )
     return Category.objects.get_list()
 
@@ -39,10 +39,10 @@ def subcategories(categories: QuerySet) -> QuerySet:
         for i in range(0, 4):
             Subcategory.objects.create(
                 category=category,
-                name_en=f'{category}: subcategory {i}',
-                description_en=f'{category}: subcategory {i} description',
-                name_de=f'{category}: unterkategorie {i}',
-                description_de='{category}: unterkategorie {i} beschreibung',
+                name_en=f"{category}: subcategory {i}",
+                description_en=f"{category}: subcategory {i} description",
+                name_de=f"{category}: unterkategorie {i}",
+                description_de="{category}: unterkategorie {i} beschreibung",
             )
 
     return Subcategory.objects.get_list()
@@ -63,8 +63,8 @@ def professionals(
     )):
         Professional.objects.create(
             user=i[0],
-            name=f'professional {k}',
-            description=f'professional description {k}',
+            name=f"professional {k}",
+            description=f"professional description {k}",
             level=i[1],
             experience=i[2],
             subcategory=i[3],
@@ -79,7 +79,7 @@ def professional_tags(professionals: QuerySet, ) -> QuerySet:
         for i in range(0, OBJECTS_TO_CREATE):
             ProfessionalTag.objects.create(
                 professional=professional,
-                name=f'tag {professional.pk}-{i}',
+                name=f"tag {professional.pk}-{i}",
             )
     return ProfessionalTag.objects.get_list()
 
@@ -94,12 +94,12 @@ def professional_contacts(
         ProfessionalContact.objects.create(
             professional=professional,
             contact=contacts[0],
-            value=f'{contacts[0]}',
+            value=f"{contacts[0]}",
         )
         ProfessionalContact.objects.create(
             professional=professional,
             contact=contacts[1],
-            value=f'{contacts[1]}',
+            value=f"{contacts[1]}",
         )
     return ProfessionalContact.objects.get_list()
 
@@ -114,12 +114,12 @@ def professional_locations(
         ProfessionalLocation.objects.create(
             professional=professional,
             postal_code=postal_codes[0],
-            address=f'test address {postal_codes[0]}',
+            address=f"test address {postal_codes[0]}",
         )
         ProfessionalLocation.objects.create(
             professional=professional,
             postal_code=postal_codes[1],
-            address=f'test address {postal_codes[1]}',
+            address=f"test address {postal_codes[1]}",
         )
     return ProfessionalLocation.objects.get_list()
 
@@ -130,10 +130,10 @@ def professional_educations(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalEducation.objects.create(
             professional=professional,
-            university=f'university_{professional.pk}',
-            deegree=f'degree_{professional.pk}',
-            field_of_study=f'field_of_study_{professional.pk}',
-            description=f'description_{professional.pk}',
+            university=f"university_{professional.pk}",
+            deegree=f"degree_{professional.pk}",
+            field_of_study=f"field_of_study_{professional.pk}",
+            description=f"description_{professional.pk}",
             start_date=arrow.utcnow().shift(days=-3).date(),
             end_date=arrow.utcnow().shift(days=-2).date(),
         )
@@ -146,9 +146,9 @@ def professional_experience(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalExperience.objects.create(
             professional=professional,
-            title=f'title_{professional.pk}',
-            company=f'company_{professional.pk}',
-            description=f'description_{professional.pk}',
+            title=f"title_{professional.pk}",
+            company=f"company_{professional.pk}",
+            description=f"description_{professional.pk}",
             start_date=arrow.utcnow().shift(days=-3).date(),
             end_date=arrow.utcnow().shift(days=-2).date(),
         )
@@ -161,11 +161,11 @@ def professional_certificates(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalCertificate.objects.create(
             professional=professional,
-            name=f'name_{professional.pk}',
-            organization=f'company_{professional.pk}',
+            name=f"name_{professional.pk}",
+            organization=f"company_{professional.pk}",
             date=arrow.utcnow().shift(days=-3).date(),
-            certificate_id=f'certificate_id_{professional.pk}',
-            url=f'http://certificate.com//certificate_{professional.pk}',
+            certificate_id=f"certificate_id_{professional.pk}",
+            url=f"http://certificate.com//certificate_{professional.pk}",
         )
     return ProfessionalCertificate.objects.get_list()
 
@@ -176,7 +176,7 @@ def professional_photos(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalPhoto.objects.create(
             professional=professional,
-            name=f'name_{professional.pk}',
-            description=f'description_{professional.pk}',
+            name=f"name_{professional.pk}",
+            description=f"description_{professional.pk}",
         )
     return ProfessionalPhoto.objects.get_list()

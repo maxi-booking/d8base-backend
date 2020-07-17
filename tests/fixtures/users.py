@@ -17,16 +17,16 @@ from users.models import (User, UserContact, UserLanguage, UserLocation,
 def contacts(countries: List[Country]) -> QuerySet:
     """Return a contacts queryset."""
     telegram, _ = Contact.objects.get_or_create(
-        name='telegram',
-        code='telegram_code',
+        name="telegram",
+        code="telegram_code",
     )
     icq, _ = Contact.objects.get_or_create(
-        name='icq',
-        code='icq_code',
+        name="icq",
+        code="icq_code",
     )
     whatsapp, _ = Contact.objects.get_or_create(
-        name='whatsapp',
-        code='whatsapp_code',
+        name="whatsapp",
+        code="whatsapp_code",
     )
     telegram.countries.add(countries[0])
     icq.excluded_countries.add(countries[1])
@@ -40,22 +40,22 @@ def users() -> QuerySet:
     """Return a users queryset."""
     for i in range(0, OBJECTS_TO_CREATE):
         User.objects.create_user(
-            email=f'user_{i}@example.com',
-            password='pass',
-            first_name='user_first_name_{i}',
-            last_name='user_last_name_{i}',
+            email=f"user_{i}@example.com",
+            password="pass",
+            first_name="user_first_name_{i}",
+            last_name="user_last_name_{i}",
         )
-    return User.objects.filter(email__startswith='user_')
+    return User.objects.filter(email__startswith="user_")
 
 
 @pytest.fixture
 def user_languages(admin: User, user: User) -> QuerySet:
     """Return a user languages queryset."""
     for i in (
-        ('en', admin, True),
-        ('fr', user, True),
-        ('de', admin, False),
-        ('ru', admin, False),
+        ("en", admin, True),
+        ("fr", user, True),
+        ("de", admin, False),
+        ("ru", admin, False),
     ):
         UserLanguage.objects.create(language=i[0], user=i[1], is_native=i[2])
     return UserLanguage.objects.get_list()
@@ -65,8 +65,8 @@ def user_languages(admin: User, user: User) -> QuerySet:
 def user_settings(admin: User, user: User) -> QuerySet:
     """Return a user settings queryset."""
     for i in (
-        ('en', 'UDS', admin),
-        ('fr', 'EUR', user),
+        ("en", "UDS", admin),
+        ("fr", "EUR", user),
     ):
         UserSettings.objects.create(language=i[0], currency=i[1], user=i[2])
     return UserSettings.objects.get_list()
@@ -88,7 +88,7 @@ def user_locations(
         UserLocation.objects.create(
             user=i[0],
             postal_code=i[1],
-            address=f'test address {k}',
+            address=f"test address {k}",
             coordinates=i[2],
         )
     return UserLocation.objects.get_list()
@@ -110,7 +110,7 @@ def user_contacts(
         UserContact.objects.create(
             user=i[0],
             contact=i[1],
-            value=f'test contact {k}',
+            value=f"test contact {k}",
         )
     return UserContact.objects.get_list()
 
@@ -131,6 +131,6 @@ def user_saved_professionals(
         UserSavedProfessional.objects.create(
             user=i[0],
             professional=i[1],
-            note=f'professional note {k}',
+            note=f"professional note {k}",
         )
     return UserSavedProfessional.objects.get_list()

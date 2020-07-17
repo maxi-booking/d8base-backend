@@ -9,8 +9,8 @@ from .models import Category, Subcategory
 class CategoryTranslationOptions(TranslationOptions):
     """The category translation options class."""
 
-    fields = ('name', 'description')
-    required_languages = ('en', )
+    fields = ("name", "description")
+    required_languages = ("en", )
 
 
 @register(Subcategory)

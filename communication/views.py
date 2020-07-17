@@ -24,8 +24,8 @@ class SuggestedMessageViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer_class = SuggestedMessageSerializer
     queryset = SuggestedMessage.objects.get_list()
-    filterset_fields = ('subcategory', 'is_enabled')
-    search_fields = ('=id', 'name', 'body')
+    filterset_fields = ("subcategory", "is_enabled")
+    search_fields = ("=id", "name", "body")
 
 
 class UserReviewCommentViewSet(viewsets.ModelViewSet):
@@ -35,8 +35,8 @@ class UserReviewCommentViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewCommentSerializer
     queryset = ReviewComment.objects.get_list()
     filterset_class = ReviewCommentFilterSet
-    search_fields = ('=id', 'review__title', 'review__description', 'title',
-                     'description', 'review__user__last_name')
+    search_fields = ("=id", "review__title", "review__description", "title",
+                     "description", "review__user__last_name")
 
 
 class UserReviewViewSet(viewsets.ModelViewSet):
@@ -45,9 +45,9 @@ class UserReviewViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = ReviewSerializer
     queryset = Review.objects.get_list()
-    filterset_fields = ('rating', 'created', 'modified')
-    search_fields = ('=id', 'professional__name', 'professional__description',
-                     'title', 'description')
+    filterset_fields = ("rating", "created", "modified")
+    search_fields = ("=id", "professional__name", "professional__description",
+                     "title", "description")
 
 
 class LatestMessagesViewSet(viewsets.ViewSet):
@@ -69,15 +69,15 @@ class MessagesListViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer_class = MessageSerializer
     queryset = Message.objects.get_list()
-    search_fields = ('=id', 'subject', 'body', 'sender__last_name',
-                     'sender__email', 'recipient__email',
-                     'recipient__last_name')
+    search_fields = ("=id", "subject", "body", "sender__last_name",
+                     "sender__email", "recipient__email",
+                     "recipient__last_name")
 
     filterset_class = MessagesListFilterSet
 
     def mark_read(self, query):
         """Mark messages as read."""
-        sender = self.request.GET.get('interlocutor')
+        sender = self.request.GET.get("interlocutor")
         if sender:
             Message.objects.mark_read(
                 recipient=self.request.user,
@@ -100,12 +100,12 @@ class ReceivedMessagesViewSet(RetrieveModelMixin, ListModelMixin,
     """The received messages viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'recipient'
+    owner_filter_field = "recipient"
     serializer_class = ReceivedMessageSerializer
     queryset = Message.objects.get_received_messages()
-    search_fields = ('=id', 'subject', 'body', 'sender__last_name',
-                     'sender__email')
-    filterset_fields = ('is_read', )
+    search_fields = ("=id", "subject", "body", "sender__last_name",
+                     "sender__email")
+    filterset_fields = ("is_read", )
     filterset_class = ReciviedMessagesFilterSet
     delete_service = delete_message_from_recipient
     read_service = mark_message_read
@@ -128,18 +128,18 @@ class SentMessagesViewSet(viewsets.ModelViewSet):
     """The sent messages viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'sender'
+    owner_filter_field = "sender"
     serializer_class = SentMessageSerializer
     queryset = Message.objects.get_sent_messages()
-    search_fields = ('=id', 'subject', 'body', 'recipient__last_name',
-                     'recipient__email')
+    search_fields = ("=id", "subject", "body", "recipient__last_name",
+                     "recipient__email")
     filterset_class = SentMessagesFilterSet
     delete_service = delete_message_from_sender
 
     def _check_update_permission(self) -> Optional[Response]:
         if self.get_object().is_read:
             return Response(
-                {'error': 'Updating a read message is forbiden.'},
+                {"error": "Updating a read message is forbiden."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return None

@@ -42,7 +42,7 @@ class ReviewCommentFilterSet(filters.FilterSet):
     """The filterset class for the review comment viewset class."""
 
     review = filters.ModelChoiceFilter(
-        label=_('review'),
+        label=_("review"),
         queryset=_get_reviews,
     )
 
@@ -50,16 +50,16 @@ class ReviewCommentFilterSet(filters.FilterSet):
         """The professional list filterset class serializer META class."""
 
         model = ReviewComment
-        fields = ('review', 'created', 'modified')
+        fields = ("review", "created", "modified")
 
 
 class MessagesListFilterSet(filters.FilterSet):
     """The filterset class for the messages list viewset class."""
 
     interlocutor = filters.ModelChoiceFilter(
-        label=_('interlocutor'),
+        label=_("interlocutor"),
         queryset=_get_interlocutors,
-        method='interlocutor_filter',
+        method="interlocutor_filter",
     )
 
     def interlocutor_filter(self, queryset, name, value):
@@ -74,14 +74,14 @@ class MessagesListFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Message
-        fields = ('is_read', 'interlocutor')
+        fields = ("is_read", "interlocutor")
 
 
 class SentMessagesFilterSet(filters.FilterSet):
     """The filterset class for the sent messages viewset class."""
 
     recipient = filters.ModelChoiceFilter(
-        label=_('recipient'),
+        label=_("recipient"),
         queryset=_get_recipients,
     )
 
@@ -89,14 +89,14 @@ class SentMessagesFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Message
-        fields = ('is_read', 'recipient')
+        fields = ("is_read", "recipient")
 
 
 class ReciviedMessagesFilterSet(filters.FilterSet):
     """The filterset class for the recivied messages viewset class."""
 
     sender = filters.ModelChoiceFilter(
-        label=_('sender'),
+        label=_("sender"),
         queryset=_get_senders,
     )
 
@@ -104,4 +104,4 @@ class ReciviedMessagesFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Message
-        fields = ('is_read', 'sender')
+        fields = ("is_read", "sender")

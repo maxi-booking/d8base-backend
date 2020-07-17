@@ -12,16 +12,16 @@ class ProfessionalLocationManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional locations."""
         return self.all().select_related(
-            'country',
-            'region',
-            'subregion',
-            'city',
-            'district',
-            'postal_code',
-            'professional',
-            'professional__user',
-            'created_by',
-            'modified_by',
+            "country",
+            "region",
+            "subregion",
+            "city",
+            "district",
+            "postal_code",
+            "professional",
+            "professional__user",
+            "created_by",
+            "modified_by",
         )
 
     def get_user_list(self, user: User) -> QuerySet:
@@ -35,10 +35,10 @@ class ProfessionalPhotoManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional photos."""
         return self.all().select_related(
-            'professional',
-            'created_by',
-            'modified_by',
-            'professional__user',
+            "professional",
+            "created_by",
+            "modified_by",
+            "professional__user",
         )
 
 
@@ -48,10 +48,10 @@ class ProfessionalEducationManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional educations."""
         return self.all().select_related(
-            'professional',
-            'created_by',
-            'modified_by',
-            'professional__user',
+            "professional",
+            "created_by",
+            "modified_by",
+            "professional__user",
         )
 
 
@@ -61,10 +61,10 @@ class ProfessionalCertificateManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional certificates."""
         return self.all().select_related(
-            'professional',
-            'created_by',
-            'modified_by',
-            'professional__user',
+            "professional",
+            "created_by",
+            "modified_by",
+            "professional__user",
         )
 
 
@@ -74,10 +74,10 @@ class ProfessionalExperienceManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional educations."""
         return self.all().select_related(
-            'professional',
-            'created_by',
-            'modified_by',
-            'professional__user',
+            "professional",
+            "created_by",
+            "modified_by",
+            "professional__user",
         )
 
 
@@ -87,11 +87,11 @@ class ProfessionalContactManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professional contacts."""
         return self.all().select_related(
-            'professional',
-            'contact',
-            'created_by',
-            'modified_by',
-            'professional__user',
+            "professional",
+            "contact",
+            "created_by",
+            "modified_by",
+            "professional__user",
         )
 
 
@@ -100,12 +100,12 @@ class ProfessionalTagManager(models.Manager):
 
     def get_list(self) -> QuerySet:
         """Return a list of professional tags."""
-        return self.all().select_related('created_by', 'modified_by',
-                                         'professional')
+        return self.all().select_related("created_by", "modified_by",
+                                         "professional")
 
     def get_names(self) -> QuerySet:
         """Return a list of professional tags names."""
-        return self.all().distinct('name').order_by('name').values('name')
+        return self.all().distinct("name").order_by("name").values("name")
 
 
 class ProfessionalManager(models.Manager):
@@ -114,11 +114,11 @@ class ProfessionalManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of professionals."""
         return self.all().select_related(
-            'created_by',
-            'modified_by',
-            'user',
-            'subcategory',
-            'subcategory__category',
+            "created_by",
+            "modified_by",
+            "user",
+            "subcategory",
+            "subcategory__category",
         )
 
     def get_user_list(self, user: User) -> QuerySet:
@@ -131,7 +131,7 @@ class CategoryManager(MultilingualManager):
 
     def get_list(self) -> QuerySet:
         """Return a list of contacts."""
-        return self.all().select_related('created_by', 'modified_by')
+        return self.all().select_related("created_by", "modified_by")
 
 
 class SubcategoryManager(MultilingualManager):
@@ -140,7 +140,7 @@ class SubcategoryManager(MultilingualManager):
     def get_list(self) -> QuerySet:
         """Return a list of contacts."""
         return self.all().select_related(
-            'created_by',
-            'modified_by',
-            'category',
+            "created_by",
+            "modified_by",
+            "category",
         )

@@ -123,7 +123,7 @@ def test_location_autofiller_set_timezone(cities: List[City]):
 def test_location_autofiller_set_units(countries: List[Country]):
     """Should autofill units from a country."""
     country = countries[0]
-    country.tld = 'us'
+    country.tld = "us"
     location = AbstractLocation()
     location.units = settings.UNITS_METRIC
     LocationAutofiller(location).autofill_location()

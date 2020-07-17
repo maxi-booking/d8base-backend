@@ -8,32 +8,32 @@ if TYPE_CHECKING:
     from .models import Message, Review, ReviewComment
 
 
-def validate_message_recipient(obj: 'Message'):
+def validate_message_recipient(obj: "Message"):
     """Validate the message recipient."""
     if obj.recipient_id and obj.sender and obj.recipient == obj.sender:
         raise ValidationError(
-            {'recipient': _('Sender and recipient is the same user.')})
+            {"recipient": _("Sender and recipient is the same user.")})
 
 
-def validate_message_parent(obj: 'Message'):
+def validate_message_parent(obj: "Message"):
     """Validate the message parent message."""
     if obj.parent and \
             (not obj.parent.is_read or obj.parent.recipient != obj.sender):
-        raise ValidationError({'parent': _('Invalid parent message.')})
+        raise ValidationError({"parent": _("Invalid parent message.")})
 
 
-def validate_review_user(obj: 'Review'):
+def validate_review_user(obj: "Review"):
     """Validate the review user."""
     if obj.user_id and obj.professional and obj.user == obj.professional.user:
         raise ValidationError({
-            'user': _('The review user and the professional user are equal.')
+            "user": _("The review user and the professional user are equal.")
         })
 
 
-def validate_review_comment_user(obj: 'ReviewComment'):
+def validate_review_comment_user(obj: "ReviewComment"):
     """Validate the review comment user."""
     if obj.user_id and obj.review and obj.user != obj.review.professional.user:
         raise ValidationError({
-            'user':
-                _('The comment user and the professional user are not equal.')
+            "user":
+                _("The comment user and the professional user are not equal.")
         })

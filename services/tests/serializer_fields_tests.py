@@ -16,7 +16,7 @@ def test_account_professional_location_foreign_key(
     request = HttpRequest()
     user = professional_locations[0].professional.user
     request.user = user
-    obj._context = {'request': request}  # pylint: disable=protected-access
+    obj._context = {"request": request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
     assert professional_locations.count() == 8
@@ -30,7 +30,7 @@ def test_account_service_foreign_key(services: QuerySet):
     request = HttpRequest()
     user = services[0].professional.user
     request.user = user
-    obj._context = {'request': request}  # pylint: disable=protected-access
+    obj._context = {"request": request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
     assert services.count() == 8

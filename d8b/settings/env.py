@@ -10,9 +10,9 @@ def get_env() -> environ.Env:
     """Return the ENV."""
     env = environ.Env()
 
-    run_env = env.str('RUN_ENV', default='')
+    run_env = env.str("RUN_ENV", default="")
 
-    env_file = '.env_' + run_env if run_env else '.env'
+    env_file = ".env_" + run_env if run_env else ".env"
     environ.Env.read_env(
         os.path.join(
             os.path.dirname(os.path.abspath(__file__)),

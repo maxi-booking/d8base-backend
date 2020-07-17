@@ -19,8 +19,8 @@ class MockModelCleanFieldsSerializer(ModelCleanFieldsSerializer):
 
 def test_model_clean_fields_serializer(mocker: MockFixture):
     """Should call the model clean method."""
-    full_clean = mocker.Mock(return_value='full_clean')
-    clean = mocker.Mock(return_value='clean')
+    full_clean = mocker.Mock(return_value="full_clean")
+    clean = mocker.Mock(return_value="clean")
     serializer = MockModelCleanFieldsSerializer()
     serializer.Meta.model.full_clean = full_clean
     serializer.Meta.model.clean = clean
@@ -28,7 +28,7 @@ def test_model_clean_fields_serializer(mocker: MockFixture):
 
     assert full_clean.called
 
-    serializer.instance = {'instance': True}
+    serializer.instance = {"instance": True}
     serializer.validate({})
 
     assert clean.called

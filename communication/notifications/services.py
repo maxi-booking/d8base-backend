@@ -20,6 +20,6 @@ def render_template(
 ) -> str:
     """Render the template."""
     with select_locale(lang):
-        template_path = f'{folder}/{template}.html'
+        template_path = f"{folder}/{template}.html"
         message = render_to_string(template_path, data)
         return message

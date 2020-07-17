@@ -12,8 +12,8 @@ class ContactSerializer(serializers.ModelSerializer):
         """The contact class serializer META class."""
 
         model = Contact
-        fields = ('id', 'name', 'code', 'is_default', 'countries',
-                  'excluded_countries', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by',
-                            'countries', 'excluded_countries')
+        fields = ("id", "name", "code", "is_default", "countries",
+                  "excluded_countries", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by",
+                            "countries", "excluded_countries")

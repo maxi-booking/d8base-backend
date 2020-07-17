@@ -22,6 +22,6 @@ def test_timezone_field():
 def test_units_field():
     """Should create a units field."""
     field = UnitsField()
-    assert field.choices[0] == (0, 'metric')
-    assert field.choices[1] == (1, 'imperial/US')
+    assert field.choices[0] == (0, "metric")
+    assert field.choices[1] == (1, "imperial/US")
     assert field.default == 0

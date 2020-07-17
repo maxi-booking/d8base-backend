@@ -18,8 +18,8 @@ class DisableAdminI18nMiddleware(MiddlewareMixin):
         """Set the locale to en in the admin interface."""
         # pylint: disable=unused-argument, no-self-use
         resolver_match = resolve(request.path)
-        if resolver_match.app_name == 'admin':
-            activate('en')
+        if resolver_match.app_name == "admin":
+            activate("en")
 
 
 _USER = local()
@@ -27,7 +27,7 @@ _USER = local()
 
 class ThreadSafeUserMiddleware(MiddlewareMixin):
     """
-    Store request's user into global thread-safe variable.
+    Store request"s user into global thread-safe variable.
 
     Must be introduced AFTER
     `django.contrib.auth.middleware.AuthenticationMiddleware`.
@@ -39,8 +39,8 @@ class ThreadSafeUserMiddleware(MiddlewareMixin):
         _USER.value = request.user if request.user.pk else None
 
     @staticmethod
-    def get_current_user() -> Optional['User']:
+    def get_current_user() -> Optional["User"]:
         """Return user."""
-        if hasattr(_USER, 'value') and _USER.value:
+        if hasattr(_USER, "value") and _USER.value:
             return _USER.value
         return None

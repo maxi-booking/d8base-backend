@@ -26,11 +26,11 @@ class Service(CommonInfo):
 
     objects = ServiceManager()
 
-    TYPE_ONLINE: str = 'online'
-    TYPE_PROFESSIONAL_LOCATION: str = 'professional'
-    TYPE_CLIENT_LOCATION: str = 'client'
+    TYPE_ONLINE: str = "online"
+    TYPE_PROFESSIONAL_LOCATION: str = "professional"
+    TYPE_CLIENT_LOCATION: str = "client"
     TYPE_CHOICES = [
-        (TYPE_ONLINE, _('online')),
+        (TYPE_ONLINE, _("online")),
         (TYPE_PROFESSIONAL_LOCATION, _("at the professional's location")),
         (TYPE_CLIENT_LOCATION, _("at the client's location")),
     ]
@@ -38,16 +38,16 @@ class Service(CommonInfo):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='services',
-        verbose_name=_('professional'),
+        related_name="services",
+        verbose_name=_("professional"),
     )
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         db_index=True,
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         db_index=True,
         null=True,
         blank=True,
@@ -56,35 +56,35 @@ class Service(CommonInfo):
         ],
     )
     duration = models.PositiveIntegerField(
-        _('duration'),
+        _("duration"),
         db_index=True,
-        help_text=_('duration in minutes'),
+        help_text=_("duration in minutes"),
     )
     service_type = models.CharField(
-        _('account type'),
+        _("account type"),
         max_length=20,
         choices=TYPE_CHOICES,
     )
     is_base_schedule = models.BooleanField(
         default=False,
-        verbose_name=_('is the base schedule used?'),
+        verbose_name=_("is the base schedule used?"),
         db_index=True,
     )
     is_auto_order_confirmation = models.BooleanField(
         default=True,
-        help_text=_('are orders confirmed automatically?'),
-        verbose_name=_('is auto order confirmation?'),
+        help_text=_("are orders confirmed automatically?"),
+        verbose_name=_("is auto order confirmation?"),
         db_index=True,
     )
     is_enabled = models.BooleanField(
         default=False,
-        verbose_name=_('is enabled?'),
+        verbose_name=_("is enabled?"),
         db_index=True,
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.name}'
+        return f"{self.professional}: {self.name}"
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""
@@ -100,15 +100,15 @@ class ServiceTag(BaseTag):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='tags',
-        verbose_name=_('service'),
+        related_name="tags",
+        verbose_name=_("service"),
     )
 
     class Meta(BaseTag.Meta):
         """The metainformation."""
 
         abstract = False
-        unique_together = (('name', 'service'), )
+        unique_together = (("name", "service"), )
 
 
 class ServiceLocation(CommonInfo, ValidationMixin):
@@ -120,23 +120,23 @@ class ServiceLocation(CommonInfo, ValidationMixin):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='locations',
-        verbose_name=_('service'),
+        related_name="locations",
+        verbose_name=_("service"),
     )
     location = models.ForeignKey(
         ProfessionalLocation,
         on_delete=models.CASCADE,
-        related_name='service_locations',
-        verbose_name=_('location'),
+        related_name="service_locations",
+        verbose_name=_("location"),
     )
     max_distance = models.DecimalField(
-        _('maximum distance'),
+        _("maximum distance"),
         max_digits=7,
         decimal_places=1,
         db_index=True,
         null=True,
         blank=True,
-        help_text=_('maximum travel distance from the location'),
+        help_text=_("maximum travel distance from the location"),
         validators=[MinValueValidator(0.1)],
     )
 
@@ -144,7 +144,7 @@ class ServiceLocation(CommonInfo, ValidationMixin):
         """The Metainformation."""
 
         abstract = False
-        unique_together = (('location', 'service'), )
+        unique_together = (("location", "service"), )
 
 
 class ServicePhoto(PhotoMixin):
@@ -155,11 +155,11 @@ class ServicePhoto(PhotoMixin):
     service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
-        related_name='photos',
-        verbose_name=_('service'),
+        related_name="photos",
+        verbose_name=_("service"),
     )
     photo = ProcessedImageField(
-        upload_to=RandomFilenameGenerator('photos', 'service'),
+        upload_to=RandomFilenameGenerator("photos", "service"),
         processors=[
             ResizeToFit(
                 width=settings.D8B_IMAGE_WIDTH,
@@ -167,12 +167,12 @@ class ServicePhoto(PhotoMixin):
                 upscale=False,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.service}: {self.photo}'
+        return f"{self.service}: {self.photo}"
 
     class Meta(PhotoMixin.Meta):
         """The Metainformation."""
@@ -186,23 +186,23 @@ class Price(CommonInfo, ValidationMixin):
     validators = [validate_service_price]
     objects = ServicePriceManager()
 
-    TYPE_CASH: str = 'cash'
-    TYPE_ONLINE: str = 'online'
+    TYPE_CASH: str = "cash"
+    TYPE_ONLINE: str = "online"
     PAYMENT_METHODS_CHOICES = [
-        (TYPE_CASH, _('cash')),
-        (TYPE_ONLINE, _('online')),
+        (TYPE_CASH, _("cash")),
+        (TYPE_ONLINE, _("online")),
     ]
 
     service = models.OneToOneField(
         Service,
         on_delete=models.CASCADE,
-        related_name='price',
-        verbose_name=_('service'),
+        related_name="price",
+        verbose_name=_("service"),
     )
     price = MoneyField(
         max_digits=settings.D8B_MONEY_MAX_DIGITS,
         decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
-        verbose_name=_('price'),
+        verbose_name=_("price"),
         null=True,
         blank=True,
         validators=[MinMoneyValidator(0)],
@@ -211,7 +211,7 @@ class Price(CommonInfo, ValidationMixin):
     start_price = MoneyField(
         max_digits=settings.D8B_MONEY_MAX_DIGITS,
         decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
-        verbose_name=_('start price'),
+        verbose_name=_("start price"),
         null=True,
         blank=True,
         validators=[MinMoneyValidator(0)],
@@ -220,7 +220,7 @@ class Price(CommonInfo, ValidationMixin):
     end_price = MoneyField(
         max_digits=settings.D8B_MONEY_MAX_DIGITS,
         decimal_places=settings.D8B_MONEY_DECIMAL_PLACES,
-        verbose_name=_('end price'),
+        verbose_name=_("end price"),
         null=True,
         blank=True,
         validators=[MinMoneyValidator(0)],
@@ -228,7 +228,7 @@ class Price(CommonInfo, ValidationMixin):
     )
     is_price_fixed = models.BooleanField(
         default=True,
-        verbose_name=_('is the price fixed?'),
+        verbose_name=_("is the price fixed?"),
         db_index=True,
     )
     payment_methods = ArrayField(
@@ -236,15 +236,15 @@ class Price(CommonInfo, ValidationMixin):
             max_length=10,
             choices=PAYMENT_METHODS_CHOICES,
         ),
-        verbose_name=_('payment methods'),
+        verbose_name=_("payment methods"),
         db_index=True,
-        help_text='available payment methods',
+        help_text="available payment methods",
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return (f'{self.service}: {self.price}'
-                f' ({self.start_price}-{self.end_price})')
+        return (f"{self.service}: {self.price}"
+                f" ({self.start_price}-{self.end_price})")
 
     class Meta(CommonInfo.Meta):
         """The Metainformation."""

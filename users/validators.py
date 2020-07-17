@@ -11,6 +11,6 @@ def validate_birthday(birthday: date, min_age: int = 12) -> None:
     min_date = arrow.utcnow().shift(years=-min_age).date()
     if birthday > min_date:
         raise ValidationError(
-            _('Minimal age is %(min_age)s years old.'),
-            params={'min_age': min_age},
+            _("Minimal age is %(min_age)s years old."),
+            params={"min_age": min_age},
         )

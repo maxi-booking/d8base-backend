@@ -47,12 +47,12 @@ class PriceSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = Price
-        fields = ('id', 'service', 'price', 'price_currency', 'start_price',
-                  'start_price_currency', 'end_price', 'end_price_currency',
-                  'is_price_fixed', 'payment_methods', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
-        extra_kwargs = {'is_price_fixed': {'required': True}}
+        fields = ("id", "service", "price", "price_currency", "start_price",
+                  "start_price_currency", "end_price", "end_price_currency",
+                  "is_price_fixed", "payment_methods", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
+        extra_kwargs = {"is_price_fixed": {"required": True}}
 
 
 class ServiceTagSerializer(serializers.ModelSerializer):
@@ -64,9 +64,9 @@ class ServiceTagSerializer(serializers.ModelSerializer):
         """The metainformation."""
 
         model = ServiceTag
-        fields = ('id', 'service', 'name', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "service", "name", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ServiceTagListSerializer(serializers.ModelSerializer):
@@ -76,7 +76,7 @@ class ServiceTagListSerializer(serializers.ModelSerializer):
         """The metainformation."""
 
         model = ServiceTag
-        fields = ('name', )
+        fields = ("name", )
 
 
 class ServiceSerializer(serializers.ModelSerializer):
@@ -89,11 +89,11 @@ class ServiceSerializer(serializers.ModelSerializer):
         """The metainformation."""
 
         model = Service
-        fields = ('id', 'professional', 'name', 'description', 'duration',
-                  'service_type', 'is_base_schedule',
-                  'is_auto_order_confirmation', 'is_enabled', 'price',
-                  'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "name", "description", "duration",
+                  "service_type", "is_base_schedule",
+                  "is_auto_order_confirmation", "is_enabled", "price",
+                  "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ServiceLocationSerializer(ModelCleanFieldsSerializer):
@@ -113,9 +113,9 @@ class ServiceLocationSerializer(ModelCleanFieldsSerializer):
 
         model = ServiceLocation
 
-        fields = ('id', 'service', 'location', 'max_distance', 'created',
-                  'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "service", "location", "max_distance", "created",
+                  "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class RateSerializer(serializers.ModelSerializer):
@@ -136,19 +136,19 @@ class RateSerializer(serializers.ModelSerializer):
     def get_countries(rate: Rate) -> List[str]:
         """Get the currency countries."""
         currency = CURRENCIES.get(rate.currency)
-        return getattr(currency, 'countries', '-')
+        return getattr(currency, "countries", "-")
 
     @staticmethod
     def get_title(rate: Rate) -> str:
         """Get the currency title."""
         currency = CURRENCIES.get(rate.currency)
-        return _(getattr(currency, 'name', '-').strip())
+        return _(getattr(currency, "name", "-").strip())
 
     class Meta:
         """The metainformation."""
 
         model = Rate
-        fields = ('currency', 'title', 'sign', 'countries', 'value')
+        fields = ("currency", "title", "sign", "countries", "value")
 
 
 class ServicePhotoSerializer(ModelCleanFieldsSerializer):
@@ -163,7 +163,7 @@ class ServicePhotoSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = ServicePhoto
-        fields = ('id', 'service', 'name', 'description', 'order', 'photo',
-                  'photo_thumbnail', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "service", "name", "description", "order", "photo",
+                  "photo_thumbnail", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")

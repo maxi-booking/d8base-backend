@@ -15,8 +15,8 @@ class LocationCopyAutofiller(BaseLocationAutofiller):
     source: Optional[AbstractLocation]
 
     members: List[str] = [
-        'postal_code', 'district', 'city', 'subregion', 'region', 'country',
-        'units', 'coordinates', 'address', 'timezone'
+        "postal_code", "district", "city", "subregion", "region", "country",
+        "units", "coordinates", "address", "timezone"
     ]
 
     def __init__(self, destination: AbstractLocation,
@@ -41,7 +41,7 @@ class LocationCopyAutofiller(BaseLocationAutofiller):
         return self.destination
 
 
-def update_professional_rating(professional: 'Professional'):
+def update_professional_rating(professional: "Professional"):
     """Update the professional rating."""
     rating = Review.objects.get_professional_rating(professional)
     professional.rating = rating

@@ -43,7 +43,7 @@ class RandomFilenameGenerator():
 
     def __init__(self, path: str, id_field: str):
         """Construct the object."""
-        self.path = os.path.join(path, '{}/{}{}')
+        self.path = os.path.join(path, "{}/{}{}")
         self.id_field = id_field
 
     def __call__(self, instance, filename) -> str:
@@ -51,7 +51,7 @@ class RandomFilenameGenerator():
         extension = os.path.splitext(filename)[1]
 
         return self.path.format(
-            slugify(getattr(instance, self.id_field, '_'), True),
+            slugify(getattr(instance, self.id_field, "_"), True),
             uuid.uuid4(),
             extension,
         )

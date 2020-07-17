@@ -21,10 +21,10 @@ class UserSavedProfessionalManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of user saved professionals."""
         return self.all().select_related(
-            'user',
-            'professional',
-            'created_by',
-            'modified_by',
+            "user",
+            "professional",
+            "created_by",
+            "modified_by",
         )
 
 
@@ -34,14 +34,14 @@ class UserSettingsManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of user contacts."""
         return self.all().select_related(
-            'user',
-            'created_by',
-            'modified_by',
+            "user",
+            "created_by",
+            "modified_by",
         )
 
     def update_or_create_from_user_language(
         self,
-        user_language: 'UserLanguage',
+        user_language: "UserLanguage",
     ):
         """Update or create a user settings from the user language object."""
         settings, created = self.get_or_create(user=user_language.user)
@@ -55,7 +55,7 @@ class UserSettingsManager(models.Manager):
 
     def update_or_create_from_user_location(
         self,
-        user_location: 'UserLocation',
+        user_location: "UserLocation",
     ):
         """Update or create a user settings from the user location object."""
         country = user_location.country
@@ -90,10 +90,10 @@ class UserContactManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of user contacts."""
         return self.all().select_related(
-            'user',
-            'contact',
-            'created_by',
-            'modified_by',
+            "user",
+            "contact",
+            "created_by",
+            "modified_by",
         )
 
 
@@ -103,9 +103,9 @@ class UserLanguageManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of user languages."""
         return self.all().select_related(
-            'user',
-            'created_by',
-            'modified_by',
+            "user",
+            "created_by",
+            "modified_by",
         )
 
 
@@ -115,22 +115,22 @@ class UserLocationManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of user locations."""
         return self.all().select_related(
-            'country',
-            'region',
-            'subregion',
-            'city',
-            'district',
-            'postal_code',
-            'user',
-            'created_by',
-            'modified_by',
+            "country",
+            "region",
+            "subregion",
+            "city",
+            "district",
+            "postal_code",
+            "user",
+            "created_by",
+            "modified_by",
         )
 
-    def get_user_list(self, user: 'User') -> QuerySet:
+    def get_user_list(self, user: "User") -> QuerySet:
         """Return a list of user location filtered by user."""
         return self.get_list().filter(user=user)
 
-    def get_user_timezone(self, user: 'User') -> Optional[str]:
+    def get_user_timezone(self, user: "User") -> Optional[str]:
         """Return the user timezone."""
         location = self.filter(user=user).first()
         return location.timezone if location else location
@@ -149,10 +149,10 @@ class UserManager(BaseUserManager):
         email: str,
         password: str,
         **extra_fields,
-    ) -> 'User':
+    ) -> "User":
         """Create and save a User with the given email and password."""
         if not email:
-            raise ValueError(_('The email must be set'))
+            raise ValueError(_("The email must be set"))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -167,15 +167,15 @@ class UserManager(BaseUserManager):
         email: str,
         password: str,
         **extra_fields,
-    ) -> 'User':
+    ) -> "User":
         """Create and save a superuser with the given email and password."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError(_("Superuser must have is_staff=True."))
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self.create_user(email, password, **extra_fields)

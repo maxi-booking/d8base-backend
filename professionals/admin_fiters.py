@@ -5,5 +5,5 @@ from admin_auto_filters.filters import AutocompleteFilter
 class ProfessionalFilter(AutocompleteFilter):
     """The admin professional filter."""
 
-    title = 'professional'
-    field_name = 'professional'
+    title = "professional"
+    field_name = "professional"

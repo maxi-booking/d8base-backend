@@ -15,53 +15,53 @@ class RatingField(PositiveSmallIntegerField):
     EXCELLENT: int = 5
 
     CHOICES = [
-        (POOR, _('poor')),
-        (AVERAGE, _('average')),
-        (GOOD, _('good')),
-        (VERY_GOOD, _('very good')),
-        (EXCELLENT, _('excellent')),
+        (POOR, _("poor")),
+        (AVERAGE, _("average")),
+        (GOOD, _("good")),
+        (VERY_GOOD, _("very good")),
+        (EXCELLENT, _("excellent")),
     ]
 
-    description = _('Rating')
+    description = _("Rating")
 
     def __init__(self, *args, **kwargs):
         """Initialize the object."""
-        kwargs.setdefault('choices', self.CHOICES)
-        kwargs.setdefault('verbose_name', _('rating'))
+        kwargs.setdefault("choices", self.CHOICES)
+        kwargs.setdefault("verbose_name", _("rating"))
         super().__init__(*args, **kwargs)
 
 
 class LanguageField(CharField):
     """The language field for Django models."""
 
-    description = _('Language code')
+    description = _("Language code")
 
     def __init__(self, *args, **kwargs):
         """Initialize the object."""
-        kwargs.setdefault('max_length', 2)
-        kwargs.setdefault('choices', settings.LANGUAGES)
+        kwargs.setdefault("max_length", 2)
+        kwargs.setdefault("choices", settings.LANGUAGES)
         super().__init__(*args, **kwargs)
 
 
 class UnitsField(PositiveSmallIntegerField):
     """The units of measurement field for Django models."""
 
-    description = _('Units')
+    description = _("Units")
 
     def __init__(self, *args, **kwargs):
         """Initialize the object."""
-        kwargs.setdefault('choices', settings.UNITS)
-        kwargs.setdefault('default', settings.UNITS_METRIC)
+        kwargs.setdefault("choices", settings.UNITS)
+        kwargs.setdefault("default", settings.UNITS_METRIC)
         super().__init__(*args, **kwargs)
 
 
 class TimezoneField(CharField):
     """The timezone field for Django models."""
 
-    description = _('Timezone')
+    description = _("Timezone")
 
     def __init__(self, *args, **kwargs):
         """Initialize the object."""
-        kwargs.setdefault('max_length', 50)
-        kwargs.setdefault('choices', zip(common_timezones, common_timezones))
+        kwargs.setdefault("max_length", 50)
+        kwargs.setdefault("choices", zip(common_timezones, common_timezones))
         super().__init__(*args, **kwargs)

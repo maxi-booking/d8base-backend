@@ -10,7 +10,7 @@ class UserReviewForeignKey(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Review.objects.get_user_list(user=user)
 
 
@@ -19,5 +19,5 @@ class ParentMessageForeignKey(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Message.objects.get_received_messages(recipient=user)

@@ -34,7 +34,7 @@ class OauthRepository():
     """The Oauth repository."""
 
     jwt_app_name: str = settings.JWT_APPLICATION_NAME
-    token_expire: int = settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS']
+    token_expire: int = settings.OAUTH2_PROVIDER["ACCESS_TOKEN_EXPIRE_SECONDS"]
     jwt_app: Application
 
     def __init__(self) -> None:
@@ -54,12 +54,12 @@ class OauthRepository():
 
         return app
 
-    def create_access_token(self, user: 'User') -> AccessToken:
+    def create_access_token(self, user: "User") -> AccessToken:
         """Create an access token."""
         expires = timezone.now() + timedelta(seconds=self.token_expire)
         access_token = AccessToken(
             user=user,
-            scope='read write groups',
+            scope="read write groups",
             expires=expires,
             token=common.generate_token(),
             application=self.jwt_app,
@@ -69,8 +69,8 @@ class OauthRepository():
         return access_token
 
     def create_refresh_token(
-            self,
-            access_token: AccessToken,
+        self,
+        access_token: AccessToken,
     ) -> RefreshToken:
         """Create a refresh token."""
         refresh_token = RefreshToken(

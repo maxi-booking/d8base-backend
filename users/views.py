@@ -19,23 +19,23 @@ from .serializers import (UserCalculatedUnitsSerializer, UserContactSerializer,
                           UserSettingsSerializer)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([AllowAny])
 def is_user_registered(request):
     """Check if a user registered."""
-    user = User.objects.filter(email=request.data.get('email')).first()
-    return Response({'is_registered': bool(user)})
+    user = User.objects.filter(email=request.data.get("email")).first()
+    return Response({"is_registered": bool(user)})
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def resend_verify_registration(request):
     """Resend a registration verification email."""
     user = request.user
     if user.is_confirmed:
-        raise NotFound('the user has already been confirmed')
+        raise NotFound("the user has already been confirmed")
     send_register_verification_email_notification(request, request.user)
-    return Response({'detail': 'a message has been sent'})
+    return Response({"detail": "a message has been sent"})
 
 
 class UserCalculatedUnitsViewSet(viewsets.ViewSet):
@@ -50,7 +50,7 @@ class UserCalculatedUnitsViewSet(viewsets.ViewSet):
 
         units = UserCalculatedUnits(
             is_imperial_units=is_imperial,
-            distance='mi' if is_imperial else 'km',
+            distance="mi" if is_imperial else "km",
             timezone=timezone.get_current_timezone_name(),
         )
         serializer = self.serializer_class(instance=units, many=False)
@@ -86,7 +86,7 @@ class UserLocationViewSet(viewsets.ModelViewSet):
 
     is_owner_filter_enabled = True
     serializer_class = UserLocationSerializer
-    filterset_fields = ('is_default', )
+    filterset_fields = ("is_default", )
     queryset = UserLocation.objects.get_list()
 
 
@@ -96,4 +96,4 @@ class UserContactViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = UserContactSerializer
     queryset = UserContact.objects.get_list()
-    filterset_fields = ('contact', )
+    filterset_fields = ("contact", )

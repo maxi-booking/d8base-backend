@@ -20,7 +20,7 @@ class ServiceFilterSet(filters.FilterSet):
     """The filter class for the service viewset class."""
 
     professional = filters.ModelChoiceFilter(
-        label=_('professional'),
+        label=_("professional"),
         queryset=_get_professionals,
     )
 
@@ -28,14 +28,14 @@ class ServiceFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Service
-        fields = ('professional', 'is_enabled', 'is_base_schedule')
+        fields = ("professional", "is_enabled", "is_base_schedule")
 
 
 class ServicePhotoFilterSet(filters.FilterSet):
     """The filter class for the service photo viewset class."""
 
     service = filters.ModelChoiceFilter(
-        label=_('service'),
+        label=_("service"),
         queryset=_get_services,
     )
 
@@ -43,14 +43,14 @@ class ServicePhotoFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ServicePhoto
-        fields = ('service', )
+        fields = ("service", )
 
 
 class ServiceLocationFilterSet(filters.FilterSet):
     """The filter class for the service location viewset class."""
 
     service = filters.ModelChoiceFilter(
-        label=_('service'),
+        label=_("service"),
         queryset=_get_services,
     )
 
@@ -58,14 +58,14 @@ class ServiceLocationFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ServiceLocation
-        fields = ('service', )
+        fields = ("service", )
 
 
 class ServiceTagFilterSet(filters.FilterSet):
     """The filter class for the service tag viewset class."""
 
     service = filters.ModelChoiceFilter(
-        label=_('service'),
+        label=_("service"),
         queryset=_get_services,
     )
 
@@ -73,14 +73,14 @@ class ServiceTagFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = ServiceTag
-        fields = ('service', )
+        fields = ("service", )
 
 
 class PriceFilterSet(filters.FilterSet):
     """The filter class for the price viewset class."""
 
     service = filters.ModelChoiceFilter(
-        label=_('service'),
+        label=_("service"),
         queryset=_get_services,
     )
 
@@ -88,4 +88,4 @@ class PriceFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Price
-        fields = ('service', 'is_price_fixed')
+        fields = ("service", "is_price_fixed")

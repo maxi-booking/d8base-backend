@@ -27,27 +27,27 @@ def test_user_timezone_middleware(
         """Return a date offset."""
         response = client_with_token.get(
             reverse(
-                'user-languages-detail',
+                "user-languages-detail",
                 args=[lang.pk],
             ),
             **{UserTimezoneMiddleware.TIME_ZONE_HEADER: header},
         )
         assert timezone.get_current_timezone_name() == settings.TIME_ZONE
-        return arrow.get(response.json()['created']).format('ZZ')
+        return arrow.get(response.json()["created"]).format("ZZ")
 
-    assert get_offset() == '+00:00'
+    assert get_offset() == "+00:00"
 
-    user.locations.create(timezone='Europe/London')
-    assert get_offset() == '+01:00'
-
-    user.locations.all().delete()
-    user.locations.create(timezone='America/Toronto')
-    assert get_offset() == '-04:00'
+    user.locations.create(timezone="Europe/London")
+    assert get_offset() == "+01:00"
 
     user.locations.all().delete()
-    assert get_offset() == '+00:00'
+    user.locations.create(timezone="America/Toronto")
+    assert get_offset() == "-04:00"
 
-    assert get_offset(header='Europe/Moscow') == '+03:00'
-    assert get_offset(header='Europe/London') == '+01:00'
-    assert get_offset(header='invalid') == '+00:00'
-    assert get_offset() == '+00:00'
+    user.locations.all().delete()
+    assert get_offset() == "+00:00"
+
+    assert get_offset(header="Europe/Moscow") == "+03:00"
+    assert get_offset(header="Europe/London") == "+01:00"
+    assert get_offset(header="invalid") == "+00:00"
+    assert get_offset() == "+00:00"

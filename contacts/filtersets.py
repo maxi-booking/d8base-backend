@@ -11,9 +11,9 @@ class ContactFilterSet(filters.FilterSet):
     """The filter class for the contact viewset class."""
 
     by_country = filters.ModelChoiceFilter(
-        label=_('For country'),
+        label=_("For country"),
         queryset=CountryRepository().get_list(),
-        method='filter_by_country',
+        method="filter_by_country",
     )
 
     def filter_by_country(self, queryset, _, value):
@@ -25,5 +25,5 @@ class ContactFilterSet(filters.FilterSet):
         """The contact filter class serializer META class."""
 
         model = Contact
-        fields = ('by_country', 'countries', 'excluded_countries',
-                  'is_default')
+        fields = ("by_country", "countries", "excluded_countries",
+                  "is_default")

@@ -26,7 +26,7 @@ def test_update_professional_rating(
     manager.create(
         user=admin,
         professional=professional,
-        description='description',
+        description="description",
         rating=4,
     )
     update_professional_rating(professional)
@@ -50,9 +50,9 @@ def test_location_autofiller_set_from_region(
     source.city = cities[1]
     source.district = districts[0]
     source.postal_code = postal_codes[1]
-    source.address = 'test address'
+    source.address = "test address"
     source.units = 1
-    source.timezone = 'test timezone'
+    source.timezone = "test timezone"
     destination = AbstractLocation()
     LocationCopyAutofiller(destination, source).autofill_location()
 

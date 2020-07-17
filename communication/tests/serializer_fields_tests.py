@@ -16,7 +16,7 @@ def test_user_review_foreign_key(reviews: QuerySet):
     request = HttpRequest()
     user = reviews[0].professional.user
     request.user = user
-    obj._context = {'request': request}  # pylint: disable=protected-access
+    obj._context = {"request": request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
     assert reviews.count() == 2
@@ -30,7 +30,7 @@ def test_parent_message_foreign_key(messages: QuerySet):
     request = HttpRequest()
     user = messages[0].sender
     request.user = user
-    obj._context = {'request': request}  # pylint: disable=protected-access
+    obj._context = {"request": request}  # pylint: disable=protected-access
     result = obj.get_queryset()
 
     assert messages.count() == OBJECTS_TO_CREATE * 4

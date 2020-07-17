@@ -27,50 +27,50 @@ def test_is_user_registered(
 ):
     """Should check if a user registered."""
     response = client.post(
-        reverse('is-user-registered'),
-        {'email': admin.email},
-        content_type='application/json',
+        reverse("is-user-registered"),
+        {"email": admin.email},
+        content_type="application/json",
     )
     assert response.status_code == 200
-    assert response.json()['is_registered']
+    assert response.json()["is_registered"]
 
     response = client.post(
-        reverse('is-user-registered'),
-        {'email': user.email},
-        content_type='application/json',
+        reverse("is-user-registered"),
+        {"email": user.email},
+        content_type="application/json",
     )
     assert response.status_code == 200
-    assert response.json()['is_registered']
+    assert response.json()["is_registered"]
 
     response = client.post(
-        reverse('is-user-registered'),
-        {'email': 'invalid_email'},
-        content_type='application/json',
+        reverse("is-user-registered"),
+        {"email": "invalid_email"},
+        content_type="application/json",
     )
     assert response.status_code == 200
-    assert not response.json()['is_registered']
+    assert not response.json()["is_registered"]
 
 
 def test_user_calculated_units(
     client_with_token: APIClient,
     user: User,
 ):
-    """Should return the user's units."""
-    response = client_with_token.get(reverse('user-calculated-units-list'))
+    """Should return the user"s units."""
+    response = client_with_token.get(reverse("user-calculated-units-list"))
     data = response.json()
     assert response.status_code == 200
-    assert not data['is_imperial_units']
-    assert data['distance'] == 'km'
-    assert data['timezone'] == 'UTC'
+    assert not data["is_imperial_units"]
+    assert data["distance"] == "km"
+    assert data["timezone"] == "UTC"
 
     UserSettings.objects.create(user=user, units=settings.UNITS_IMPERIAL)
-    UserLocation.objects.create(user=user, timezone='America/Toronto')
+    UserLocation.objects.create(user=user, timezone="America/Toronto")
     user.refresh_from_db()
-    response = client_with_token.get(reverse('user-calculated-units-list'))
+    response = client_with_token.get(reverse("user-calculated-units-list"))
     data = response.json()
-    assert data['is_imperial_units']
-    assert data['distance'] == 'mi'
-    assert data['timezone'] == 'America/Toronto'
+    assert data["is_imperial_units"]
+    assert data["distance"] == "mi"
+    assert data["timezone"] == "America/Toronto"
 
 
 def test_auth_get_token(user: User, client: Client):
@@ -78,59 +78,59 @@ def test_auth_get_token(user: User, client: Client):
     repo = OauthRepository()
 
     response = client.post(
-        reverse('oauth2_provider:token'),
+        reverse("oauth2_provider:token"),
         {
-            'grant_type': 'password',
-            'username': user.email,
-            'password': USER_PASSWORD,
-            'client_id': repo.jwt_app.client_id,
-            'client_secret': repo.jwt_app.client_secret,
+            "grant_type": "password",
+            "username": user.email,
+            "password": USER_PASSWORD,
+            "client_id": repo.jwt_app.client_id,
+            "client_secret": repo.jwt_app.client_secret,
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     assert response.status_code == 200
-    access = response.json()['access_token']
+    access = response.json()["access_token"]
 
     assert client.get(
-        reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access}',
+        reverse("api-root"),
+        HTTP_AUTHORIZATION=f"Bearer {access}",
     ).status_code == 200
 
 
 def test_accounts_profile_get(admin_client):
     """Should return the user profile."""
-    response = admin_client.get(reverse('profile'))
+    response = admin_client.get(reverse("profile"))
 
     assert response.status_code == 200
-    assert response.accepted_media_type == 'application/json'
-    assert response.json()['email'] == ADMIN_EMAIL
+    assert response.accepted_media_type == "application/json"
+    assert response.json()["email"] == ADMIN_EMAIL
 
 
 def test_accounts_profile_update(admin: User, admin_client: Client):
     """Should be able to update the user profile."""
     response = admin_client.patch(
-        reverse('profile'),
+        reverse("profile"),
         {
-            'first_name':
-                'new_name',
-            'email':
-                'new_email@test.ru',
-            'avatar':
-                ('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAA'
-                 'AB/HNKOAAAAGFBMVEXMzMyWlpajo6O3t7fFxcWcnJyxsbG+vr50Rsl6AAAAC'
-                 'XBIWXMAAA7EAAAOxAGVKw4bAAAAJklEQVQImWNgwADKDAwsAQyuDAzMAgyMb'
-                 'OYMAgyuLApAUhnMRgIANvcCBwsFJwYAAAAASUVORK5CYII=')
+            "first_name":
+                "new_name",
+            "email":
+                "new_email@test.ru",
+            "avatar":
+                ("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAA"
+                 "AB/HNKOAAAAGFBMVEXMzMyWlpajo6O3t7fFxcWcnJyxsbG+vr50Rsl6AAAAC"
+                 "XBIWXMAAA7EAAAOxAGVKw4bAAAAJklEQVQImWNgwADKDAwsAQyuDAzMAgyMb"
+                 "OYMAgyuLApAUhnMRgIANvcCBwsFJwYAAAAASUVORK5CYII=")
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     admin.refresh_from_db()
     data = response.json()
-    avatar_path = f'avatars/{slugify(ADMIN_EMAIL)}'
+    avatar_path = f"avatars/{slugify(ADMIN_EMAIL)}"
     assert response.status_code == 200
-    assert response.accepted_media_type == 'application/json'
-    assert data['email'] == ADMIN_EMAIL
-    assert data['first_name'] == 'new_name'
-    assert admin.first_name == 'new_name'
+    assert response.accepted_media_type == "application/json"
+    assert data["email"] == ADMIN_EMAIL
+    assert data["first_name"] == "new_name"
+    assert admin.first_name == "new_name"
     assert admin.email == ADMIN_EMAIL
     assert avatar_path in admin.avatar.name
     assert admin.avatar_thumbnail is not None
@@ -140,25 +140,25 @@ def test_accounts_profile_update(admin: User, admin_client: Client):
 def test_accounts_change_password(admin: User, admin_client: Client):
     """Should be able to change the user password."""
     response = admin_client.post(
-        reverse('change-password'),
+        reverse("change-password"),
         {
-            'old_password': ADMIN_PASSWORD,
-            'password': 'new_password',
-            'password_confirm': 'new_password',
+            "old_password": ADMIN_PASSWORD,
+            "password": "new_password",
+            "password_confirm": "new_password",
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     admin.refresh_from_db()
     assert response.status_code == 200
-    assert response.accepted_media_type == 'application/json'
-    assert admin.check_password('new_password')
+    assert response.accepted_media_type == "application/json"
+    assert admin.check_password("new_password")
     assert not admin.check_password(ADMIN_PASSWORD)
 
 
 def _get_query_params_from_link_in_text(text: str) -> Dict[str, List[Any]]:
     """Find, parse a link and return query params."""
-    pattern = re.compile((r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-                          r'[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'))
+    pattern = re.compile((r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|"
+                          r"[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"))
     url = pattern.findall(text)[0]
     query_params = parse_qs(urlparse(url).query)
 
@@ -172,27 +172,27 @@ def test_accounts_reset_password(
 ):
     """Should be able to reset the user password."""
     response = client.post(
-        reverse('send-reset-password-link'),
-        {'login': user.email},
-        content_type='application/json',
+        reverse("send-reset-password-link"),
+        {"login": user.email},
+        content_type="application/json",
     )
     assert response.status_code == 200
     assert len(mailoutbox) == 1
     query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
 
     response = client.post(
-        reverse('reset-password'),
+        reverse("reset-password"),
         {
-            'user_id': query_params['user_id'][0],
-            'timestamp': query_params['timestamp'][0],
-            'signature': query_params['signature'][0],
-            'password': 'new_password',
+            "user_id": query_params["user_id"][0],
+            "timestamp": query_params["timestamp"][0],
+            "signature": query_params["signature"][0],
+            "password": "new_password",
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     assert response.status_code == 200
     user.refresh_from_db()
-    assert user.check_password('new_password')
+    assert user.check_password("new_password")
     assert not user.check_password(USER_PASSWORD)
 
 
@@ -206,13 +206,13 @@ def _check_register_verification(
     query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
 
     response = client.post(
-        reverse('verify-registration'),
+        reverse("verify-registration"),
         {
-            'user_id': query_params['user_id'][0],
-            'timestamp': query_params['timestamp'][0],
-            'signature': query_params['signature'][0],
+            "user_id": query_params["user_id"][0],
+            "timestamp": query_params["timestamp"][0],
+            "signature": query_params["signature"][0],
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     assert response.status_code == 200
     user.refresh_from_db()
@@ -225,30 +225,30 @@ def test_accounts_register(
     mailoutbox: List[EmailMultiAlternatives],
 ):
     """Should be able to register a new user."""
-    expires: int = settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS']
+    expires: int = settings.OAUTH2_PROVIDER["ACCESS_TOKEN_EXPIRE_SECONDS"]
     response = client.post(
-        reverse('register'),
+        reverse("register"),
         {
-            'email': 'test@test.io',
-            'first_name': 'test',
-            'password': 'test_pass',
-            'password_confirm': 'test_pass',
+            "email": "test@test.io",
+            "first_name": "test",
+            "password": "test_pass",
+            "password_confirm": "test_pass",
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     assert response.status_code == 201
-    assert response.json()['token']['access_token'] is not None
-    assert response.json()['token']['refresh_token'] is not None
-    assert response.json()['token']['scope'] == 'read write groups'
-    assert response.json()['token']['token_type'] == 'Bearer'
-    assert response.json()['token']['expires_in'] == expires
+    assert response.json()["token"]["access_token"] is not None
+    assert response.json()["token"]["refresh_token"] is not None
+    assert response.json()["token"]["scope"] == "read write groups"
+    assert response.json()["token"]["token_type"] == "Bearer"
+    assert response.json()["token"]["expires_in"] == expires
 
-    user = User.objects.get(email='test@test.io')
+    user = User.objects.get(email="test@test.io")
     groups = user.groups.all()
-    assert user.first_name == 'test'
+    assert user.first_name == "test"
     assert user.is_active
     assert not user.is_confirmed
-    assert user.check_password('test_pass')
+    assert user.check_password("test_pass")
     assert groups.count() == 1
     assert groups[0].name == settings.GROUP_USER_NAME
 
@@ -262,13 +262,13 @@ def test_resend_verify_registration(
     mailoutbox: List[EmailMultiAlternatives],
 ):
     """Should be able to resend a registration verification email."""
-    response = client_with_token.post(reverse('resend-verify-registration'))
+    response = client_with_token.post(reverse("resend-verify-registration"))
 
     assert response.status_code == 404
     user.is_confirmed = False
     user.save()
 
-    client_with_token.post(reverse('resend-verify-registration'))
+    client_with_token.post(reverse("resend-verify-registration"))
 
     _check_register_verification(client, user, mailoutbox)
 
@@ -279,10 +279,10 @@ def test_accounts_register_email(
     mailoutbox: List[EmailMultiAlternatives],
 ):
     """Should be able to change a user email."""
-    new_email = 'new_email@example.com'
+    new_email = "new_email@example.com"
     response = client_with_token.post(
-        reverse('register-email'),
-        {'email': new_email},
+        reverse("register-email"),
+        {"email": new_email},
     )
     assert response.status_code == 200
 
@@ -292,12 +292,12 @@ def test_accounts_register_email(
     query_params = _get_query_params_from_link_in_text(mailoutbox[0].body)
 
     response = client_with_token.post(
-        reverse('verify-email'),
+        reverse("verify-email"),
         {
-            'user_id': query_params['user_id'][0],
-            'email': query_params['email'][0],
-            'timestamp': query_params['timestamp'][0],
-            'signature': query_params['signature'][0],
+            "user_id": query_params["user_id"][0],
+            "email": query_params["email"][0],
+            "timestamp": query_params["timestamp"][0],
+            "signature": query_params["signature"][0],
         },
     )
     assert response.status_code == 200
@@ -312,11 +312,11 @@ def test_user_languages_list(
     user_languages: QuerySet,
 ):
     """Should return a languages list."""
-    response = client_with_token.get(reverse('user-languages-list'))
+    response = client_with_token.get(reverse("user-languages-list"))
     data = response.json()
     assert response.status_code == 200
-    assert data['count'] == user_languages.filter(user=user).count()
-    assert data['results'][0]['language'] == 'fr'
+    assert data["count"] == user_languages.filter(user=user).count()
+    assert data["results"][0]["language"] == "fr"
 
 
 def test_user_languages_detail(
@@ -327,10 +327,10 @@ def test_user_languages_detail(
     """Should return a user language."""
     lang = user_languages.filter(user=user).first()
     response = client_with_token.get(
-        reverse('user-languages-detail', args=[lang.pk]))
+        reverse("user-languages-detail", args=[lang.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['language'] == lang.language
+    assert data["language"] == lang.language
 
 
 def test_user_languages_create(
@@ -340,13 +340,13 @@ def test_user_languages_create(
 ):
     """Should be able to create a user language."""
     response = client_with_token.post(
-        reverse('user-languages-list'),
+        reverse("user-languages-list"),
         {
-            'language': 'en',
-            'is_native': False
+            "language": "en",
+            "is_native": False
         },
     )
-    lang = user_languages.get(user=user, language='en')
+    lang = user_languages.get(user=user, language="en")
     assert response.status_code == 201
     assert lang.is_native is False
     assert lang.user == user
@@ -362,16 +362,16 @@ def test_user_languages_update(
     """Should be able to update a user language."""
     lang = user_languages.filter(user=user).first()
     response = client_with_token.patch(
-        reverse('user-languages-detail', args=[lang.pk]),
+        reverse("user-languages-detail", args=[lang.pk]),
         {
-            'language': 'en',
-            'is_native': True,
+            "language": "en",
+            "is_native": True,
         },
     )
     lang.refresh_from_db()
     assert response.status_code == 200
     assert lang.is_native is True
-    assert lang.language == 'en'
+    assert lang.language == "en"
     assert lang.user == user
     assert lang.modified_by == user
 
@@ -384,7 +384,7 @@ def test_user_languages_delete(
     """Should be able to update a user language."""
     lang = user_languages.filter(user=user).first()
     response = client_with_token.delete(
-        reverse('user-languages-detail', args=[lang.pk]))
+        reverse("user-languages-detail", args=[lang.pk]))
     assert response.status_code == 204
     assert user_languages.filter(user=user).count() == 0
 
@@ -395,12 +395,12 @@ def test_user_locations_list(
     user_locations: QuerySet,
 ):
     """Should return a locations list."""
-    response = client_with_token.get(reverse('user-locations-list'))
+    response = client_with_token.get(reverse("user-locations-list"))
     data = response.json()
     assert response.status_code == 200
-    assert data['count'] == user_locations.filter(user=user).count()
+    assert data["count"] == user_locations.filter(user=user).count()
 
-    assert data['results'][0]['address'] == 'test address 3'
+    assert data["results"][0]["address"] == "test address 3"
 
 
 def test_user_location_detail(
@@ -411,11 +411,11 @@ def test_user_location_detail(
     """Should return a user location."""
     obj = user_locations.filter(user=user).first()
     response = client_with_token.get(
-        reverse('user-locations-detail', args=[obj.pk]))
+        reverse("user-locations-detail", args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['city'] == obj.city.pk
-    assert data['address'] == obj.address
+    assert data["city"] == obj.city.pk
+    assert data["address"] == obj.address
 
 
 def test_user_location_create(
@@ -427,15 +427,15 @@ def test_user_location_create(
 ):
     """Should be able to create a user location."""
     response = client_with_token.post(
-        reverse('user-locations-list'),
+        reverse("user-locations-list"),
         {
-            'address': 'new test address',
-            'is_default': True,
-            'city': cities[0].pk,
-            'country': countries[0].pk
+            "address": "new test address",
+            "is_default": True,
+            "city": cities[0].pk,
+            "country": countries[0].pk
         },
     )
-    obj = user_locations.get(user=user, address='new test address')
+    obj = user_locations.get(user=user, address="new test address")
 
     assert response.status_code == 201
     assert obj.is_default is True
@@ -453,16 +453,16 @@ def test_user_location_update(
     """Should be able to update a user location."""
     obj = user_locations.filter(user=user).first()
     response = client_with_token.patch(
-        reverse('user-locations-detail', args=[obj.pk]),
+        reverse("user-locations-detail", args=[obj.pk]),
         {
-            'address': 'new test address',
-            'is_default': True,
+            "address": "new test address",
+            "is_default": True,
         },
     )
     obj.refresh_from_db()
     assert response.status_code == 200
     assert obj.is_default is True
-    assert obj.address == 'new test address'
+    assert obj.address == "new test address"
     assert obj.user == user
     assert obj.modified_by == user
 
@@ -475,7 +475,7 @@ def test_user_location_delete(
     """Should be able to delete a user language."""
     obj = user_locations.filter(user=user).first()
     response = client_with_token.delete(
-        reverse('user-locations-detail', args=[obj.pk]))
+        reverse("user-locations-detail", args=[obj.pk]))
     assert response.status_code == 204
     assert user_locations.filter(user=user, pk=obj.pk).count() == 0
 
@@ -486,12 +486,12 @@ def test_user_contacts_list(
     user_contacts: QuerySet,
 ):
     """Should return an contacts list."""
-    response = client_with_token.get(reverse('user-contacts-list'))
+    response = client_with_token.get(reverse("user-contacts-list"))
     data = response.json()
     assert response.status_code == 200
-    assert data['count'] == user_contacts.filter(user=user).count()
+    assert data["count"] == user_contacts.filter(user=user).count()
 
-    assert data['results'][0]['value'] == 'test contact 3'
+    assert data["results"][0]["value"] == "test contact 3"
 
 
 def test_user_contacts_detail(
@@ -502,11 +502,11 @@ def test_user_contacts_detail(
     """Should return a user contact."""
     obj = user_contacts.filter(user=user).first()
     response = client_with_token.get(
-        reverse('user-contacts-detail', args=[obj.pk]))
+        reverse("user-contacts-detail", args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['value'] == obj.value
-    assert data['contact'] == obj.contact.pk
+    assert data["value"] == obj.value
+    assert data["contact"] == obj.contact.pk
 
 
 def test_user_contacts_create(
@@ -516,13 +516,13 @@ def test_user_contacts_create(
 ):
     """Should be able to create a user contact."""
     response = client_with_token.post(
-        reverse('user-contacts-list'),
+        reverse("user-contacts-list"),
         {
-            'value': 'test 123456',
-            'contact': user_contacts[0].contact.pk
+            "value": "test 123456",
+            "contact": user_contacts[0].contact.pk
         },
     )
-    obj = user_contacts.get(user=user, value='test 123456')
+    obj = user_contacts.get(user=user, value="test 123456")
 
     assert response.status_code == 201
     assert obj.user == user
@@ -538,14 +538,14 @@ def test_user_contacts_update(
     """Should be able to update a user contact."""
     obj = user_contacts.filter(user=user).first()
     response = client_with_token.patch(
-        reverse('user-contacts-detail', args=[obj.pk]),
+        reverse("user-contacts-detail", args=[obj.pk]),
         {
-            'value': 'new test contact',
+            "value": "new test contact",
         },
     )
     obj.refresh_from_db()
     assert response.status_code == 200
-    assert obj.value == 'new test contact'
+    assert obj.value == "new test contact"
     assert obj.user == user
     assert obj.modified_by == user
 
@@ -558,7 +558,7 @@ def test_user_contacts_delete(
     """Should be able to delete a user contact."""
     obj = user_contacts.filter(user=user).first()
     response = client_with_token.delete(
-        reverse('user-contacts-detail', args=[obj.pk]))
+        reverse("user-contacts-detail", args=[obj.pk]))
     assert response.status_code == 204
     assert user_contacts.filter(user=user, pk=obj.pk).count() == 0
 
@@ -570,10 +570,10 @@ def test_user_settings_list(
 ):
     """Should return a settings list."""
     obj = user_settings.filter(user=user).first()
-    response = client_with_token.get(reverse('user-settings-list'))
+    response = client_with_token.get(reverse("user-settings-list"))
     data = response.json()
     assert response.status_code == 200
-    assert data['results'][0]['language'] == obj.language
+    assert data["results"][0]["language"] == obj.language
 
 
 def test_user_settings_detail(
@@ -584,10 +584,10 @@ def test_user_settings_detail(
     """Should return a user settings."""
     obj = user_settings.filter(user=user).first()
     response = client_with_token.get(
-        reverse('user-settings-detail', args=[obj.pk]))
+        reverse("user-settings-detail", args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['currency'] == obj.currency
+    assert data["currency"] == obj.currency
 
 
 def test_user_settings_create(
@@ -596,15 +596,15 @@ def test_user_settings_create(
 ):
     """Should be able to create a user settings object."""
     response = client_with_token.post(
-        reverse('user-settings-list'),
+        reverse("user-settings-list"),
         {
-            'language': 'de',
-            'currency': 'EUR'
+            "language": "de",
+            "currency": "EUR"
         },
     )
     assert response.status_code == 201
-    assert user.settings.language == 'de'
-    assert user.settings.currency == 'EUR'
+    assert user.settings.language == "de"
+    assert user.settings.currency == "EUR"
 
 
 def test_user_settings_update(
@@ -615,14 +615,14 @@ def test_user_settings_update(
     """Should be able to update a user settings."""
     obj = user_settings.filter(user=user).first()
     response = client_with_token.patch(
-        reverse('user-settings-detail', args=[obj.pk]),
+        reverse("user-settings-detail", args=[obj.pk]),
         {
-            'language': 'ru',
+            "language": "ru",
         },
     )
     obj.refresh_from_db()
     assert response.status_code == 200
-    assert obj.language == 'ru'
+    assert obj.language == "ru"
     assert obj.user == user
     assert obj.modified_by == user
 
@@ -635,7 +635,7 @@ def test_user_settings_delete(
     """Should be able to delete a user settings."""
     obj = user_settings.filter(user=user).first()
     response = client_with_token.delete(
-        reverse('user-settings-detail', args=[obj.pk]))
+        reverse("user-settings-detail", args=[obj.pk]))
     assert response.status_code == 204
     assert user_settings.filter(user=user).count() == 0
 
@@ -647,11 +647,11 @@ def test_user_saved_professional_list(
 ):
     """Should return a user saved professionals list."""
     obj = user_saved_professionals.filter(user=user).first()
-    response = client_with_token.get(reverse('user-saved-professionals-list'))
+    response = client_with_token.get(reverse("user-saved-professionals-list"))
     data = response.json()
     assert response.status_code == 200
-    assert data['results'][0]['professional'] == obj.professional.pk
-    assert data['results'][0]['note'] == obj.note
+    assert data["results"][0]["professional"] == obj.professional.pk
+    assert data["results"][0]["note"] == obj.note
 
 
 def test_user_saved_professional_detail(
@@ -662,10 +662,10 @@ def test_user_saved_professional_detail(
     """Should return a user saved professionals."""
     obj = user_saved_professionals.filter(user=user).first()
     response = client_with_token.get(
-        reverse('user-saved-professionals-detail', args=[obj.pk]))
+        reverse("user-saved-professionals-detail", args=[obj.pk]))
     data = response.json()
     assert response.status_code == 200
-    assert data['note'] == obj.note
+    assert data["note"] == obj.note
 
 
 def test_user_saved_professional_create(
@@ -675,14 +675,14 @@ def test_user_saved_professional_create(
 ):
     """Should be able to create a user saved professional object."""
     response = client_with_token.post(
-        reverse('user-saved-professionals-list'),
+        reverse("user-saved-professionals-list"),
         {
-            'note': 'test note',
-            'professional': professionals[0].pk
+            "note": "test note",
+            "professional": professionals[0].pk
         },
     )
     assert response.status_code == 201
-    assert user.saved_professionals.first().note == 'test note'
+    assert user.saved_professionals.first().note == "test note"
     assert user.saved_professionals.first().professional == professionals[0]
 
 
@@ -694,14 +694,14 @@ def test_user_saved_professional_update(
     """Should be able to update a user saved professional."""
     obj = user_saved_professionals.filter(user=user).first()
     response = client_with_token.patch(
-        reverse('user-saved-professionals-detail', args=[obj.pk]),
+        reverse("user-saved-professionals-detail", args=[obj.pk]),
         {
-            'note': 'new note',
+            "note": "new note",
         },
     )
     obj.refresh_from_db()
     assert response.status_code == 200
-    assert obj.note == 'new note'
+    assert obj.note == "new note"
     assert obj.user == user
     assert obj.modified_by == user
 
@@ -714,6 +714,6 @@ def test_user_saved_professional_delete(
     """Should be able to delete a user saved professionals."""
     obj = user_saved_professionals.filter(user=user).first()
     response = client_with_token.delete(
-        reverse('user-saved-professionals-detail', args=[obj.pk]))
+        reverse("user-saved-professionals-detail", args=[obj.pk]))
     assert response.status_code == 204
     assert user_saved_professionals.filter(pk=obj.pk).count() == 0

@@ -7,6 +7,6 @@ from .views import ContactViewSet
 def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
-    router.register(r'contacts/contacts', ContactViewSet, 'contacts')
+    router.register(r"contacts/contacts", ContactViewSet, "contacts")
 
     return router

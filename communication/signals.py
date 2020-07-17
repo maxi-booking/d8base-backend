@@ -14,7 +14,7 @@ from .models import Review
 @receiver(
     post_save,
     sender=Review,
-    dispatch_uid='communication_review_on_save',
+    dispatch_uid="communication_review_on_save",
 )
 def review_post_save(sender: Type, instance: Review, **kwargs):
     """Review post save signal."""
@@ -24,7 +24,7 @@ def review_post_save(sender: Type, instance: Review, **kwargs):
 @receiver(
     post_delete,
     sender=Review,
-    dispatch_uid='communication_review_on_save',
+    dispatch_uid="communication_review_on_save",
 )
 def review_post_delete(sender: Type, instance: Review, **kwargs):
     """Review post delete signal."""

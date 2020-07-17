@@ -29,9 +29,9 @@ class CountryAdmin(
 ):
     """The country admin."""
 
-    list_filter = ('continent', )
-    list_select_related = ('continent', )
-    search_fields_extend = ['continent__name']
+    list_filter = ("continent", )
+    list_select_related = ("continent", )
+    search_fields_extend = ["continent__name"]
 
 
 @admin.register(base_models.Region)
@@ -42,9 +42,9 @@ class RegionAdmin(
 ):
     """The region admin."""
 
-    list_select_related = ('country', )
-    search_fields_extend = ['country__name']
-    autocomplete_fields = ('alt_names', )
+    list_select_related = ("country", )
+    search_fields_extend = ["country__name"]
+    autocomplete_fields = ("alt_names", )
 
 
 @admin.register(base_models.Subregion)
@@ -55,19 +55,19 @@ class SubregionAdmin(
 ):
     """The subregion admin."""
 
-    list_select_related = ('region', )
-    search_fields_extend = ['region__name', 'region__country__name']
-    autocomplete_fields = ('alt_names', 'region')
+    list_select_related = ("region", )
+    search_fields_extend = ["region__name", "region__country__name"]
+    autocomplete_fields = ("alt_names", "region")
 
 
 @admin.register(base_models.City)
 class CitiesAdmin(VersionAdmin, base_admin.CityAdmin, SearchFieldsUpdateMixin):
     """The cities admin."""
 
-    list_filter = ('country', )
-    list_select_related = ('country', 'region', 'subregion')
-    search_fields_extend = ['country__name', 'region__name', 'subregion__name']
-    autocomplete_fields = ('alt_names', 'region', 'subregion')
+    list_filter = ("country", )
+    list_select_related = ("country", "region", "subregion")
+    search_fields_extend = ["country__name", "region__name", "subregion__name"]
+    autocomplete_fields = ("alt_names", "region", "subregion")
 
 
 @admin.register(base_models.District)
@@ -78,9 +78,9 @@ class DistrictAdmin(
 ):
     """The district admin."""
 
-    list_select_related = ('city', )
-    search_fields_extend = ['city__name']
-    autocomplete_fields = ('alt_names', 'city')
+    list_select_related = ("city", )
+    search_fields_extend = ["city__name"]
+    autocomplete_fields = ("alt_names", "city")
 
 
 @admin.register(base_models.AlternativeName)
@@ -97,9 +97,9 @@ class PostalCodeAdmin(
     """The alternative name admin."""
 
     autocomplete_fields = [
-        'alt_names', 'region', 'subregion', 'city', 'district'
+        "alt_names", "region", "subregion", "city", "district"
     ]
-    list_select_related = ('subregion', 'region', 'country')
+    list_select_related = ("subregion", "region", "country")
     search_fields_extend = [
-        'region__name', 'subregion__name', 'city__name', 'district__name'
+        "region__name", "subregion__name", "city__name", "district__name"
     ]

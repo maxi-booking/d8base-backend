@@ -8,4 +8,4 @@ def validate_user_location(obj):
     if obj.user_location and\
             obj.user_location.user != obj.professional.user:
         raise ValidationError(
-            {'user_location': _('User location from the other user.')})
+            {"user_location": _("User location from the other user.")})

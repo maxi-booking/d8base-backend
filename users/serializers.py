@@ -30,8 +30,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         """The profile class serializer META class."""
 
         model = User
-        fields = settings.USER_FIELDS + ['avatar_thumbnail']
-        read_only_fields = settings.USER_READONLY_FIELDS + ['email']
+        fields = settings.USER_FIELDS + ["avatar_thumbnail"]
+        read_only_fields = settings.USER_READONLY_FIELDS + ["email"]
 
 
 class TokenSerializer(serializers.Serializer):
@@ -41,8 +41,8 @@ class TokenSerializer(serializers.Serializer):
 
     access_token: str = serializers.CharField()
     expires_in: str = serializers.IntegerField(
-        default=settings.OAUTH2_PROVIDER['ACCESS_TOKEN_EXPIRE_SECONDS'])
-    token_type: str = serializers.CharField(default='Bearer')
+        default=settings.OAUTH2_PROVIDER["ACCESS_TOKEN_EXPIRE_SECONDS"])
+    token_type: str = serializers.CharField(default="Bearer")
     scope: str = serializers.CharField()
     refresh_token: str = serializers.CharField()
 
@@ -50,7 +50,7 @@ class TokenSerializer(serializers.Serializer):
 class RegisterTokenSerializer(serializers.ModelSerializer):
     """The registration serializer with the user token included."""
 
-    token = serializers.SerializerMethodField('get_token')
+    token = serializers.SerializerMethodField("get_token")
 
     # pylint: disable=no-self-use
     @swagger_serializer_method(serializer_or_field=serializers.DictField)
@@ -59,16 +59,16 @@ class RegisterTokenSerializer(serializers.ModelSerializer):
         access, refresh = get_auth_tokens(user)
 
         return TokenSerializer({
-            'access_token': access.token,
-            'scope': access.scope,
-            'refresh_token': refresh.token
+            "access_token": access.token,
+            "scope": access.scope,
+            "refresh_token": refresh.token
         }).data
 
     class Meta:
         """The register class serializer META class."""
 
         model = User
-        fields = settings.USER_FIELDS + ['token']
+        fields = settings.USER_FIELDS + ["token"]
         read_only_fields = settings.USER_READONLY_FIELDS
 
 
@@ -90,10 +90,10 @@ class UserSettingsSerializer(
 
         model = UserSettings
 
-        fields = ('id', 'user', 'language', 'currency', 'units',
-                  'is_last_name_hidden', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "language", "currency", "units",
+                  "is_last_name_hidden", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class UserSavedProfessionalSerializer(
@@ -107,9 +107,9 @@ class UserSavedProfessionalSerializer(
 
         model = UserSavedProfessional
 
-        fields = ('id', 'user', 'note', 'professional', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "note", "professional", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class UserLanguageSerializer(
@@ -123,9 +123,9 @@ class UserLanguageSerializer(
 
         model = UserLanguage
 
-        fields = ('id', 'user', 'language', 'is_native', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "language", "is_native", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class UserContactSerializer(
@@ -139,9 +139,9 @@ class UserContactSerializer(
 
         model = UserContact
 
-        fields = ('id', 'user', 'contact', 'contact_display', 'contact_code',
-                  'value', 'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "contact", "contact_display", "contact_code",
+                  "value", "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class UserLocationSerializer(
@@ -155,8 +155,8 @@ class UserLocationSerializer(
 
         model = UserLocation
 
-        fields = ('id', 'user', 'country', 'region', 'subregion', 'city',
-                  'district', 'postal_code', 'address', 'coordinates',
-                  'is_default', 'units', 'timezone', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "country", "region", "subregion", "city",
+                  "district", "postal_code", "address", "coordinates",
+                  "is_default", "units", "timezone", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")

@@ -16,16 +16,16 @@ def test_user_location_manager_get_user_location(user: User):
     """Should a user timezone."""
     manager = UserLocation.objects
     assert manager.get_user_timezone(user) is None
-    user.locations.create(timezone='Europe/London')
-    assert manager.get_user_timezone(user) == 'Europe/London'
+    user.locations.create(timezone="Europe/London")
+    assert manager.get_user_timezone(user) == "Europe/London"
 
 
 def test_user_manager_create_user():
     """Should create a user."""
-    user = User.objects.create_user(email='common@user.com', password='foo')
+    user = User.objects.create_user(email="common@user.com", password="foo")
     groups = user.groups.all()
 
-    assert user.email == 'common@user.com'
+    assert user.email == "common@user.com"
     assert user.is_active
     assert not user.is_staff
     assert not user.is_superuser
@@ -35,18 +35,18 @@ def test_user_manager_create_user():
     with pytest.raises(TypeError):
         User.objects.create_user()  # type: ignore
     with pytest.raises(TypeError):
-        User.objects.create_user(email='')  # type: ignore
+        User.objects.create_user(email="")  # type: ignore
     with pytest.raises(TypeError):
-        User.objects.create_user(email='')  # type: ignore
+        User.objects.create_user(email="")  # type: ignore
     with pytest.raises(ValueError):
-        User.objects.create_user(email='', password='foo')
+        User.objects.create_user(email="", password="foo")
 
 
 def test_user_manager_create_superuser():
     """Should create a superuser."""
-    user = User.objects.create_superuser('super@user.com', 'foo')
+    user = User.objects.create_superuser("super@user.com", "foo")
 
-    assert user.email == 'super@user.com'
+    assert user.email == "super@user.com"
     assert user.is_active
     assert user.is_staff
     assert user.is_superuser
@@ -54,31 +54,31 @@ def test_user_manager_create_superuser():
 
     with pytest.raises(ValueError):
         User.objects.create_superuser(
-            email='super@user.com',
-            password='foo',
+            email="super@user.com",
+            password="foo",
             is_superuser=False,
         )
 
     with pytest.raises(ValueError):
         User.objects.create_superuser(
-            email='super@user.com',
-            password='foo',
+            email="super@user.com",
+            password="foo",
             is_staff=False,
         )
 
 
 def test_user_settings_manager_update_or_create_from_user_language(user: User):
     """Should update or create a user settings from the user language."""
-    UserLanguage.objects.create(user=user, language='de')
+    UserLanguage.objects.create(user=user, language="de")
     user.refresh_from_db()
 
-    assert user.settings.language == 'de'
+    assert user.settings.language == "de"
 
     user.settings.delete()
-    UserLanguage.objects.create(user=user, language='xx')
+    UserLanguage.objects.create(user=user, language="xx")
     user.refresh_from_db()
 
-    assert user.settings.language == 'en'
+    assert user.settings.language == "en"
 
 
 def test_user_settings_manager_update_or_create_from_user_location(
@@ -86,17 +86,17 @@ def test_user_settings_manager_update_or_create_from_user_location(
     countries: List[Country],
 ):
     """Should update or create a user settings from the user location."""
-    countries[0].language_codes = 'fr'
-    countries[0].currency = 'EUR'
+    countries[0].language_codes = "fr"
+    countries[0].currency = "EUR"
 
-    countries[1].language_codes = 'invalid'
-    countries[1].currency = 'INVALID'
+    countries[1].language_codes = "invalid"
+    countries[1].currency = "INVALID"
 
     UserLocation.objects.create(user=user, country=countries[0])
     user.refresh_from_db()
 
-    assert user.settings.language == 'fr'
-    assert user.settings.currency == 'EUR'
+    assert user.settings.language == "fr"
+    assert user.settings.currency == "EUR"
     assert user.settings.units == settings.UNITS_METRIC
 
     # invalid language and currency
@@ -108,8 +108,8 @@ def test_user_settings_manager_update_or_create_from_user_location(
     )
     user.refresh_from_db()
 
-    assert user.settings.language == 'en'
-    assert user.settings.currency == 'USD'
+    assert user.settings.language == "en"
+    assert user.settings.currency == "USD"
     assert user.settings.units == settings.UNITS_IMPERIAL
 
     # user location without a country
@@ -117,6 +117,6 @@ def test_user_settings_manager_update_or_create_from_user_location(
     UserLocation.objects.create(user=user)
     user.refresh_from_db()
 
-    assert user.settings.language == 'en'
-    assert user.settings.currency == 'USD'
+    assert user.settings.language == "en"
+    assert user.settings.currency == "USD"
     assert user.settings.units == settings.UNITS_METRIC

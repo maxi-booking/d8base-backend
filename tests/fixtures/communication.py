@@ -18,10 +18,10 @@ def suggested_messages(subcategories: QuerySet) -> QuerySet:
     for i in range(0, OBJECTS_TO_CREATE):
         SuggestedMessage.objects.create(
             subcategory=cat,
-            name_en=f'name {i}',
-            body_en=f'description {i}',
-            name_de=f'der name {i}',
-            body_de=f'beschreibung {i}',
+            name_en=f"name {i}",
+            body_en=f"description {i}",
+            name_de=f"der name {i}",
+            body_de=f"beschreibung {i}",
         )
     return SuggestedMessage.objects.get_list()
 
@@ -36,29 +36,29 @@ def messages(admin: User, user: User, users: QuerySet) -> QuerySet:
         Message.objects.create(
             sender=admin,
             recipient=user,
-            subject=f'subject {i}',
-            body=f'message body {i}',
+            subject=f"subject {i}",
+            body=f"message body {i}",
         )
     for i in range(0, OBJECTS_TO_CREATE):
         Message.objects.create(
             sender=user,
             recipient=admin,
-            subject=f'subject {i}',
-            body=f'message body {i}',
+            subject=f"subject {i}",
+            body=f"message body {i}",
         )
     for i in range(0, OBJECTS_TO_CREATE):
         Message.objects.create(
             sender=user_one,
             recipient=user_two,
-            subject=f'subject user {i}',
-            body=f'message body user {i}',
+            subject=f"subject user {i}",
+            body=f"message body user {i}",
         )
     for i in range(0, OBJECTS_TO_CREATE):
         Message.objects.create(
             sender=user_two,
             recipient=user_one,
-            subject=f'subject user {i}',
-            body=f'message body user {i}',
+            subject=f"subject user {i}",
+            body=f"message body user {i}",
         )
     return Message.objects.get_list()
 
@@ -71,15 +71,15 @@ def reviews(admin: User, user: User, professionals: QuerySet) -> QuerySet:
     Review.objects.create(
         user=user,
         professional=admin_professional,
-        title='title user',
-        description='description user',
+        title="title user",
+        description="description user",
         rating=4,
     )
     Review.objects.create(
         user=admin,
         professional=user_professional,
-        title='title admin',
-        description='description admin',
+        title="title admin",
+        description="description admin",
         rating=5,
     )
     return Review.objects.get_list()
@@ -93,13 +93,13 @@ def review_comments(admin: User, user: User, reviews: QuerySet) -> QuerySet:
     ReviewComment.objects.create(
         user=user,
         review=user_review,
-        title='title user',
-        description='description user',
+        title="title user",
+        description="description user",
     )
     ReviewComment.objects.create(
         user=admin,
         review=admin_review,
-        title='title admin',
-        description='description admin',
+        title="title admin",
+        description="description admin",
     )
     return ReviewComment.objects.get_list()

@@ -12,7 +12,7 @@ class AccountServiceForeignKey(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Service.objects.get_user_list(user=user)
 
 
@@ -22,5 +22,5 @@ class AccountProfessionalLocationForeignKey(
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return ProfessionalLocation.objects.get_user_list(user=user)

@@ -26,7 +26,7 @@ class ProfessionalLocationViewSet(viewsets.ModelViewSet):
     """The professional contact viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalLocationSerializer
     queryset = ProfessionalLocation.objects.get_list()
     filterset_class = ProfessionalLocationFilterSet
@@ -36,10 +36,10 @@ class ProfessionalContactViewSet(viewsets.ModelViewSet):
     """The professional contact viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalContactSerializer
     queryset = ProfessionalContact.objects.get_list()
-    search_fields = ('=id', 'contact__name', 'value')
+    search_fields = ("=id", "contact__name", "value")
     filterset_class = ProfessionalContactFilterSet
 
 
@@ -47,10 +47,10 @@ class ProfessionalEducationViewSet(viewsets.ModelViewSet):
     """The professional education viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalEducationSerializer
     queryset = ProfessionalEducation.objects.get_list()
-    search_fields = ('=id', 'university', 'deegree', 'field_of_study')
+    search_fields = ("=id", "university", "deegree", "field_of_study")
     filterset_class = ProfessionalEductationFilterSet
 
 
@@ -58,10 +58,10 @@ class ProfessionalPhotoViewSet(viewsets.ModelViewSet):
     """The professional photo viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalPhotoSerializer
     queryset = ProfessionalPhoto.objects.get_list()
-    search_fields = ('=id', 'name', 'description')
+    search_fields = ("=id", "name", "description")
     filterset_class = ProfessionalPhotoFilterSet
 
 
@@ -69,10 +69,10 @@ class ProfessionalCertificateViewSet(viewsets.ModelViewSet):
     """The professional certificate viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalCertificateSerializer
     queryset = ProfessionalCertificate.objects.get_list()
-    search_fields = ('=id', 'name', 'organization')
+    search_fields = ("=id", "name", "organization")
     filterset_class = ProfessionalCertificateFilterSet
 
 
@@ -80,10 +80,10 @@ class ProfessionalExperienceViewSet(viewsets.ModelViewSet):
     """The professional education viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalExperienceSerializer
     queryset = ProfessionalExperience.objects.get_list()
-    search_fields = ('=id', 'title', 'company')
+    search_fields = ("=id", "title", "company")
     filterset_class = ProfessionalExperienceFilterSet
 
 
@@ -91,10 +91,10 @@ class ProfessionalTagViewSet(viewsets.ModelViewSet):
     """The professional tag viewset."""
 
     is_owner_filter_enabled = True
-    owner_filter_field = 'professional__user'
+    owner_filter_field = "professional__user"
     serializer_class = ProfessionalTagSerializer
     queryset = ProfessionalTag.objects.get_list()
-    search_fields = ('=id', 'name')
+    search_fields = ("=id", "name")
     filterset_class = ProfessionalTagFilterSet
 
 
@@ -103,7 +103,7 @@ class ProfessionalTagListViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer_class = ProfessionalTagListSerializer
     queryset = ProfessionalTag.objects.get_names()
-    search_fields = ('name', )
+    search_fields = ("name", )
 
 
 class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
@@ -111,7 +111,7 @@ class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer_class = ProfessionalListSerializer
     queryset = Professional.objects.get_list()
-    search_fields = ('=id', 'name', 'user__email')
+    search_fields = ("=id", "name", "user__email")
     filterset_class = ProfessionalListFilterSet
 
 
@@ -121,7 +121,7 @@ class ProfessionalViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = ProfessionalSerializer
     queryset = Professional.objects.get_list()
-    search_fields = ('=id', 'name')
+    search_fields = ("=id", "name")
 
 
 class CategoryViewSet(
@@ -133,7 +133,7 @@ class CategoryViewSet(
 
     serializer_class = CategorySerializer
     queryset = Category.objects.get_list()
-    search_fields = ('=id', 'name')
+    search_fields = ("=id", "name")
 
 
 class SubcategoryViewSet(
@@ -145,5 +145,5 @@ class SubcategoryViewSet(
 
     serializer_class = SubcategorySerializer
     queryset = Subcategory.objects.get_list()
-    search_fields = ('=id', 'name', 'category__name')
-    filterset_fields = ('category', )
+    search_fields = ("=id", "name", "category__name")
+    filterset_fields = ("category", )

@@ -13,7 +13,7 @@ class LocationAutofiller(BaseLocationAutofiller):
     location: AbstractLocation
 
     members: List[str] = [
-        'postal_code', 'district', 'city', 'subregion', 'region'
+        "postal_code", "district", "city", "subregion", "region"
     ]
 
     def __init__(self, location: AbstractLocation):
@@ -57,13 +57,13 @@ class LocationAutofiller(BaseLocationAutofiller):
 
     def _set_timezone(self):
         """Set the timezone attr based on the city attr."""
-        city = getattr(self.location, 'city', None)
+        city = getattr(self.location, "city", None)
         if city and city.timezone:
             self.location.timezone = city.timezone
 
     def _set_units(self):
         """Set the units based on the country attr."""
-        country = getattr(self.location, 'country', None)
+        country = getattr(self.location, "country", None)
         if not country:
             return
         if country.tld in settings.IMPERIAL_UNITS_COUNTRIES:
@@ -74,7 +74,7 @@ class LocationAutofiller(BaseLocationAutofiller):
         self._set_units()
         for member in self.members:
             if getattr(self.location, member, None):
-                getattr(self, f'_set_from_{member}')()
+                getattr(self, f"_set_from_{member}")()
                 self._set_timezone()
                 return self.location
 

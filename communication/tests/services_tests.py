@@ -28,8 +28,8 @@ def test_notify_new_review_comment(
     comment = ReviewComment()
     comment.user = user
     comment.review = review
-    comment.title = 'title'
-    comment.description = 'description'
+    comment.title = "title"
+    comment.description = "description"
 
     notify_new_review_comment(comment)
     assert len(mailoutbox) == 1
@@ -48,8 +48,8 @@ def test_notify_new_message(
     message = Message()
     message.recipient = user
     message.sender = admin
-    message.subject = 'subject'
-    message.body = 'body'
+    message.subject = "subject"
+    message.body = "body"
 
     notify_new_message(message)
     assert len(mailoutbox) == 1
@@ -69,8 +69,8 @@ def test_notify_new_review(
     review = Review()
     review.user = user
     review.professional = professional
-    review.title = 'title'
-    review.description = 'description'
+    review.title = "title"
+    review.description = "description"
 
     notify_new_review(review)
     assert len(mailoutbox) == 1

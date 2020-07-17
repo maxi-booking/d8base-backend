@@ -15,7 +15,7 @@ pytestmark = pytest.mark.django_db
 # pylint: disable=redefined-outer-name, protected-access
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def mock_common_info_class(django_db_blocker):
     """Get the mock of the CommomInfo class."""
 
@@ -36,7 +36,7 @@ def mock_common_info_class(django_db_blocker):
     return MockCommonInfo
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def mock_common_info(mock_common_info_class):
     """Get the instance of mock of the CommomInfo class."""
     return mock_common_info_class()
@@ -49,7 +49,7 @@ def test_common_info_get_current_user(
 ):
     """Should get the current user."""
     mock_common_info.reset_user()
-    response = admin_client.get(reverse('admin:users_user_changelist'))
+    response = admin_client.get(reverse("admin:users_user_changelist"))
 
     assert response.status_code == 200
     assert CommonInfo.get_current_user() == admin
@@ -88,7 +88,7 @@ def test_common_info_set_user_fields_on_save(
 ):
     """Should set user fields for a user when saving."""
     mock_common_info.reset_user()
-    response = admin_client.get(reverse('admin:users_user_changelist'))
+    response = admin_client.get(reverse("admin:users_user_changelist"))
     mock_common_info.pk = None
     mock_common_info.save()
 
@@ -109,8 +109,8 @@ def test_common_info_set_user_fields_on_save_without_user(mock_common_info):
 
 def test_validation_mixin(mock_common_info, mocker: MockFixture):
     """Should run validators."""
-    validator1 = mocker.Mock(return_value='validator1')
-    validator2 = mocker.Mock(return_value='validator2')
+    validator1 = mocker.Mock(return_value="validator1")
+    validator2 = mocker.Mock(return_value="validator2")
     mock_common_info.validators = [validator1, validator2]
     mock_common_info.clean()
 

@@ -24,58 +24,58 @@ class SuggestedMessage(CommonInfo):
     objects = SuggestedMessageManager()
 
     subcategory = models.ForeignKey(
-        'professionals.Subcategory',
+        "professionals.Subcategory",
         on_delete=models.SET_NULL,
-        related_name='suggested_answers',
-        verbose_name=_('subcategory'),
+        related_name="suggested_answers",
+        verbose_name=_("subcategory"),
         null=True,
         blank=True,
     )
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         db_index=True,
     )
-    body = models.TextField(_('body'))
+    body = models.TextField(_("body"))
     is_enabled = models.BooleanField(
         default=True,
-        verbose_name=_('is enabled?'),
+        verbose_name=_("is enabled?"),
         db_index=True,
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.name}'
+        return f"{self.name}"
 
 
 class Review(CommonInfo, ValidationMixin):
     """The review class."""
 
     validators = [validate_review_user]
-    notifier: Callable[['Review'], None] = notify_new_review
+    notifier: Callable[["Review"], None] = notify_new_review
     objects = ReviewManager()
 
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name=_('user'),
+        related_name="reviews",
+        verbose_name=_("user"),
     )
     professional = models.ForeignKey(
-        'professionals.Professional',
+        "professionals.Professional",
         on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name=_('professional'),
+        related_name="reviews",
+        verbose_name=_("professional"),
     )
     title = models.CharField(
-        _('title'),
+        _("title"),
         max_length=255,
         null=True,
         blank=True,
         db_index=True,
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         db_index=True,
         validators=[MinLengthValidator(settings.D8B_REVIEW_MIN_LENGTH)],
     )
@@ -88,51 +88,51 @@ class Review(CommonInfo, ValidationMixin):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}->{self.professional}: review {self.title}'
+        return f"{self.user}->{self.professional}: review {self.title}"
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""
 
         abstract = False
-        unique_together = (('user', 'professional'), )
+        unique_together = (("user", "professional"), )
 
 
 class ReviewComment(CommonInfo, ValidationMixin):
     """The review comment class."""
 
     validators = [validate_review_comment_user]
-    notifier: Callable[['Review'], None] = notify_new_review_comment
+    notifier: Callable[["Review"], None] = notify_new_review_comment
     objects = ReviewCommentManager()
 
     review = models.OneToOneField(
         Review,
         on_delete=models.CASCADE,
-        related_name='review_comments',
+        related_name="review_comments",
         unique=True,
-        verbose_name=_('review'),
+        verbose_name=_("review"),
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='review_comments',
-        verbose_name=_('user'),
+        related_name="review_comments",
+        verbose_name=_("user"),
     )
     title = models.CharField(
-        _('title'),
+        _("title"),
         max_length=255,
         null=True,
         blank=True,
         db_index=True,
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         db_index=True,
         validators=[MinLengthValidator(settings.D8B_REVIEW_MIN_LENGTH)],
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'Comment to the {self.review}'
+        return f"Comment to the {self.review}"
 
     def save(self, **kwargs):
         """Save the object."""
@@ -149,11 +149,11 @@ class Message(CommonInfo, ValidationMixin):
     """The message class."""
 
     validators = [validate_message_recipient, validate_message_parent]
-    notifier: Callable[['Review'], None] = notify_new_message
+    notifier: Callable[["Review"], None] = notify_new_message
     objects = MessageManager()
 
     parent = models.ForeignKey(
-        'self',
+        "self",
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -161,32 +161,32 @@ class Message(CommonInfo, ValidationMixin):
     sender = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='sent_messages',
-        verbose_name=_('sender'),
+        related_name="sent_messages",
+        verbose_name=_("sender"),
     )
     recipient = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='received_messages',
-        verbose_name=_('recipient'),
+        related_name="received_messages",
+        verbose_name=_("recipient"),
     )
     subject = models.CharField(
-        _('subject'),
+        _("subject"),
         max_length=255,
         blank=True,
         null=True,
         db_index=True,
     )
-    body = models.TextField(_('body'))
+    body = models.TextField(_("body"))
     is_read = models.BooleanField(
         default=False,
         editable=False,
-        help_text=_('Has the message been read?'),
-        verbose_name=_('is read?'),
+        help_text=_("Has the message been read?"),
+        verbose_name=_("is read?"),
         db_index=True,
     )
     read_datetime = models.DateTimeField(
-        _('read date'),
+        _("read date"),
         blank=True,
         null=True,
         editable=False,
@@ -194,12 +194,12 @@ class Message(CommonInfo, ValidationMixin):
     is_deleted_from_sender = models.BooleanField(
         default=False,
         editable=False,
-        help_text=_('Has the message been deleted from sender?'),
-        verbose_name=_('is deleted from sender?'),
+        help_text=_("Has the message been deleted from sender?"),
+        verbose_name=_("is deleted from sender?"),
         db_index=True,
     )
     delete_from_sender_datetime = models.DateTimeField(
-        _('delete from sender datetime '),
+        _("delete from sender datetime "),
         blank=True,
         null=True,
         editable=False,
@@ -207,12 +207,12 @@ class Message(CommonInfo, ValidationMixin):
     is_deleted_from_recipient = models.BooleanField(
         default=False,
         editable=False,
-        help_text=_('Has the message been deleted from recipient?'),
-        verbose_name=_('is deleted from recipient?'),
+        help_text=_("Has the message been deleted from recipient?"),
+        verbose_name=_("is deleted from recipient?"),
         db_index=True,
     )
     delete_from_recipient_datetime = models.DateTimeField(
-        _('delete from recipient datetime '),
+        _("delete from recipient datetime "),
         blank=True,
         null=True,
         editable=False,
@@ -225,7 +225,7 @@ class Message(CommonInfo, ValidationMixin):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.sender}->{self.recipient}: {self.subject}'
+        return f"{self.sender}->{self.recipient}: {self.subject}"
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""

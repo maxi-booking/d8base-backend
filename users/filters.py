@@ -7,8 +7,8 @@ class OwnerFilter(BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
         """Filter the queryset."""
-        if not getattr(view, 'is_owner_filter_enabled', False):
+        if not getattr(view, "is_owner_filter_enabled", False):
             return queryset
-        field_name = getattr(view, 'owner_filter_field', 'user')
+        field_name = getattr(view, "owner_filter_field", "user")
         user = request.user
         return queryset.filter(**{field_name: user}).select_related(field_name)

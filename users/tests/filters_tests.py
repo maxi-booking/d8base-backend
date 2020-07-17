@@ -14,7 +14,7 @@ class MockView():
     """The mock view class."""
 
     is_owner_filter_enabled = False
-    owner_filter_field = 'user'
+    owner_filter_field = "user"
 
 
 def test_owner_filter_field(
@@ -53,7 +53,7 @@ def test_owner_filter_field(
     ).count() == 4
 
     view.is_owner_filter_enabled = True
-    view.owner_filter_field = 'professional__user'
+    view.owner_filter_field = "professional__user"
 
     assert owner_filter.filter_queryset(
         request,

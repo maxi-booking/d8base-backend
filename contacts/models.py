@@ -14,14 +14,14 @@ class Contact(CommonInfo):
     objects = ContactsManager()
 
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=150,
         blank=True,
         null=True,
         db_index=True,
     )
     code = models.CharField(
-        _('code'),
+        _("code"),
         max_length=150,
         blank=True,
         null=True,
@@ -29,46 +29,46 @@ class Contact(CommonInfo):
         db_index=True,
     )
     is_default = models.BooleanField(
-        _('is_default'),
+        _("is_default"),
         default=False,
-        help_text=_('Does the contact appear in the default list?'),
+        help_text=_("Does the contact appear in the default list?"),
     )
     countries = models.ManyToManyField(
         Country,
         blank=True,
-        verbose_name=_('country'),
-        related_name='contacts',
+        verbose_name=_("country"),
+        related_name="contacts",
     )
     excluded_countries = models.ManyToManyField(
         Country,
         blank=True,
-        verbose_name=_('excluded countries'),
-        related_name='contacts_excluded',
+        verbose_name=_("excluded countries"),
+        related_name="contacts_excluded",
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.name}'
+        return f"{self.name}"
 
     class Meta:
         """The contact class META class."""
 
-        ordering = ('name', )
+        ordering = ("name", )
 
 
 class ContactMixin(models.Model):
     """The contact mixin class."""
 
     value = models.CharField(
-        verbose_name=_('value'),
+        verbose_name=_("value"),
         max_length=255,
         db_index=True,
     )
     contact = models.ForeignKey(
         Contact,
         on_delete=models.CASCADE,
-        related_name='%(app_label)s_%(class)s_contacts',
-        verbose_name=_('contact'),
+        related_name="%(app_label)s_%(class)s_contacts",
+        verbose_name=_("contact"),
     )
 
     @property

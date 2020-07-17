@@ -9,5 +9,5 @@ from .models import SuggestedMessage
 class SuggestedMessageTranslationOptions(TranslationOptions):
     """The suggested answer translation options class."""
 
-    fields = ('name', 'body')
-    required_languages = ('en', )
+    fields = ("name", "body")
+    required_languages = ("en", )

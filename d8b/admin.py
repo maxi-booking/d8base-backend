@@ -12,8 +12,8 @@ if not settings.TESTS:
     admin.site.__class__ = OTPAdminSite
 
 actions.add_to_site(site)
-admin.site.site_header = admin.site.site_title = 'D8B admin'
-admin.site.site_url = '/api/'
+admin.site.site_header = admin.site.site_title = "D8B admin"
+admin.site.site_url = "/api/"
 
 
 class SearchFieldsUpdateMixin(admin.ModelAdmin):

@@ -12,11 +12,11 @@ pytestmark = pytest.mark.django_db
 
 def test_contacts_list(admin_client: Client, contacts: QuerySet):
     """Should return a list of contacts."""
-    response = admin_client.get(reverse('contacts-list'))
+    response = admin_client.get(reverse("contacts-list"))
 
     assert response.status_code == 200
-    assert response.accepted_media_type == 'application/json'
-    assert response.json()['count'] == contacts.count()
+    assert response.accepted_media_type == "application/json"
+    assert response.json()["count"] == contacts.count()
 
 
 def test_contacts_list_filtered(
@@ -26,9 +26,9 @@ def test_contacts_list_filtered(
 ):
     """Should return a filtered list of languages."""
     response = admin_client.get(
-        reverse('contacts-list') + f'?by_country={countries[0].pk}')
+        reverse("contacts-list") + f"?by_country={countries[0].pk}")
 
     assert response.status_code == 200
-    assert response.accepted_media_type == 'application/json'
-    assert response.json()['count'] != contacts.count()
-    assert response.json()['results'][0]['name'] == 'icq'
+    assert response.accepted_media_type == "application/json"
+    assert response.json()["count"] != contacts.count()
+    assert response.json()["results"][0]["name"] == "icq"

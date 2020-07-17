@@ -5,4 +5,4 @@ from django.apps import AppConfig
 class UsersConfig(AppConfig):
     """The users app configuration."""
 
-    name: str = 'users'
+    name: str = "users"

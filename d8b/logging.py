@@ -14,8 +14,8 @@ def log(message: str):
             """Run the func."""
             result = func(*args, **kwargs)
 
-            logging.getLogger('d8b').info(
-                '%s; args: %s; kwargs: %s',
+            logging.getLogger("d8b").info(
+                "%s; args: %s; kwargs: %s",
                 message,
                 args,
                 kwargs,

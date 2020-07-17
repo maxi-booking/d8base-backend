@@ -10,29 +10,29 @@ from users.models import User
 from .services import render_template, translate_subject
 
 
-@log('An email has been sent to the manangers')
+@log("An email has been sent to the manangers")
 def mail_managers(
     subject,
     data: dict,
-    template: str = 'emails/base_manager.html',
+    template: str = "emails/base_manager.html",
 ):
     """Send an email to manangers."""
     base_mail_managers(subject=subject,
-                       message='',
+                       message="",
                        html_message=render_to_string(template, data))
 
 
-@log('An mail has been sent to the user.')
+@log("An mail has been sent to the user.")
 def mail_user(user: User, subject: str, template: str, data: dict):
     """Send an email to the user."""
     lang = user.preferred_language
-    subject_text = get_settings('EMAIL_SUBJECT_PREFIX')
+    subject_text = get_settings("EMAIL_SUBJECT_PREFIX")
     subject_text += translate_subject(lang, subject)
 
     send_mail(
         recipient_list=[user.email],
-        from_email=get_settings('DEFAULT_FROM_EMAIL'),
+        from_email=get_settings("DEFAULT_FROM_EMAIL"),
         subject=subject_text,
-        message='',
-        html_message=render_template(lang, template, 'emails', data),
+        message="",
+        html_message=render_template(lang, template, "emails", data),
     )

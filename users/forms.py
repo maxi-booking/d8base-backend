@@ -14,7 +14,7 @@ class UserCreationForm(BaseUserCreationForm):
         """The user create form [meta]."""
 
         model: Type = User
-        fields: Tuple[str] = ('email', )
+        fields: Tuple[str] = ("email", )
 
 
 class UserChangeForm(BaseUserChangeForm):
@@ -24,4 +24,4 @@ class UserChangeForm(BaseUserChangeForm):
         """The user change form [meta]."""
 
         model: Type = User
-        fields: Tuple[str] = ('email', )
+        fields: Tuple[str] = ("email", )

@@ -554,6 +554,6 @@ valid-metaclass-classmethod-first-arg=cls
 # "BaseException, Exception".
 overgeneral-exceptions=BaseException,
                        Exception
-string-quote=single-avoid-escape
+string-quote=double-avoid-escape
 triple-quote=double
 docstring-quote=double

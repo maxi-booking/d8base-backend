@@ -10,10 +10,10 @@ from users.models import User
 pytestmark = pytest.mark.django_db
 
 
-@pytest.mark.parametrize('value,expected', [
-    (Decimal('1'), Decimal('0.6')),
-    (Decimal('0.5'), Decimal('0.3')),
-    (Decimal('22.5'), Decimal('14.0')),
+@pytest.mark.parametrize("value,expected", [
+    (Decimal("1"), Decimal("0.6")),
+    (Decimal("0.5"), Decimal("0.3")),
+    (Decimal("22.5"), Decimal("14.0")),
 ])
 def test_distance_field_to_representation(
     value: Decimal,
@@ -31,6 +31,6 @@ def test_distance_field_to_representation(
     assert field.to_representation(value) == value
     assert field.to_internal_value(value) == value
 
-    timezone.activate('America/New_York')
+    timezone.activate("America/New_York")
     assert field.to_representation(value) == expected
     assert field.to_internal_value(expected) == Decimal(value)

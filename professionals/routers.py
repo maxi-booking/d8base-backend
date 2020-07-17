@@ -13,63 +13,63 @@ def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
     router.register(
-        r'professionals/categories',
+        r"professionals/categories",
         CategoryViewSet,
-        'categories',
+        "categories",
     )
     router.register(
-        r'professionals/subcategories',
+        r"professionals/subcategories",
         SubcategoryViewSet,
-        'subcategories',
+        "subcategories",
     )
     router.register(
-        r'professionals/tags',
+        r"professionals/tags",
         ProfessionalTagListViewSet,
-        'professional-tags',
+        "professional-tags",
     )
     router.register(
-        r'professionals/professionals',
+        r"professionals/professionals",
         ProfessionalListViewSet,
-        'professionals',
+        "professionals",
     )
     router.register(
-        r'accounts/professionals',
+        r"accounts/professionals",
         ProfessionalViewSet,
-        'user-professionals',
+        "user-professionals",
     )
     router.register(
-        r'accounts/professional-tags',
+        r"accounts/professional-tags",
         ProfessionalTagViewSet,
-        'user-professional-tags',
+        "user-professional-tags",
     )
     router.register(
-        r'accounts/professional-educations',
+        r"accounts/professional-educations",
         ProfessionalEducationViewSet,
-        'user-professional-education',
+        "user-professional-education",
     )
     router.register(
-        r'accounts/professional-experience',
+        r"accounts/professional-experience",
         ProfessionalExperienceViewSet,
-        'user-professional-experience',
+        "user-professional-experience",
     )
     router.register(
-        r'accounts/professional-photos',
+        r"accounts/professional-photos",
         ProfessionalPhotoViewSet,
-        'user-professional-photos',
+        "user-professional-photos",
     )
     router.register(
-        r'accounts/professional-certificates',
+        r"accounts/professional-certificates",
         ProfessionalCertificateViewSet,
-        'user-professional-certificates',
+        "user-professional-certificates",
     )
     router.register(
-        r'accounts/professional-contacts',
+        r"accounts/professional-contacts",
         ProfessionalContactViewSet,
-        'user-professional-contacts',
+        "user-professional-contacts",
     )
     router.register(
-        r'accounts/professional-locations',
+        r"accounts/professional-locations",
         ProfessionalLocationViewSet,
-        'user-professional-locations',
+        "user-professional-locations",
     )
     return router

@@ -12,7 +12,7 @@ from .models import User, UserLocation
 class UserTimezoneMiddleware:
     """The user timezone middleware."""
 
-    TIME_ZONE_HEADER = 'HTTP_X_TIMEZONE'
+    TIME_ZONE_HEADER = "HTTP_X_TIMEZONE"
 
     def __init__(self, get_response):
         """Construct the object."""

@@ -18,10 +18,10 @@ def test_contact_manager_get_by_country(
     result0 = Contact.objects.get_by_country(countries[0])
 
     assert contacts.count() != result0.count()
-    assert result0[0].name == 'icq'
-    assert result0[1].name == 'telegram'
+    assert result0[0].name == "icq"
+    assert result0[1].name == "telegram"
 
     result1 = Contact.objects.get_by_country(countries[1])
 
     assert result0.count() != result1.count()
-    assert result1[0].name == 'whatsapp'
+    assert result1[0].name == "whatsapp"

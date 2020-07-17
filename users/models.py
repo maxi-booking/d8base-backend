@@ -32,30 +32,30 @@ class CalculatedUserUnits:
 class User(AbstractUser):
     """The user class."""
 
-    ACCOUNT_USER: str = 'user'
-    ACCOUNT_PROFESSIONAL: str = 'professional'
+    ACCOUNT_USER: str = "user"
+    ACCOUNT_PROFESSIONAL: str = "professional"
     ACCOUNT_CHOICES = [
-        (ACCOUNT_USER, _('user')),
-        (ACCOUNT_PROFESSIONAL, _('professional')),
+        (ACCOUNT_USER, _("user")),
+        (ACCOUNT_PROFESSIONAL, _("professional")),
     ]
 
     GENDER_MALE: int = 0
     GENDER_FEMALE: int = 1
-    GENDER_CHOICES = [(GENDER_MALE, _('male')), (GENDER_FEMALE, _('female'))]
+    GENDER_CHOICES = [(GENDER_MALE, _("male")), (GENDER_FEMALE, _("female"))]
 
-    USERNAME_FIELD: str = 'email'
+    USERNAME_FIELD: str = "email"
     REQUIRED_FIELDS: List[str] = []
 
     objects: UserManager = UserManager()
 
     username = None
     email = models.EmailField(
-        _('email'),
+        _("email"),
         unique=True,
         db_index=True,
     )
     patronymic = models.CharField(
-        _('patronymic'),
+        _("patronymic"),
         max_length=150,
         blank=True,
         null=True,
@@ -66,40 +66,40 @@ class User(AbstractUser):
         db_index=True,
     )
     gender = models.PositiveIntegerField(
-        _('gender'),
+        _("gender"),
         choices=GENDER_CHOICES,
         blank=True,
         null=True,
     )
     birthday = models.DateField(
-        _('birthday'),
+        _("birthday"),
         blank=True,
         null=True,
         validators=[validate_birthday],
     )
     nationality = models.ForeignKey(
         Country,
-        verbose_name=_('nationality'),
+        verbose_name=_("nationality"),
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name='nationalities',
+        related_name="nationalities",
     )
     account_type = models.CharField(
-        _('account type'),
+        _("account type"),
         max_length=20,
         choices=ACCOUNT_CHOICES,
         default=ACCOUNT_USER,
     )
     is_confirmed = models.BooleanField(
         default=False,
-        help_text=_('is account confirmed?'),
-        verbose_name=_('is confirmed'),
+        help_text=_("is account confirmed?"),
+        verbose_name=_("is confirmed"),
     )
     avatar = ProcessedImageField(
         blank=True,
         null=True,
-        upload_to=RandomFilenameGenerator('avatars', 'email'),
+        upload_to=RandomFilenameGenerator("avatars", "email"),
         processors=[
             SmartResize(
                 width=settings.D8B_AVATAR_WIDTH,
@@ -107,18 +107,18 @@ class User(AbstractUser):
                 upscale=True,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
 
     avatar_thumbnail = ImageSpecField(
-        source='avatar',
+        source="avatar",
         processors=[
             SmartResize(
                 width=settings.D8B_AVATAR_THUMBNAIL_WIDTH,
                 height=settings.D8B_AVATAR_THUMBNAIL_HEIGHT,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
 
     @property
@@ -141,33 +141,33 @@ class UserSavedProfessional(CommonInfo):
     objects = UserSavedProfessionalManager()
 
     note = models.CharField(
-        _('note'),
+        _("note"),
         null=True,
         blank=True,
         max_length=255,
     )
     professional = models.ForeignKey(
-        'professionals.Professional',
+        "professionals.Professional",
         on_delete=models.CASCADE,
-        related_name='user_saved_professionals',
-        verbose_name=_('professional'),
+        related_name="user_saved_professionals",
+        verbose_name=_("professional"),
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='saved_professionals',
-        verbose_name=_('user'),
+        related_name="saved_professionals",
+        verbose_name=_("user"),
     )
 
     class Meta(CommonInfo.Meta):
         """The user language class META class."""
 
         abstract = False
-        unique_together = (('user', 'professional'), )
+        unique_together = (("user", "professional"), )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: {self.professional} saved professional'
+        return f"{self.user}: {self.professional} saved professional"
 
 
 class UserSettings(CommonInfo):
@@ -176,14 +176,14 @@ class UserSettings(CommonInfo):
     objects = UserSettingsManager()
 
     language = LanguageField(
-        verbose_name=_('language'),
+        verbose_name=_("language"),
         null=True,
         blank=True,
         default=settings.LANGUAGE_CODE,
         choices=settings.APP_LANGUAGES,
     )
     currency = CurrencyField(
-        verbose_name=_('currency'),
+        verbose_name=_("currency"),
         null=True,
         blank=True,
         choices=CURRENCY_CHOICES,
@@ -191,19 +191,19 @@ class UserSettings(CommonInfo):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='settings',
-        verbose_name=_('user'),
+        related_name="settings",
+        verbose_name=_("user"),
     )
     is_last_name_hidden = models.BooleanField(
         default=False,
-        help_text=_('Is the last name hidden from other users?'),
-        verbose_name=_('is the last name hidden?'),
+        help_text=_("Is the last name hidden from other users?"),
+        verbose_name=_("is the last name hidden?"),
     )
-    units = UnitsField(verbose_name=_('units'))
+    units = UnitsField(verbose_name=_("units"))
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user} settings'
+        return f"{self.user} settings"
 
 
 class UserLocation(CommonInfo, LocationMixin):
@@ -215,14 +215,14 @@ class UserLocation(CommonInfo, LocationMixin):
 
     is_default = models.BooleanField(
         default=False,
-        help_text=_('is default location?'),
-        verbose_name=_('is default'),
+        help_text=_("is default location?"),
+        verbose_name=_("is default"),
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='locations',
-        verbose_name=_('user'),
+        related_name="locations",
+        verbose_name=_("user"),
     )
 
     def save(self, **kwargs):
@@ -235,7 +235,7 @@ class UserLocation(CommonInfo, LocationMixin):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: ' + ', '.join(
+        return f"{self.user}: " + ", ".join(
             map(str, filter(None, [self.country, self.city, self.address])))
 
     class Meta(CommonInfo.Meta):
@@ -249,18 +249,18 @@ class UserLanguage(CommonInfo):
 
     objects = UserLanguageManager()
 
-    language = LanguageField(verbose_name=_('language'))
+    language = LanguageField(verbose_name=_("language"))
     is_native = models.BooleanField(
         default=True,
-        help_text=_('is native language?'),
-        verbose_name=_('is native'),
+        help_text=_("is native language?"),
+        verbose_name=_("is native"),
         db_index=True,
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='languages',
-        verbose_name=_('user'),
+        related_name="languages",
+        verbose_name=_("user"),
     )
 
     def save(self, **kwargs):
@@ -270,13 +270,13 @@ class UserLanguage(CommonInfo):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: {self.language}'
+        return f"{self.user}: {self.language}"
 
     class Meta:
         """The user language class META class."""
 
-        ordering = ('language', )
-        unique_together = (('language', 'user'), )
+        ordering = ("language", )
+        unique_together = (("language", "user"), )
 
 
 class UserContact(ContactMixin, CommonInfo):
@@ -287,16 +287,16 @@ class UserContact(ContactMixin, CommonInfo):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='contacts',
-        verbose_name=_('user'),
+        related_name="contacts",
+        verbose_name=_("user"),
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: {self.contact} {self.value}'
+        return f"{self.user}: {self.contact} {self.value}"
 
     class Meta(CommonInfo.Meta):
         """The user contact class META class."""
 
         abstract = False
-        unique_together = (('value', 'user', 'contact'), )
+        unique_together = (("value", "user", "contact"), )

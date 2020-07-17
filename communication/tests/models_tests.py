@@ -12,12 +12,12 @@ pytestmark = pytest.mark.django_db
 
 def test_message_notifier(user: User, admin: User, mocker: MockFixture):
     """Should run a notifier on save."""
-    mock = mocker.patch('communication.models.Message.notifier')
+    mock = mocker.patch("communication.models.Message.notifier")
     message = Message()
     message.recipient = user
     message.sender = admin
-    message.subject = 'subject'
-    message.body = 'body'
+    message.subject = "subject"
+    message.body = "body"
     message.save()
     assert mock.call_count == 1
 
@@ -28,13 +28,13 @@ def test_review_notifier(
     mocker: MockFixture,
 ):
     """Should run a notifier on save."""
-    mock = mocker.patch('communication.models.Review.notifier')
+    mock = mocker.patch("communication.models.Review.notifier")
     professional = professionals.exclude(user=user).first()
     review = Review()
     review.user = user
     review.professional = professional
-    review.title = 'title'
-    review.description = 'description'
+    review.title = "title"
+    review.description = "description"
     review.rating = RatingField.GOOD
     review.save()
     assert mock.call_count == 1
@@ -46,12 +46,12 @@ def test_review_comment_notifier(
     mocker: MockFixture,
 ):
     """Should run a notifier on save."""
-    mock = mocker.patch('communication.models.ReviewComment.notifier')
+    mock = mocker.patch("communication.models.ReviewComment.notifier")
     review = reviews.exclude(professional__user=user).first()
     comment = ReviewComment()
     comment.user = user
     comment.review = review
-    comment.title = 'title'
-    comment.description = 'description'
+    comment.title = "title"
+    comment.description = "description"
     comment.save()
     assert mock.call_count == 1

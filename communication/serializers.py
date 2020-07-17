@@ -21,8 +21,8 @@ class SuggestedMessageSerializer(
 
         model = SuggestedMessage
 
-        fields = ('id', 'name', 'body', 'subcategory', 'is_enabled')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "name", "body", "subcategory", "is_enabled")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ReviewCommentSerializer(
@@ -38,9 +38,9 @@ class ReviewCommentSerializer(
 
         model = ReviewComment
 
-        fields = ('id', 'user', 'review', 'title', 'description', 'created',
-                  'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "review", "title", "description", "created",
+                  "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ReviewSerializer(ModelCleanFieldsSerializer, UserHiddenFieldMixin):
@@ -51,9 +51,9 @@ class ReviewSerializer(ModelCleanFieldsSerializer, UserHiddenFieldMixin):
 
         model = Review
 
-        fields = ('id', 'user', 'professional', 'title', 'description',
-                  'rating', 'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "user", "professional", "title", "description",
+                  "rating", "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,8 +67,8 @@ class UserSerializer(serializers.ModelSerializer):
 
         model = User
 
-        fields = ('id', 'email', 'first_name', 'last_name', 'avatar',
-                  'avatar_thumbnail')
+        fields = ("id", "email", "first_name", "last_name", "avatar",
+                  "avatar_thumbnail")
 
 
 class LatestMessageSerializer(serializers.ModelSerializer):
@@ -82,11 +82,11 @@ class LatestMessageSerializer(serializers.ModelSerializer):
 
         model = Message
 
-        fields = ('id', 'sender', 'recipient', 'subject', 'body', 'is_read',
-                  'read_datetime', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('read_datetime', 'is_read', 'created', 'modified',
-                            'created_by', 'modified_by')
+        fields = ("id", "sender", "recipient", "subject", "body", "is_read",
+                  "read_datetime", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("read_datetime", "is_read", "created", "modified",
+                            "created_by", "modified_by")
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -97,11 +97,11 @@ class MessageSerializer(serializers.ModelSerializer):
 
         model = Message
 
-        fields = ('id', 'sender', 'recipient', 'parent', 'subject', 'body',
-                  'is_read', 'read_datetime', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('sender', 'recipient', 'read_datetime', 'is_read',
-                            'created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "sender", "recipient", "parent", "subject", "body",
+                  "is_read", "read_datetime", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("sender", "recipient", "read_datetime", "is_read",
+                            "created", "modified", "created_by", "modified_by")
 
 
 class SentMessageSerializer(ModelCleanFieldsSerializer):
@@ -115,11 +115,11 @@ class SentMessageSerializer(ModelCleanFieldsSerializer):
 
         model = Message
 
-        fields = ('id', 'sender', 'recipient', 'parent', 'subject', 'body',
-                  'is_read', 'read_datetime', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('read_datetime', 'is_read', 'created', 'modified',
-                            'created_by', 'modified_by')
+        fields = ("id", "sender", "recipient", "parent", "subject", "body",
+                  "is_read", "read_datetime", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("read_datetime", "is_read", "created", "modified",
+                            "created_by", "modified_by")
 
 
 class ReceivedMessageSerializer(ModelCleanFieldsSerializer):
@@ -134,8 +134,8 @@ class ReceivedMessageSerializer(ModelCleanFieldsSerializer):
 
         model = Message
 
-        fields = ('id', 'sender', 'recipient', 'parent', 'subject', 'body',
-                  'is_read', 'read_datetime', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('read_datetime', 'is_read', 'created', 'modified',
-                            'created_by', 'modified_by')
+        fields = ("id", "sender", "recipient", "parent", "subject", "body",
+                  "is_read", "read_datetime", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("read_datetime", "is_read", "created", "modified",
+                            "created_by", "modified_by")

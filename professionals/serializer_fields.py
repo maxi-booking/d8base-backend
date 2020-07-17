@@ -10,5 +10,5 @@ class AccountProfessionalForeignKey(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return Professional.objects.get_user_list(user=user)

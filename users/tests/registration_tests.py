@@ -16,9 +16,9 @@ def test_get_registration_urls():
     """Should return the filtered registration URLs."""
     names = [u.name for u in get_urls()]
 
-    assert 'login' not in names
-    assert 'logout' not in names
-    assert 'register' in names
+    assert "login" not in names
+    assert "logout" not in names
+    assert "register" in names
 
 
 def test_get_auth_tokens(user: User, client: Client):
@@ -26,28 +26,28 @@ def test_get_auth_tokens(user: User, client: Client):
     access, refresh = get_auth_tokens(user)
     app = Application.objects.get(name=settings.JWT_APPLICATION_NAME)
 
-    assert client.get(reverse('api-root')).status_code == 401
+    assert client.get(reverse("api-root")).status_code == 401
     assert access is not None
     assert refresh is not None
     assert access.token != refresh.token
     assert client.get(
-        reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access.token}',
+        reverse("api-root"),
+        HTTP_AUTHORIZATION=f"Bearer {access.token}",
     ).status_code == 200
     assert client.get(
-        reverse('api-root'),
-        HTTP_AUTHORIZATION=f'Bearer {access.token}',
+        reverse("api-root"),
+        HTTP_AUTHORIZATION=f"Bearer {access.token}",
     ).status_code == 200
 
     response = client.post(
-        reverse('oauth2_provider:token'),
+        reverse("oauth2_provider:token"),
         {
-            'grant_type': 'refresh_token',
-            'refresh_token': refresh.token,
-            'client_id': app.client_id,
-            'client_secret': app.client_secret,
+            "grant_type": "refresh_token",
+            "refresh_token": refresh.token,
+            "client_id": app.client_id,
+            "client_secret": app.client_secret,
         },
-        content_type='application/json',
+        content_type="application/json",
     )
     assert response.status_code == 200
-    assert response.json()['access_token'] != access.token
+    assert response.json()["access_token"] != access.token

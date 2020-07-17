@@ -10,38 +10,38 @@ def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
     router.register(
-        r'accounts/services',
+        r"accounts/services",
         ServiceViewSet,
-        'user-services',
+        "user-services",
     )
     router.register(
-        r'services/tags',
+        r"services/tags",
         ServiceTagListViewSet,
-        'service-tags',
+        "service-tags",
     )
     router.register(
-        r'accounts/service-tags',
+        r"accounts/service-tags",
         ServiceTagViewSet,
-        'user-service-tags',
+        "user-service-tags",
     )
     router.register(
-        r'accounts/service-locations',
+        r"accounts/service-locations",
         ServiceLocationViewSet,
-        'user-service-locations',
+        "user-service-locations",
     )
     router.register(
-        r'accounts/service-prices',
+        r"accounts/service-prices",
         PriceViewSet,
-        'user-service-prices',
+        "user-service-prices",
     )
     router.register(
-        r'accounts/service-photos',
+        r"accounts/service-photos",
         ServicePhotoViewSet,
-        'user-service-photos',
+        "user-service-photos",
     )
     router.register(
-        r'rates',
+        r"rates",
         RateViewSet,
-        'rates',
+        "rates",
     )
     return router

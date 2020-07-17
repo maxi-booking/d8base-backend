@@ -11,11 +11,11 @@ class ServiceManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
-            'professional__user',
-            'professional',
-            'price',
-            'created_by',
-            'modified_by',
+            "professional__user",
+            "professional",
+            "price",
+            "created_by",
+            "modified_by",
         )
 
     def get_user_list(self, user: User) -> QuerySet:
@@ -29,16 +29,16 @@ class ServiceTagManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
-            'service__professional',
-            'service__professional__user',
-            'service',
-            'created_by',
-            'modified_by',
+            "service__professional",
+            "service__professional__user",
+            "service",
+            "created_by",
+            "modified_by",
         )
 
     def get_names(self) -> QuerySet:
         """Return a list of professional tags names."""
-        return self.all().distinct('name').order_by('name').values('name')
+        return self.all().distinct("name").order_by("name").values("name")
 
 
 class ServiceLocationManager(models.Manager):
@@ -47,11 +47,11 @@ class ServiceLocationManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
-            'service__professional',
-            'service__professional__user',
-            'service',
-            'created_by',
-            'modified_by',
+            "service__professional",
+            "service__professional__user",
+            "service",
+            "created_by",
+            "modified_by",
         )
 
 
@@ -61,11 +61,11 @@ class ServicePhotoManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
-            'service__professional',
-            'service__professional__user',
-            'service',
-            'created_by',
-            'modified_by',
+            "service__professional",
+            "service__professional__user",
+            "service",
+            "created_by",
+            "modified_by",
         )
 
 
@@ -75,9 +75,9 @@ class ServicePriceManager(models.Manager):
     def get_list(self) -> QuerySet:
         """Return a list of objects."""
         return self.all().select_related(
-            'service__professional',
-            'service__professional__user',
-            'service',
-            'created_by',
-            'modified_by',
+            "service__professional",
+            "service__professional__user",
+            "service",
+            "created_by",
+            "modified_by",
         )

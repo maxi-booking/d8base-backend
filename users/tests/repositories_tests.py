@@ -41,7 +41,7 @@ def test_oauth_repository_init():
 def test_oauth_repository_create_access_token(user: User):
     """Should return an access token."""
     access_token = OauthRepository().create_access_token(user)
-    assert access_token.scope == 'read write groups'
+    assert access_token.scope == "read write groups"
     assert access_token.user == user
     assert access_token.token is not None
     assert access_token.expires > timezone.now()

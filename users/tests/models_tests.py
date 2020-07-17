@@ -1,4 +1,3 @@
-
 """The users models module."""
 from typing import List
 
@@ -15,8 +14,8 @@ pytestmark = pytest.mark.django_db
 def test_user_preferred_language(user: User):
     """Should return a users prefferred language."""
     assert user.preferred_language == settings.LANGUAGE_CODE
-    UserSettings.objects.create(user=user, language='de')
-    assert user.preferred_language == 'de'
+    UserSettings.objects.create(user=user, language="de")
+    assert user.preferred_language == "de"
 
 
 def test_user_location_save_autofill(
@@ -61,9 +60,9 @@ def test_user_location_save_set_default_field(
 
 def test_user_contact_contact_display(user_contacts: QuerySet):
     """Should return the contact name."""
-    assert user_contacts[0].contact_display == 'whatsapp'
-    assert user_contacts[0].contact_code == 'whatsapp_code'
-    assert user_contacts[2].contact_display == 'telegram'
-    assert user_contacts[2].contact_code == 'telegram_code'
-    assert user_contacts[3].contact_display == 'icq'
-    assert user_contacts[3].contact_code == 'icq_code'
+    assert user_contacts[0].contact_display == "whatsapp"
+    assert user_contacts[0].contact_code == "whatsapp_code"
+    assert user_contacts[2].contact_display == "telegram"
+    assert user_contacts[2].contact_code == "telegram_code"
+    assert user_contacts[3].contact_display == "icq"
+    assert user_contacts[3].contact_code == "icq_code"

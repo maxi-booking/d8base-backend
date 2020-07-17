@@ -26,4 +26,4 @@ class DistanceFilterViewSetMixin():
     )
     bbox_filter_include_overlapping = True
     distance_filter_convert_meters = True
-    distance_filter_field = 'location'
+    distance_filter_field = "location"

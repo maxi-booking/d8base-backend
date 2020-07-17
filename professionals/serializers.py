@@ -25,11 +25,11 @@ class ProfessionalLocationSerializer(ModelCleanFieldsSerializer):
 
         model = ProfessionalLocation
 
-        fields = ('id', 'professional', 'user_location', 'country', 'region',
-                  'subregion', 'city', 'district', 'postal_code', 'address',
-                  'coordinates', 'units', 'timezone', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "user_location", "country", "region",
+                  "subregion", "city", "district", "postal_code", "address",
+                  "coordinates", "units", "timezone", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalContactSerializer(serializers.ModelSerializer):
@@ -41,9 +41,9 @@ class ProfessionalContactSerializer(serializers.ModelSerializer):
         """The professional contact class serializer META class."""
 
         model = ProfessionalContact
-        fields = ('id', 'professional', 'contact', 'contact_display', 'value',
-                  'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "contact", "contact_display", "value",
+                  "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalTagSerializer(serializers.ModelSerializer):
@@ -55,9 +55,9 @@ class ProfessionalTagSerializer(serializers.ModelSerializer):
         """The professional tag class serializer META class."""
 
         model = ProfessionalTag
-        fields = ('id', 'professional', 'name', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "name", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalTagListSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class ProfessionalTagListSerializer(serializers.ModelSerializer):
         """The professional class serializer META class."""
 
         model = ProfessionalTag
-        fields = ('name', )
+        fields = ("name", )
 
 
 class ProfessionalListSerializer(serializers.ModelSerializer):
@@ -77,11 +77,11 @@ class ProfessionalListSerializer(serializers.ModelSerializer):
         """The professional list class serializer META class."""
 
         model = Professional
-        fields = ('id', 'user', 'name', 'description', 'company', 'experience',
-                  'level', 'rating', 'subcategory', 'is_last_name_hidden',
-                  'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('rating', 'created', 'modified', 'created_by',
-                            'modified_by')
+        fields = ("id", "user", "name", "description", "company", "experience",
+                  "level", "rating", "subcategory", "is_last_name_hidden",
+                  "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("rating", "created", "modified", "created_by",
+                            "modified_by")
 
 
 class ProfessionalSerializer(
@@ -102,8 +102,8 @@ class CategorySerializer(serializers.ModelSerializer):
         """The category class serializer META class."""
 
         model = Category
-        fields = ('id', 'name', 'description', 'order')
-        read_only_fields = ('order', )
+        fields = ("id", "name", "description", "order")
+        read_only_fields = ("order", )
 
 
 class SubcategorySerializer(serializers.ModelSerializer):
@@ -113,8 +113,8 @@ class SubcategorySerializer(serializers.ModelSerializer):
         """The subcategory class serializer META class."""
 
         model = Subcategory
-        fields = ('id', 'category', 'name', 'description', 'order')
-        read_only_fields = ('order', )
+        fields = ("id", "category", "name", "description", "order")
+        read_only_fields = ("order", )
 
 
 class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
@@ -129,10 +129,10 @@ class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = ProfessionalCertificate
-        fields = ('id', 'professional', 'name', 'organization', 'date',
-                  'certificate_id', 'url', 'photo', 'photo_thumbnail',
-                  'created', 'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "name", "organization", "date",
+                  "certificate_id", "url", "photo", "photo_thumbnail",
+                  "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalPhotoSerializer(ModelCleanFieldsSerializer):
@@ -147,10 +147,10 @@ class ProfessionalPhotoSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = ProfessionalPhoto
-        fields = ('id', 'professional', 'name', 'description', 'order',
-                  'photo', 'photo_thumbnail', 'created', 'modified',
-                  'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "name", "description", "order",
+                  "photo", "photo_thumbnail", "created", "modified",
+                  "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
@@ -162,11 +162,11 @@ class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = ProfessionalEducation
-        fields = ('id', 'professional', 'university', 'deegree',
-                  'field_of_study', 'is_still_here', 'start_date', 'end_date',
-                  'description', 'created', 'modified', 'created_by',
-                  'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "university", "deegree",
+                  "field_of_study", "is_still_here", "start_date", "end_date",
+                  "description", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ProfessionalExperienceSerializer(ModelCleanFieldsSerializer):
@@ -178,7 +178,7 @@ class ProfessionalExperienceSerializer(ModelCleanFieldsSerializer):
         """The metainformation."""
 
         model = ProfessionalExperience
-        fields = ('id', 'professional', 'title', 'company', 'is_still_here',
-                  'start_date', 'end_date', 'description', 'created',
-                  'modified', 'created_by', 'modified_by')
-        read_only_fields = ('created', 'modified', 'created_by', 'modified_by')
+        fields = ("id", "professional", "title", "company", "is_still_here",
+                  "start_date", "end_date", "description", "created",
+                  "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")

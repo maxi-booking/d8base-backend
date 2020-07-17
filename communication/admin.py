@@ -20,8 +20,8 @@ admin.site.unregister(GCMDevice)
 class GCMDeviceAdmin(VersionAdmin, BaseGCMDeviceAdmin):
     """The groups admin class."""
 
-    list_filter = (UserFilter, 'active', 'cloud_message_type')
-    autocomplete_fields = ('user', )
+    list_filter = (UserFilter, "active", "cloud_message_type")
+    autocomplete_fields = ("user", )
 
     class Media:
         """Required for the AutocompleteFilter."""
@@ -32,23 +32,23 @@ class SuggestedMessageAdmin(VersionAdmin, TabbedTranslationAdmin):
     """The suggested answer admin class."""
 
     model: Type = SuggestedMessage
-    list_display = ('id', 'name', 'subcategory', 'body', 'is_enabled',
-                    'created', 'created_by')
-    list_display_links = ('id', 'name')
-    list_filter = ('subcategory', 'is_enabled')
-    search_fields = ('=id', 'name', 'body')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    list_display = ("id", "name", "subcategory", "body", "is_enabled",
+                    "created", "created_by")
+    list_display_links = ("id", "name")
+    list_filter = ("subcategory", "is_enabled")
+    search_fields = ("=id", "name", "body")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
 
     fieldsets: Tuple = (
-        ('General', {
-            'fields': ('name', 'body')
+        ("General", {
+            "fields": ("name", "body")
         }),
-        ('Options', {
-            'fields': ('subcategory', 'is_enabled', 'created', 'modified',
-                       'created_by', 'modified_by')
+        ("Options", {
+            "fields": ("subcategory", "is_enabled", "created", "modified",
+                       "created_by", "modified_by")
         }),
     )
-    list_select_related = ('subcategory', 'created_by')
+    list_select_related = ("subcategory", "created_by")
 
     class Media:
         """Required for the AutocompleteFilter."""
@@ -58,11 +58,11 @@ class ReviewCommentInlineAdmin(admin.StackedInline):
     """The review comment inline admin."""
 
     model = ReviewComment
-    fields = ('id', 'user', 'title', 'description', 'created_by',
-              'modified_by')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
-    autocomplete_fields = ('user', )
-    classes = ['collapse']
+    fields = ("id", "user", "title", "description", "created_by",
+              "modified_by")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
+    autocomplete_fields = ("user", )
+    classes = ["collapse"]
 
 
 @admin.register(Review)
@@ -70,28 +70,28 @@ class ReviewAdmin(VersionAdmin):
     """The review admin class."""
 
     model: Type = Review
-    list_display = ('id', 'user', 'professional', 'title', 'rating', 'created',
-                    'created_by')
-    list_display_links = ('id', 'user', 'professional')
-    list_filter = (ProfessionalFilter, UserFilter, 'rating', 'created')
-    search_fields = ('=id', 'title', 'description')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    list_display = ("id", "user", "professional", "title", "rating", "created",
+                    "created_by")
+    list_display_links = ("id", "user", "professional")
+    list_filter = (ProfessionalFilter, UserFilter, "rating", "created")
+    search_fields = ("=id", "title", "description")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
 
     inlines = (ReviewCommentInlineAdmin, )
 
-    autocomplete_fields = ('professional', 'user')
+    autocomplete_fields = ("professional", "user")
     fieldsets: Tuple = (
-        ('General', {
-            'fields': ('user', 'professional')
+        ("General", {
+            "fields": ("user", "professional")
         }),
-        ('Review', {
-            'fields': ('rating', 'title', 'description')
+        ("Review", {
+            "fields": ("rating", "title", "description")
         }),
-        ('Options', {
-            'fields': ('created', 'modified', 'created_by', 'modified_by')
+        ("Options", {
+            "fields": ("created", "modified", "created_by", "modified_by")
         }),
     )
-    list_select_related = ('user', 'professional', 'created_by')
+    list_select_related = ("user", "professional", "created_by")
 
     class Media:
         """Required for the AutocompleteFilter."""
@@ -102,42 +102,42 @@ class MessageAdmin(VersionAdmin):
     """The messages admin class."""
 
     model: Type = Message
-    list_display = ('id', 'sender', 'recipient', 'subject', 'is_read',
-                    'read_datetime', 'created', 'created_by')
-    list_display_links = ('id', 'sender', 'subject')
-    list_filter = (SenderFilter, RecipientFilter, 'is_read', 'created')
-    search_fields = ('=id', 'sender__last_name', 'recipient__last_name',
-                     'subject', 'body')
+    list_display = ("id", "sender", "recipient", "subject", "is_read",
+                    "read_datetime", "created", "created_by")
+    list_display_links = ("id", "sender", "subject")
+    list_filter = (SenderFilter, RecipientFilter, "is_read", "created")
+    search_fields = ("=id", "sender__last_name", "recipient__last_name",
+                     "subject", "body")
     readonly_fields = (
-        'created',
-        'modified',
-        'created_by',
-        'modified_by',
-        'is_read',
-        'read_datetime',
-        'is_deleted_from_recipient',
-        'is_deleted_from_sender',
-        'delete_from_recipient_datetime',
-        'delete_from_sender_datetime',
+        "created",
+        "modified",
+        "created_by",
+        "modified_by",
+        "is_read",
+        "read_datetime",
+        "is_deleted_from_recipient",
+        "is_deleted_from_sender",
+        "delete_from_recipient_datetime",
+        "delete_from_sender_datetime",
     )
 
-    autocomplete_fields = ('sender', 'recipient', 'parent')
+    autocomplete_fields = ("sender", "recipient", "parent")
     fieldsets: Tuple = (
-        ('General', {
-            'fields': ('sender', 'recipient')
+        ("General", {
+            "fields": ("sender", "recipient")
         }),
-        ('Message', {
-            'fields': ('parent', 'subject', 'body')
+        ("Message", {
+            "fields": ("parent", "subject", "body")
         }),
-        ('Options', {
-            'fields':
-                ('is_read', 'read_datetime', 'is_deleted_from_sender',
-                 'delete_from_sender_datetime', 'is_deleted_from_recipient',
-                 'delete_from_recipient_datetime', 'created', 'modified',
-                 'created_by', 'modified_by')
+        ("Options", {
+            "fields":
+                ("is_read", "read_datetime", "is_deleted_from_sender",
+                 "delete_from_sender_datetime", "is_deleted_from_recipient",
+                 "delete_from_recipient_datetime", "created", "modified",
+                 "created_by", "modified_by")
         }),
     )
-    list_select_related = ('sender', 'recipient', 'created_by')
+    list_select_related = ("sender", "recipient", "created_by")
 
     class Media:
         """Required for the AutocompleteFilter."""

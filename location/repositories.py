@@ -55,18 +55,18 @@ class ContinentRepository(BaseRepository):
     """The Continent repository."""
 
     model = Continent
-    order_by: str = 'name'
+    order_by: str = "name"
     select_related: List[str] = []
-    prefetch_related: List[str] = ['alt_names']
+    prefetch_related: List[str] = ["alt_names"]
 
 
 class CountryRepository(BaseRepository):
     """The Country repository."""
 
     model = Country
-    order_by: str = 'name'
-    select_related: List[str] = ['continent']
-    prefetch_related: List[str] = ['neighbours', 'alt_names']
+    order_by: str = "name"
+    select_related: List[str] = ["continent"]
+    prefetch_related: List[str] = ["neighbours", "alt_names"]
 
     @staticmethod
     def get_language(country: Country) -> Optional[str]:
@@ -74,34 +74,34 @@ class CountryRepository(BaseRepository):
         codes = country.language_codes
         if not codes:
             return None
-        return codes.split(',')[0].split('-')[0].strip().lower()
+        return codes.split(",")[0].split("-")[0].strip().lower()
 
 
 class RegionRepository(BaseRepository):
     """The Region repository."""
 
     model = Region
-    order_by: str = 'name'
-    select_related: List[str] = ['country']
-    prefetch_related: List[str] = ['alt_names']
+    order_by: str = "name"
+    select_related: List[str] = ["country"]
+    prefetch_related: List[str] = ["alt_names"]
 
 
 class SubregionRepository(BaseRepository):
     """The Subregion repository."""
 
     model = Subregion
-    order_by: str = 'name'
-    select_related: List[str] = ['region']
-    prefetch_related: List[str] = ['alt_names']
+    order_by: str = "name"
+    select_related: List[str] = ["region"]
+    prefetch_related: List[str] = ["alt_names"]
 
 
 class CityRepository(BaseRepository):
     """The City repository."""
 
     model = City
-    order_by: str = 'name'
-    select_related: List[str] = ['region', 'country', 'subregion']
-    prefetch_related: List[str] = ['alt_names']
+    order_by: str = "name"
+    select_related: List[str] = ["region", "country", "subregion"]
+    prefetch_related: List[str] = ["alt_names"]
 
     def find_by_name(
         self,
@@ -121,32 +121,32 @@ class DistrictRepository(BaseRepository):
     """The District repository."""
 
     model = District
-    order_by: str = 'name'
-    select_related: List[str] = ['city']
-    prefetch_related: List[str] = ['alt_names']
+    order_by: str = "name"
+    select_related: List[str] = ["city"]
+    prefetch_related: List[str] = ["alt_names"]
 
 
 class PostalCodeRepository(BaseRepository):
     """The PostalCode repository."""
 
     model = PostalCode
-    order_by: str = 'id'
+    order_by: str = "id"
     select_related: List[str] = [
-        'country',
-        'region',
-        'subregion',
-        'city',
-        'district',
-        'city',
+        "country",
+        "region",
+        "subregion",
+        "city",
+        "district",
+        "city",
     ]
-    prefetch_related: List[str] = ['alt_names']
+    prefetch_related: List[str] = ["alt_names"]
 
 
 class AlternativeNameRepository(BaseRepository):
     """The AlternativeName repository."""
 
     model = AlternativeName
-    order_by: str = 'name'
+    order_by: str = "name"
     select_related: List[str] = []
     prefetch_related: List[str] = []
 

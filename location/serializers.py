@@ -11,7 +11,7 @@ class ContinentSerializer(serializers.ModelSerializer):
         """The Continent class serializer META class."""
 
         model = Continent
-        fields = ['id', 'slug', 'name', 'alt_names', 'code']
+        fields = ["id", "slug", "name", "alt_names", "code"]
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -22,10 +22,10 @@ class CountrySerializer(serializers.ModelSerializer):
 
         model = Country
         fields = [
-            'id', 'slug', 'name', 'alt_names', 'code', 'code3', 'population',
-            'area', 'currency', 'currency_name', 'currency_symbol',
-            'language_codes', 'phone', 'continent', 'tld',
-            'postal_code_format', 'postal_code_regex', 'capital', 'neighbours'
+            "id", "slug", "name", "alt_names", "code", "code3", "population",
+            "area", "currency", "currency_name", "currency_symbol",
+            "language_codes", "phone", "continent", "tld",
+            "postal_code_format", "postal_code_regex", "capital", "neighbours"
         ]
 
 
@@ -37,7 +37,7 @@ class RegionSerializer(serializers.ModelSerializer):
 
         model = Region
         fields = [
-            'id', 'slug', 'name', 'name_std', 'alt_names', 'code', 'country'
+            "id", "slug", "name", "name_std", "alt_names", "code", "country"
         ]
 
 
@@ -49,7 +49,7 @@ class SubregionSerializer(serializers.ModelSerializer):
 
         model = Subregion
         fields = [
-            'id', 'slug', 'name', 'name_std', 'alt_names', 'code', 'region'
+            "id", "slug", "name", "name_std", "alt_names", "code", "region"
         ]
 
 
@@ -61,9 +61,9 @@ class CitySerializer(serializers.ModelSerializer):
 
         model = City
         fields = [
-            'id', 'slug', 'name', 'name_std', 'alt_names', 'country', 'region',
-            'subregion', 'location', 'population', 'elevation', 'kind',
-            'timezone'
+            "id", "slug", "name", "name_std", "alt_names", "country", "region",
+            "subregion", "location", "population", "elevation", "kind",
+            "timezone"
         ]
 
 
@@ -76,8 +76,8 @@ class DistrictSerializer(serializers.ModelSerializer):
         model = District
 
         fields = [
-            'id', 'slug', 'name', 'name_std', 'alt_names', 'code', 'location',
-            'population', 'city'
+            "id", "slug", "name", "name_std", "alt_names", "code", "location",
+            "population", "city"
         ]
 
 
@@ -90,9 +90,9 @@ class PostalCodeSerializer(serializers.ModelSerializer):
         model = PostalCode
 
         fields = [
-            'id', 'slug', 'name', 'alt_names', 'code', 'region_name',
-            'subregion_name', 'district_name', 'country', 'region',
-            'subregion', 'city', 'district', 'names', 'name_full'
+            "id", "slug", "name", "alt_names", "code", "region_name",
+            "subregion_name", "district_name", "country", "region",
+            "subregion", "city", "district", "names", "name_full"
         ]
 
 
@@ -104,8 +104,8 @@ class AlternativeNameSerializer(serializers.ModelSerializer):
 
         model = AlternativeName
         fields = [
-            'id', 'slug', 'name', 'kind', 'language_code', 'is_preferred',
-            'is_short', 'is_colloquial', 'is_historic'
+            "id", "slug", "name", "kind", "language_code", "is_preferred",
+            "is_short", "is_colloquial", "is_historic"
         ]
 
 

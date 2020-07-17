@@ -10,5 +10,5 @@ class AccountUserLocationForeignKey(serializers.PrimaryKeyRelatedField):
 
     def get_queryset(self):
         """Return the queryset."""
-        user = self.context['request'].user
+        user = self.context["request"].user
         return UserLocation.objects.get_user_list(user=user)

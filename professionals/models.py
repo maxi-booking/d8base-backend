@@ -32,14 +32,14 @@ class PhotoMixin(CommonInfo):
     """The photo mixin."""
 
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         null=True,
         blank=True,
         db_index=True,
     )
     description = models.CharField(
-        _('description'),
+        _("description"),
         max_length=255,
         null=True,
         blank=True,
@@ -49,7 +49,7 @@ class PhotoMixin(CommonInfo):
         db_index=True,
     )
     photo = ProcessedImageField(
-        upload_to=RandomFilenameGenerator('photos', 'professional'),
+        upload_to=RandomFilenameGenerator("photos", "professional"),
         processors=[
             ResizeToFit(
                 width=settings.D8B_IMAGE_WIDTH,
@@ -57,23 +57,23 @@ class PhotoMixin(CommonInfo):
                 upscale=False,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
     photo_thumbnail = ImageSpecField(
-        source='photo',
+        source="photo",
         processors=[
             ResizeToFit(
                 width=settings.D8B_IMAGE_THUMBNAIL_WIDTH,
                 height=settings.D8B_IMAGE_THUMBNAIL_HEIGHT,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""
 
-        ordering = ('order', '-modified', '-created')
+        ordering = ("order", "-modified", "-created")
         abstract = True
 
 
@@ -81,14 +81,14 @@ class BaseCategory(CommonInfo):
     """The base category class."""
 
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         blank=True,
         null=True,
         db_index=True,
     )
     description = models.CharField(
-        _('description'),
+        _("description"),
         max_length=255,
         blank=True,
         null=True,
@@ -101,13 +101,13 @@ class BaseCategory(CommonInfo):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.name}'
+        return f"{self.name}"
 
     class Meta:
         """The contact class META class."""
 
         abstract = True
-        ordering = ('order', )
+        ordering = ("order", )
 
 
 class Category(BaseCategory, SortableMixin):
@@ -118,7 +118,7 @@ class Category(BaseCategory, SortableMixin):
     class Meta(BaseCategory.Meta):
         """The contact class META class."""
 
-        verbose_name_plural = _('categories')
+        verbose_name_plural = _("categories")
 
 
 class Subcategory(BaseCategory, SortableMixin):
@@ -129,13 +129,13 @@ class Subcategory(BaseCategory, SortableMixin):
     category = SortableForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='subcategories',
+        related_name="subcategories",
     )
 
     class Meta(BaseCategory.Meta):
         """The contact class META class."""
 
-        verbose_name_plural = _('subcategories')
+        verbose_name_plural = _("subcategories")
 
 
 class Professional(CommonInfo):
@@ -143,17 +143,17 @@ class Professional(CommonInfo):
 
     objects = ProfessionalManager()
 
-    LEVEL_JUNIOR: str = 'junior'
-    LEVEL_MIDDLE: str = 'middle'
-    LEVEL_SENIOR: str = 'senior'
+    LEVEL_JUNIOR: str = "junior"
+    LEVEL_MIDDLE: str = "middle"
+    LEVEL_SENIOR: str = "senior"
     LEVEL_CHOICES = [
-        (LEVEL_JUNIOR, _('junior')),
-        (LEVEL_MIDDLE, _('middle')),
-        (LEVEL_SENIOR, _('senior')),
+        (LEVEL_JUNIOR, _("junior")),
+        (LEVEL_MIDDLE, _("middle")),
+        (LEVEL_SENIOR, _("senior")),
     ]
 
     rating = models.DecimalField(
-        _('rating'),
+        _("rating"),
         max_digits=3,
         decimal_places=2,
         null=True,
@@ -162,12 +162,12 @@ class Professional(CommonInfo):
         db_index=True,
     )
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         db_index=True,
     )
     slug = models.CharField(
-        _('slug'),
+        _("slug"),
         null=True,
         blank=True,
         max_length=255,
@@ -176,24 +176,24 @@ class Professional(CommonInfo):
         db_index=True,
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         null=True,
         blank=True,
     )
     company = models.CharField(
-        _('company'),
+        _("company"),
         max_length=255,
         null=True,
         blank=True,
     )
     experience = models.PositiveSmallIntegerField(
-        _('years of experience'),
+        _("years of experience"),
         null=True,
         blank=True,
         db_index=True,
     )
     level = models.CharField(
-        _('level'),
+        _("level"),
         max_length=20,
         choices=LEVEL_CHOICES,
         null=True,
@@ -203,24 +203,24 @@ class Professional(CommonInfo):
     subcategory = models.ForeignKey(
         Subcategory,
         on_delete=models.PROTECT,
-        related_name='professionals',
-        verbose_name=_('subcategory'),
+        related_name="professionals",
+        verbose_name=_("subcategory"),
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='professionals',
-        verbose_name=_('user'),
+        related_name="professionals",
+        verbose_name=_("user"),
     )
     is_last_name_hidden = models.BooleanField(
-        _('is last name hidden?'),
+        _("is last name hidden?"),
         default=False,
-        help_text=_('Is the last name hidden?'),
+        help_text=_("Is the last name hidden?"),
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.user}: {self.name}'
+        return f"{self.user}: {self.name}"
 
     class Meta(CommonInfo.Meta):
         """The contact class META class."""
@@ -232,14 +232,14 @@ class BaseTag(CommonInfo):
     """The base tag class."""
 
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         db_index=True,
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.name}'
+        return f"{self.name}"
 
     class Meta(CommonInfo.Meta):
         """The contact class META class."""
@@ -255,15 +255,15 @@ class ProfessionalTag(BaseTag):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='tags',
-        verbose_name=_('professional'),
+        related_name="tags",
+        verbose_name=_("professional"),
     )
 
     class Meta(BaseTag.Meta):
         """The contact class META class."""
 
         abstract = False
-        unique_together = (('name', 'professional'), )
+        unique_together = (("name", "professional"), )
 
 
 class ProfessionalContact(CommonInfo, ContactMixin):
@@ -274,19 +274,19 @@ class ProfessionalContact(CommonInfo, ContactMixin):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='contacts',
-        verbose_name=_('professional'),
+        related_name="contacts",
+        verbose_name=_("professional"),
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.contact} {self.value}'
+        return f"{self.professional}: {self.contact} {self.value}"
 
     class Meta(CommonInfo.Meta):
         """The professional contact class META class."""
 
         abstract = False
-        unique_together = (('value', 'professional', 'contact'), )
+        unique_together = (("value", "professional", "contact"), )
 
 
 class ProfessionalExperience(CommonInfo, ValidationMixin):
@@ -298,43 +298,43 @@ class ProfessionalExperience(CommonInfo, ValidationMixin):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='experience_entries',
-        verbose_name=_('professional'),
+        related_name="experience_entries",
+        verbose_name=_("professional"),
     )
     title = models.CharField(
-        _('title'),
+        _("title"),
         max_length=255,
     )
     company = models.CharField(
-        _('company'),
+        _("company"),
         max_length=255,
     )
     is_still_here = models.BooleanField(
-        _('is still here?'),
+        _("is still here?"),
         default=False,
-        help_text=_('Is the professional still working here?'),
+        help_text=_("Is the professional still working here?"),
     )
     start_date = models.DateField(
-        _('start date'),
+        _("start date"),
         blank=True,
         null=True,
         validators=[validate_date_in_past],
     )
     end_date = models.DateField(
-        _('end date'),
+        _("end date"),
         blank=True,
         null=True,
         validators=[validate_date_in_past],
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         null=True,
         blank=True,
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.title} {self.company}'
+        return f"{self.professional}: {self.title} {self.company}"
 
     class Meta(CommonInfo.Meta):
         """The Metainformation."""
@@ -350,32 +350,32 @@ class ProfessionalCertificate(CommonInfo):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='certificates',
-        verbose_name=_('professional'),
+        related_name="certificates",
+        verbose_name=_("professional"),
     )
     name = models.CharField(
-        _('name'),
+        _("name"),
         max_length=255,
         db_index=True,
     )
     organization = models.CharField(
-        _('organization'),
+        _("organization"),
         max_length=255,
     )
     date = models.DateField(
-        _('date'),
+        _("date"),
         blank=True,
         null=True,
         validators=[validate_date_in_past],
     )
     certificate_id = models.CharField(
-        _('certificate_id'),
+        _("certificate_id"),
         max_length=255,
         blank=True,
         null=True,
     )
     url = models.URLField(
-        _('certificate url'),
+        _("certificate url"),
         max_length=255,
         blank=True,
         null=True,
@@ -383,7 +383,7 @@ class ProfessionalCertificate(CommonInfo):
     photo = ProcessedImageField(
         blank=True,
         null=True,
-        upload_to=RandomFilenameGenerator('certificates', 'professional'),
+        upload_to=RandomFilenameGenerator("certificates", "professional"),
         processors=[
             ResizeToFit(
                 width=settings.D8B_CERTIFICATE_WIDTH,
@@ -391,22 +391,22 @@ class ProfessionalCertificate(CommonInfo):
                 upscale=False,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
     photo_thumbnail = ImageSpecField(
-        source='photo',
+        source="photo",
         processors=[
             SmartResize(
                 width=settings.D8B_CERTIFICATE_THUMBNAIL_WIDTH,
                 height=settings.D8B_CERTIFICATE_THUMBNAIL_HEIGHT,
             )
         ],
-        format='PNG',
+        format="PNG",
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.name}'
+        return f"{self.professional}: {self.name}"
 
     class Meta(CommonInfo.Meta):
         """The Metainformation."""
@@ -422,13 +422,13 @@ class ProfessionalPhoto(PhotoMixin):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='photos',
-        verbose_name=_('professional'),
+        related_name="photos",
+        verbose_name=_("professional"),
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.photo}'
+        return f"{self.professional}: {self.photo}"
 
     class Meta(PhotoMixin.Meta):
         """The Metainformation."""
@@ -445,52 +445,52 @@ class ProfessionalEducation(CommonInfo, ValidationMixin):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='educations',
-        verbose_name=_('professional'),
+        related_name="educations",
+        verbose_name=_("professional"),
     )
     university = models.CharField(
-        _('university'),
+        _("university"),
         max_length=255,
-        help_text=_('school/university'),
+        help_text=_("school/university"),
     )
     deegree = models.CharField(
-        _('deegree'),
+        _("deegree"),
         max_length=255,
         null=True,
         blank=True,
     )
     field_of_study = models.CharField(
-        _('field_of_study'),
+        _("field_of_study"),
         max_length=255,
         null=True,
         blank=True,
     )
     is_still_here = models.BooleanField(
-        _('is_still_here'),
+        _("is_still_here"),
         default=False,
-        help_text=_('Is the professional still learning here?'),
+        help_text=_("Is the professional still learning here?"),
     )
     start_date = models.DateField(
-        _('start date'),
+        _("start date"),
         blank=True,
         null=True,
         validators=[validate_date_in_past],
     )
     end_date = models.DateField(
-        _('end date'),
+        _("end date"),
         blank=True,
         null=True,
         validators=[validate_date_in_past],
     )
     description = models.TextField(
-        _('description'),
+        _("description"),
         null=True,
         blank=True,
     )
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: {self.university}'
+        return f"{self.professional}: {self.university}"
 
     class Meta(CommonInfo.Meta):
         """The Metainformation."""
@@ -509,13 +509,13 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
     professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
-        related_name='locations',
-        verbose_name=_('professional'),
+        related_name="locations",
+        verbose_name=_("professional"),
     )
     is_default = models.BooleanField(
         default=False,
-        help_text=_('is default location?'),
-        verbose_name=_('is default'),
+        help_text=_("is default location?"),
+        verbose_name=_("is default"),
         db_index=True,
     )
     user_location = models.ForeignKey(
@@ -523,9 +523,9 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='professional_locations',
-        verbose_name=_('user location'),
-        help_text=_('user location to copy the location'),
+        related_name="professional_locations",
+        verbose_name=_("user location"),
+        help_text=_("user location to copy the location"),
     )
 
     def save(self, **kwargs):
@@ -536,7 +536,7 @@ class ProfessionalLocation(CommonInfo, LocationMixin, ValidationMixin):
 
     def __str__(self) -> str:
         """Return the string representation."""
-        return f'{self.professional}: ' + ', '.join(
+        return f"{self.professional}: " + ", ".join(
             map(str, filter(None, [self.country, self.city, self.address])))
 
     class Meta(CommonInfo.Meta):

@@ -13,9 +13,9 @@ class ServiceTagInlineAdmin(admin.TabularInline):
     """The service tag admin class."""
 
     model = ServiceTag
-    fields = ('id', 'name', 'created', 'modified', 'created_by', 'modified_by')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
-    classes = ['collapse']
+    fields = ("id", "name", "created", "modified", "created_by", "modified_by")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
+    classes = ["collapse"]
     extra = 3
 
 
@@ -23,20 +23,20 @@ class PriceInlineAdmin(admin.StackedInline):
     """The price admin class."""
 
     model = Price
-    fields = ('id', 'price', 'is_price_fixed', 'start_price', 'end_price',
-              'payment_methods', 'created', 'modified', 'created_by',
-              'modified_by')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    fields = ("id", "price", "is_price_fixed", "start_price", "end_price",
+              "payment_methods", "created", "modified", "created_by",
+              "modified_by")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
 
 
 class ServiceLocationInlineAdmin(admin.TabularInline):
     """The price admin class."""
 
     model = ServiceLocation
-    fields = ('id', 'location', 'max_distance', 'created', 'modified',
-              'created_by', 'modified_by')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
-    classes = ['collapse']
+    fields = ("id", "location", "max_distance", "created", "modified",
+              "created_by", "modified_by")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
+    classes = ["collapse"]
 
 
 @admin.register(ServicePhoto)
@@ -44,30 +44,30 @@ class ServicePhotoAdmin(VersionAdmin):
     """The service admin class."""
 
     model: Type = ServicePhoto
-    photo_thumbnail = AdminThumbnail(image_field='photo_thumbnail')
-    list_display = ('id', 'photo_thumbnail', 'name', 'order', 'created',
-                    'created_by', 'service')
-    list_display_links = ('id', 'name')
+    photo_thumbnail = AdminThumbnail(image_field="photo_thumbnail")
+    list_display = ("id", "photo_thumbnail", "name", "order", "created",
+                    "created_by", "service")
+    list_display_links = ("id", "name")
     list_filter = (ServiceFilter, )
-    search_fields = ('=id', 'service__name', 'service__professional__name',
-                     'name', 'description')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
+    search_fields = ("=id", "service__name", "service__professional__name",
+                     "name", "description")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
 
-    autocomplete_fields = ('service', )
+    autocomplete_fields = ("service", )
     fieldsets: Tuple = (
-        ('General', {
-            'fields': ('name', 'description')
+        ("General", {
+            "fields": ("name", "description")
         }),
-        ('Photo', {
-            'fields': ('photo', )
+        ("Photo", {
+            "fields": ("photo", )
         }),
-        ('Options', {
-            'fields': ('service', 'order', 'created', 'modified', 'created_by',
-                       'modified_by')
+        ("Options", {
+            "fields": ("service", "order", "created", "modified", "created_by",
+                       "modified_by")
         }),
     )
-    list_select_related = ('service', 'service__professional',
-                           'service__professional__user', 'created_by')
+    list_select_related = ("service", "service__professional",
+                           "service__professional__user", "created_by")
 
     class Media:
         """Required for the AutocompleteFilter."""
@@ -78,15 +78,15 @@ class ServiceAdmin(VersionAdmin):
     """The service admin class."""
 
     model: Type = Service
-    list_display = ('id', 'name', 'duration', 'service_type',
-                    'is_auto_order_confirmation', 'is_enabled', 'professional',
-                    'created', 'modified')
-    list_display_links = ('id', 'name')
-    search_fields = ('=id', 'name', 'description', 'professional__name',
-                     'professional__user__email')
-    readonly_fields = ('created', 'modified', 'created_by', 'modified_by')
-    list_filter = ('is_enabled', 'service_type', ProfessionalFilter)
-    autocomplete_fields = ('professional', )
+    list_display = ("id", "name", "duration", "service_type",
+                    "is_auto_order_confirmation", "is_enabled", "professional",
+                    "created", "modified")
+    list_display_links = ("id", "name")
+    search_fields = ("=id", "name", "description", "professional__name",
+                     "professional__user__email")
+    readonly_fields = ("created", "modified", "created_by", "modified_by")
+    list_filter = ("is_enabled", "service_type", ProfessionalFilter)
+    autocomplete_fields = ("professional", )
     inlines = (
         PriceInlineAdmin,
         ServiceTagInlineAdmin,
@@ -94,16 +94,16 @@ class ServiceAdmin(VersionAdmin):
     )
 
     fieldsets: Tuple = (
-        ('General', {
-            'fields': ('professional', 'name', 'description')
+        ("General", {
+            "fields": ("professional", "name", "description")
         }),
-        ('Options', {
-            'fields': ('duration', 'service_type', 'is_base_schedule',
-                       'is_auto_order_confirmation', 'is_enabled', 'created',
-                       'modified', 'created_by', 'modified_by')
+        ("Options", {
+            "fields": ("duration", "service_type", "is_base_schedule",
+                       "is_auto_order_confirmation", "is_enabled", "created",
+                       "modified", "created_by", "modified_by")
         }),
     )
-    list_select_related = ('professional', 'professional__user')
+    list_select_related = ("professional", "professional__user")
 
     class Media:
         """Required for the AutocompleteFilter."""

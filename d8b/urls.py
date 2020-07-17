@@ -12,24 +12,24 @@ from .openapi import get_openapi_urls
 from .routers import get_router_urls
 
 urlpatterns = [
-    re_path(r'^$', RedirectView.as_view(pattern_name='api-root')),
-    path(settings.ADMIN_URL + '/', admin.site.urls),
-    re_path(r'^adminactions/', include('adminactions.urls')),
+    re_path(r"^$", RedirectView.as_view(pattern_name="api-root")),
+    path(settings.ADMIN_URL + "/", admin.site.urls),
+    re_path(r"^adminactions/", include("adminactions.urls")),
     re_path(
-        r'^api/auth/',
-        include('oauth2_provider.urls', namespace='oauth2_provider'),
+        r"^api/auth/",
+        include("oauth2_provider.urls", namespace="oauth2_provider"),
     ),
 ]
 urlpatterns += i18n_patterns(
-    re_path(r'^api/', include(get_router_urls())),
-    re_path(r'^api/accounts/', include(get_user_urls())),
+    re_path(r"^api/", include(get_router_urls())),
+    re_path(r"^api/accounts/", include(get_user_urls())),
 )
 urlpatterns += get_openapi_urls()
 
 if settings.DEBUG or settings.TESTS:
     import debug_toolbar
 
-    urlpatterns += [re_path(r'^__debug__/', include(debug_toolbar.urls))]
+    urlpatterns += [re_path(r"^__debug__/", include(debug_toolbar.urls))]
     urlpatterns += static(
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
