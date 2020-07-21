@@ -402,6 +402,7 @@ exclude_dirs:
   - professionals/tests
   - communication/tests
   - services/tests
+  - schedule/tests
   - tests/fixtures
   - .tox
   - conftest.py

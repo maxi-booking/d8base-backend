@@ -43,6 +43,17 @@ class LanguageField(CharField):
         super().__init__(*args, **kwargs)
 
 
+class DayOfWeekField(PositiveSmallIntegerField):
+    """The day of week field for Django models."""
+
+    description = _("day of week")
+
+    def __init__(self, *args, **kwargs):
+        """Initialize the object."""
+        kwargs.setdefault("choices", settings.DAYS_OF_WEEK)
+        super().__init__(*args, **kwargs)
+
+
 class UnitsField(PositiveSmallIntegerField):
     """The units of measurement field for Django models."""
 

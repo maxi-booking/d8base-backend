@@ -2,7 +2,8 @@
 from django.contrib import admin
 from django.http.request import HttpRequest
 
-from d8b.admin import (ListDisplayUpdateMixin, ListFilterUpdateMixin,
+from d8b.admin import (FieldsetFieldsUpdateMixin, ListDisplayUpdateMixin,
+                       ListFilterUpdateMixin, ListLinksUpdateMixin,
                        SearchFieldsUpdateMixin)
 
 
@@ -18,6 +19,48 @@ class AdminMock(admin.ModelAdmin):
     list_display = ["l_one", "l_two"]
     search_fields = ["s_one", "s_two"]
     list_filter = ["f_one", "f_two"]
+    list_display_links = ["link_one", "link_two"]
+    fieldsets = [
+        ("General", {
+            "fields": ["fieldset_one", "fieldset_two", "fieldset_three"]
+        }),
+        ("Options", {
+            "fields": ["created", "modified", "created_by", "modified_by"]
+        }),
+    ]
+
+
+def test_fieldset_fields_update_mixin():
+    """Should update admin fieldset fields."""
+
+    class Test(AdminMock, FieldsetFieldsUpdateMixin):
+        """The test class."""
+
+        fieldsets_fields_extend = [
+            "fieldset_three", "fieldset_four", "fieldset_five"
+        ]
+        fieldsets_fields_remove = ["fieldset_one", "fieldset_four"]
+
+    obj = Test(ModelMock(), object())
+    request = HttpRequest()
+    assert obj.get_fieldsets(request, None)[0][1]["fields"] == [
+        "fieldset_two", "fieldset_three", "fieldset_five"
+    ]
+
+
+def test_list_links_update_mixin():
+    """Should update admin list links."""
+
+    class Test(AdminMock, ListLinksUpdateMixin):
+        """The test class."""
+
+        list_links_extend = ["link_three", "link_four", "link_five"]
+        list_links_remove = ["link_one", "link_four"]
+
+    obj = Test(ModelMock(), object())
+    request = HttpRequest()
+    assert obj.get_list_display_links(
+        request, None) == ["link_two", "link_three", "link_five"]
 
 
 def test_search_fields_update_mixin():

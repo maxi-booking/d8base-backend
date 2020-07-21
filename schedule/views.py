@@ -1,0 +1,1 @@
+"""The schedule views module."""

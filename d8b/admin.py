@@ -29,6 +29,45 @@ class SearchFieldsUpdateMixin(admin.ModelAdmin):
         return [f for f in search_fields if f not in self.search_fields_remove]
 
 
+class FieldsetFieldsUpdateMixin(admin.ModelAdmin):
+    """The mixin to update the fieldsets fields."""
+
+    fieldsets_fields_extend: List[Any] = []
+    fieldsets_fields_remove: List[Any] = []
+
+    def get_fieldsets(self, request: HttpRequest, obj=None):
+        """Admin fieldsets."""
+        fieldsets = list(super().get_fieldsets(request, obj))
+        fields = fieldsets[0][1]["fields"]
+        for field in self.fieldsets_fields_extend:
+            if field not in fields:
+                fields.append(field)
+        for field in self.fieldsets_fields_remove:
+            fields.remove(field)
+        fieldsets[0][1]["fields"] = fields
+        return fieldsets
+
+
+class ListLinksUpdateMixin(admin.ModelAdmin):
+    """The mixin to update the list links."""
+
+    list_links_extend: List[Any] = []
+    list_links_remove: List[Any] = []
+
+    def get_list_display_links(
+        self,
+        request: HttpRequest,
+        list_display,
+    ) -> List:
+        """Admin list links."""
+        links = list(super().get_list_display_links(
+            request,
+            list_display,
+        ))
+        links.extend(self.list_links_extend)
+        return [f for f in links if f not in self.list_links_remove]
+
+
 class ListFilterUpdateMixin(admin.ModelAdmin):
     """The mixin to update the list filters fields."""
 

@@ -1,4 +1,4 @@
-"""The communication fixtures module."""
+"""The services fixtures module."""
 
 from decimal import Decimal
 

@@ -49,7 +49,7 @@ setup(
         "django-cities @ git+https://github.com/webmalc/django-cities",
         "django-crispy-forms==1.9.2",
         "django-oauth-toolkit==1.3.2",
-        "django-admin-autocomplete-filter==0.6",
+        "django-admin-autocomplete-filter==0.5",
         "django-imagekit==4.0.2",
         "django-push-notifications==2.0.0",
         "drf-yasg==1.17.1",

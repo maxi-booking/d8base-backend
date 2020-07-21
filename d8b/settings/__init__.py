@@ -7,6 +7,7 @@ from .languages import *
 from .main import *
 from .messenger import *
 from .permissions import *
+from .schedule import *
 from .units import *
 
 __all__ = ["get_settings"]

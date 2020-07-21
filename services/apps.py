@@ -3,6 +3,6 @@ from django.apps import AppConfig
 
 
 class ServicesConfig(AppConfig):
-    """The communication app configuration."""
+    """The services app configuration."""
 
     name: str = "services"

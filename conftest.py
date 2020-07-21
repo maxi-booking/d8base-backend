@@ -9,6 +9,7 @@ pytest_plugins = [
     "tests.fixtures.professionals",
     "tests.fixtures.communication",
     "tests.fixtures.services",
+    "tests.fixtures.schedule",
 ]
 
 ADMIN_EMAIL = "admin@example.com"

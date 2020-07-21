@@ -2,7 +2,7 @@
 from django.conf import settings
 from pytz import common_timezones
 
-from d8b.fields import LanguageField, TimezoneField, UnitsField
+from d8b.fields import DayOfWeekField, LanguageField, TimezoneField, UnitsField
 
 
 def test_language_field():
@@ -17,6 +17,12 @@ def test_timezone_field():
     field = TimezoneField()
     assert field.max_length == 50
     assert field.choices == list(zip(common_timezones, common_timezones))
+
+
+def test_day_of_week_field():
+    """Should create a day of week field."""
+    field = DayOfWeekField()
+    assert field.choices == settings.DAYS_OF_WEEK
 
 
 def test_units_field():
