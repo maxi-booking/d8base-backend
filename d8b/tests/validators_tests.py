@@ -4,7 +4,18 @@ import pytest
 from django.core.exceptions import ValidationError
 
 from d8b.interfaces import StartEndDateEntry
-from d8b.validators import validate_date_in_past, validate_start_end_dates
+from d8b.validators import (validate_date_in_past, validate_datetime_in_future,
+                            validate_start_end_dates)
+
+
+def test_validate_datetime_in_future():
+    """Should raise an error if the datetime is not in the future."""
+    future_date = arrow.utcnow().shift(days=1).datetime
+    past_date = arrow.utcnow().shift(days=-1).datetime
+
+    with pytest.raises(ValidationError):
+        validate_datetime_in_future(past_date)
+    validate_datetime_in_future(future_date)
 
 
 def test_validate_date_in_past():

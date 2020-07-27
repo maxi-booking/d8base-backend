@@ -2,13 +2,16 @@
 
 from datetime import time
 
+import arrow
 import pytest
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 
-from schedule.validators import (validate_professional_schedule,
+from schedule.validators import (validate_professional_closed_period,
+                                 validate_professional_schedule,
                                  validate_schedule_time_span,
+                                 validate_service_closed_period,
                                  validate_service_schedule)
 
 pytestmark = pytest.mark.django_db
@@ -27,9 +30,66 @@ def test_validate_schedule_time_span():
     validate_schedule_time_span(time(9, span))
 
 
+def test_validate_service_closed_periods(service_closed_periods: QuerySet):
+    """Should validate a service closed period."""
+    period = service_closed_periods.first()
+    period.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_service_closed_period(period)
+
+    period.start_datetime = arrow.utcnow().shift(days=+1).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+15).datetime
+    with pytest.raises(ValidationError):
+        validate_service_closed_period(period)
+
+    period.start_datetime = None
+    period.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_service_closed_period(period)
+
+    period.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+4).datetime
+    period.service = None
+    with pytest.raises(ValidationError):
+        validate_service_closed_period(period)
+
+
+def test_validate_professional_closed_periods(
+        professional_closed_periods: QuerySet):
+    """Should validate a professional closed period."""
+    period = professional_closed_periods.first()
+    period.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_professional_closed_period(period)
+
+    period.start_datetime = arrow.utcnow().shift(days=+1).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+15).datetime
+    with pytest.raises(ValidationError):
+        validate_service_closed_period(period)
+
+    period.start_datetime = None
+    period.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_professional_closed_period(period)
+
+    period.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+4).datetime
+    period.professional = None
+    with pytest.raises(ValidationError):
+        validate_professional_closed_period(period)
+
+
 def test_validate_professional_schedule(professional_schedules: QuerySet):
     """Should validate a professional schedule."""
     schedule = professional_schedules.first()
+
+    schedule.start_time = time(4)
+    schedule.end_time = time(3)
+    with pytest.raises(ValidationError):
+        validate_professional_schedule(schedule)
+
     schedule.start_time = time(3)
     schedule.end_time = time(23)
     with pytest.raises(ValidationError):
@@ -50,6 +110,12 @@ def test_validate_professional_schedule(professional_schedules: QuerySet):
 def test_validate_service_schedule(service_schedules: QuerySet):
     """Should validate a service schedule."""
     schedule = service_schedules.first()
+
+    schedule.start_time = time(4)
+    schedule.end_time = time(3)
+    with pytest.raises(ValidationError):
+        validate_professional_schedule(schedule)
+
     schedule.start_time = time(3)
     schedule.end_time = time(23)
     with pytest.raises(ValidationError):

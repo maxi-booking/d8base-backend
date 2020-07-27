@@ -2,12 +2,44 @@
 
 from datetime import time
 
+import arrow
 import pytest
 from django.db.models import QuerySet
 
-from schedule.models import ProfessionalSchedule, ServiceSchedule
+from schedule.models import (ProfessionalClosedPeriod, ProfessionalSchedule,
+                             ServiceClosedPeriod, ServiceSchedule)
 
 pytestmark = pytest.mark.django_db
+
+
+def test_service_closed_periods_manager_get_overlapping_entries(
+        service_closed_periods: QuerySet):
+    """Should return overlapping closed periods."""
+    manager = ServiceClosedPeriod.objects
+    period = service_closed_periods.first()
+    assert not manager.get_overlapping_entries(period).count()
+    period.start_datetime = arrow.utcnow().shift(days=+1).date()
+    period.end_datetime = arrow.utcnow().shift(days=+15).date()
+    assert manager.get_overlapping_entries(period).count()
+
+    period.start_datetime = arrow.utcnow().shift(days=+6).date()
+    period.end_datetime = arrow.utcnow().shift(days=+12).date()
+    assert manager.get_overlapping_entries(period).count()
+
+
+def test_professional_closed_periods_manager_get_overlapping_entries(
+        professional_closed_periods: QuerySet):
+    """Should return overlapping closed periods."""
+    manager = ProfessionalClosedPeriod.objects
+    period = professional_closed_periods.first()
+    assert not manager.get_overlapping_entries(period).count()
+    period.start_datetime = arrow.utcnow().shift(days=+1).date()
+    period.end_datetime = arrow.utcnow().shift(days=+15).date()
+    assert manager.get_overlapping_entries(period).count()
+
+    period.start_datetime = arrow.utcnow().shift(days=+6).date()
+    period.end_datetime = arrow.utcnow().shift(days=+12).date()
+    assert manager.get_overlapping_entries(period).count()
 
 
 def test_professional_schedule_manager_get_overlapping_entries(

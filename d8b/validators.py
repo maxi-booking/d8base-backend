@@ -22,6 +22,12 @@ def validate_start_end_dates(obj: StartEndDateEntry) -> None:
 
 
 def validate_date_in_past(date: datetime.date) -> None:
-    """Validate a birthday."""
+    """Make sure that the date is in the past."""
     if date > arrow.utcnow().date():
         raise ValidationError(_("The date must be in the past."))
+
+
+def validate_datetime_in_future(date: datetime.datetime) -> None:
+    """Make sure that the date is in the future."""
+    if date < arrow.utcnow().datetime:
+        raise ValidationError(_("The datetime must be in the future."))
