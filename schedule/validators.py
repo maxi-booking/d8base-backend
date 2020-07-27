@@ -22,6 +22,8 @@ def _validate_schedule(schedule: "Schedule", model_name: str):
     """Validate the schedule."""
     try:
         model = apps.get_model("schedule", model_name)
+        if not schedule.start_time or not schedule.end_time:
+            raise ValidationError(_("The time interval is not set"))
         if model.objects.get_overlapping_entries(schedule).count():
             raise ValidationError(_("Time intervals should not overlap"))
     except ObjectDoesNotExist:

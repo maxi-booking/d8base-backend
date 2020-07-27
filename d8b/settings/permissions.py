@@ -69,6 +69,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "change_professionallocation",
     "delete_professionallocation",
 
+    # professional schedules
+    "add_professionalschedule",
+    "change_professionalschedule",
+    "delete_professionalschedule",
+
     # contact
     "change_contact",
 
@@ -127,4 +132,9 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "change_servicephoto",
     "add_servicephoto",
     "delete_servicephoto",
+
+    # serice schedules
+    "change_serviceschedule",
+    "add_serviceschedule",
+    "delete_serviceschedule",
 ]

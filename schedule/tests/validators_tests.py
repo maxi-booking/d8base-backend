@@ -35,6 +35,11 @@ def test_validate_professional_schedule(professional_schedules: QuerySet):
     with pytest.raises(ValidationError):
         validate_professional_schedule(schedule)
 
+    schedule.start_time = None
+    schedule.end_time = time(4)
+    with pytest.raises(ValidationError):
+        validate_professional_schedule(schedule)
+
     schedule.start_time = time(3)
     schedule.end_time = time(4)
     schedule.professional = None
@@ -47,6 +52,11 @@ def test_validate_service_schedule(service_schedules: QuerySet):
     schedule = service_schedules.first()
     schedule.start_time = time(3)
     schedule.end_time = time(23)
+    with pytest.raises(ValidationError):
+        validate_service_schedule(schedule)
+
+    schedule.start_time = None
+    schedule.end_time = time(4)
     with pytest.raises(ValidationError):
         validate_service_schedule(schedule)
 
