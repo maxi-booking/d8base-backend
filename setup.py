@@ -23,12 +23,12 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    python_requires=">=3.7.0",
+    python_requires=">=3.8.0",
     packages=find_packages(
         exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     include_package_data=True,
     install_requires=[
-        "Django>=3.0.7",
+        "Django>=3.0.7,<3.1",
         "django-environ==0.4.5",
         "django-cors-headers==3.4.0",
         "django-modeltranslation==0.15.1",

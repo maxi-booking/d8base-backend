@@ -1,6 +1,6 @@
 pudb
 ipdb
-pytest
+pytest==5.4.3
 pytest-env
 pytest-codestyle
 pycodestyle
