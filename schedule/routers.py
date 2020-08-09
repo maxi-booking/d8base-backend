@@ -1,12 +1,24 @@
 """The schedule routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import ProfessionalScheduleViewSet, ServiceScheduleViewSet
+from .views import (ProfessionalClosedPeriodViewSet,
+                    ProfessionalScheduleViewSet, ServiceClosedPeriodViewSet,
+                    ServiceScheduleViewSet)
 
 
 def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
+    router.register(
+        r"accounts/service-closed-periods",
+        ServiceClosedPeriodViewSet,
+        "user-service-closed-periods",
+    )
+    router.register(
+        r"accounts/professional-closed-periods",
+        ProfessionalClosedPeriodViewSet,
+        "user-professional-closed-periods",
+    )
     router.register(
         r"accounts/service-schedule",
         ServiceScheduleViewSet,

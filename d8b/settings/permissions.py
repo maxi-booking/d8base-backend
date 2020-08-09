@@ -74,6 +74,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "change_professionalschedule",
     "delete_professionalschedule",
 
+    # professional closed periods
+    "add_professionalclosedperiod",
+    "change_professionalclosedperiod",
+    "delete_professionalclosedperiod",
+
     # contact
     "change_contact",
 
@@ -137,4 +142,9 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "change_serviceschedule",
     "add_serviceschedule",
     "delete_serviceschedule",
+
+    # serice closed periods
+    "change_serviceclosedperiod",
+    "add_serviceclosedperiod",
+    "delete_serviceclosedperiod",
 ]
