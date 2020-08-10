@@ -59,13 +59,13 @@ def professional_closed_periods(professionals: QuerySet) -> QuerySet:
     for professional in professionals:
         ProfessionalClosedPeriod.objects.create(
             professional=professional,
-            start_datetime=arrow.utcnow().shift(days=+2).date(),
-            end_datetime=arrow.utcnow().shift(days=+4).date(),
+            start_datetime=arrow.utcnow().shift(days=+2).datetime,
+            end_datetime=arrow.utcnow().shift(days=+4).datetime,
         )
         ProfessionalClosedPeriod.objects.create(
             professional=professional,
-            start_datetime=arrow.utcnow().shift(days=+5).date(),
-            end_datetime=arrow.utcnow().shift(days=+10).date(),
+            start_datetime=arrow.utcnow().shift(days=+5).datetime,
+            end_datetime=arrow.utcnow().shift(days=+10).datetime,
         )
     return ProfessionalClosedPeriod.objects.get_list()
 
@@ -76,12 +76,12 @@ def service_closed_periods(services: QuerySet) -> QuerySet:
     for service in services:
         ServiceClosedPeriod.objects.create(
             service=service,
-            start_datetime=arrow.utcnow().shift(days=+2).date(),
-            end_datetime=arrow.utcnow().shift(days=+4).date(),
+            start_datetime=arrow.utcnow().shift(days=+2).datetime,
+            end_datetime=arrow.utcnow().shift(days=+4).datetime,
         )
         ServiceClosedPeriod.objects.create(
             service=service,
-            start_datetime=arrow.utcnow().shift(days=+5).date(),
-            end_datetime=arrow.utcnow().shift(days=+10).date(),
+            start_datetime=arrow.utcnow().shift(days=+5).datetime,
+            end_datetime=arrow.utcnow().shift(days=+10).datetime,
         )
     return ServiceClosedPeriod.objects.get_list()

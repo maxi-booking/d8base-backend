@@ -18,12 +18,12 @@ def test_service_closed_periods_manager_get_overlapping_entries(
     manager = ServiceClosedPeriod.objects
     period = service_closed_periods.first()
     assert not manager.get_overlapping_entries(period).count()
-    period.start_datetime = arrow.utcnow().shift(days=+1).date()
-    period.end_datetime = arrow.utcnow().shift(days=+15).date()
+    period.start_datetime = arrow.utcnow().shift(days=+1).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+15).datetime
     assert manager.get_overlapping_entries(period).count()
 
-    period.start_datetime = arrow.utcnow().shift(days=+6).date()
-    period.end_datetime = arrow.utcnow().shift(days=+12).date()
+    period.start_datetime = arrow.utcnow().shift(days=+6).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+12).datetime
     assert manager.get_overlapping_entries(period).count()
 
 
@@ -33,12 +33,12 @@ def test_professional_closed_periods_manager_get_overlapping_entries(
     manager = ProfessionalClosedPeriod.objects
     period = professional_closed_periods.first()
     assert not manager.get_overlapping_entries(period).count()
-    period.start_datetime = arrow.utcnow().shift(days=+1).date()
-    period.end_datetime = arrow.utcnow().shift(days=+15).date()
+    period.start_datetime = arrow.utcnow().shift(days=+1).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+15).datetime
     assert manager.get_overlapping_entries(period).count()
 
-    period.start_datetime = arrow.utcnow().shift(days=+6).date()
-    period.end_datetime = arrow.utcnow().shift(days=+12).date()
+    period.start_datetime = arrow.utcnow().shift(days=+6).datetime
+    period.end_datetime = arrow.utcnow().shift(days=+12).datetime
     assert manager.get_overlapping_entries(period).count()
 
 

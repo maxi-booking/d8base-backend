@@ -20,8 +20,18 @@ def test_validate_datetime_in_future():
 
 def test_validate_date_in_past():
     """Should raise an error if the date is not in the past."""
-    future_date = arrow.utcnow().shift(days=1).date()
-    past_date = arrow.utcnow().shift(days=-1).date()
+    future_date = arrow.utcnow().shift(days=1).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    ).datetime
+    past_date = arrow.utcnow().shift(days=-1).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    ).datetime
 
     with pytest.raises(ValidationError):
         validate_date_in_past(future_date)
@@ -31,13 +41,29 @@ def test_validate_date_in_past():
 def test_validate_star_end_dates():
     """Should raise an error if the start date is greater than the end date."""
     obj = StartEndDateEntry()
-    obj.start_date = arrow.utcnow().shift(days=-2).date()
-    obj.end_date = arrow.utcnow().shift(days=-3).date()
+    obj.start_date = arrow.utcnow().shift(days=-2).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    ).datetime
+
+    obj.end_date = arrow.utcnow().shift(days=-3).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    ).datetime
 
     with pytest.raises(ValidationError):
         validate_start_end_dates(obj)
 
-    obj.start_date = arrow.utcnow().shift(days=-4).date()
+    obj.start_date = arrow.utcnow().shift(days=-4).replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    ).datetime
     obj.is_still_here = True
 
     with pytest.raises(ValidationError):
