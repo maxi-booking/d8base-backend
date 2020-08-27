@@ -6,7 +6,7 @@ pytest-codestyle
 pycodestyle
 pytest-django
 pytest-forked
-pytest-mock
+pytest-mock==3.2.0
 pytest-cache
 pytest-cov
 pytest-flakes
@@ -21,7 +21,7 @@ pyflakes
 coverage
 flake8
 coveralls
-pylint
+pylint==2.5.3
 pylint-django
 pylint-plugin-utils
 pytest-pylint
