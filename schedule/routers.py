@@ -1,7 +1,8 @@
 """The schedule routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import (ProfessionalClosedPeriodViewSet,
+from .views import (ProfessionalCalendarViewSet,
+                    ProfessionalClosedPeriodViewSet,
                     ProfessionalScheduleViewSet, ServiceClosedPeriodViewSet,
                     ServiceScheduleViewSet)
 
@@ -28,5 +29,10 @@ def get_router() -> SimpleRouter:
         r"accounts/professional-schedule",
         ProfessionalScheduleViewSet,
         "user-professional-schedule",
+    )
+    router.register(
+        r"schedule/calendar",
+        ProfessionalCalendarViewSet,
+        "schedule-calendar",
     )
     return router

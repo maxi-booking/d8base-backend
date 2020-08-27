@@ -3,8 +3,7 @@ from rest_framework import serializers
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.serializers import ModelCleanFieldsSerializer
-from users.models import User
-from users.serializers import UserHiddenFieldMixin
+from users.serializers import UserHiddenFieldMixin, UserSerializer
 
 from .models import Message, Review, ReviewComment, SuggestedMessage
 from .serializer_fields import ParentMessageForeignKey, UserReviewForeignKey
@@ -54,21 +53,6 @@ class ReviewSerializer(ModelCleanFieldsSerializer, UserHiddenFieldMixin):
         fields = ("id", "user", "professional", "title", "description",
                   "rating", "created", "modified", "created_by", "modified_by")
         read_only_fields = ("created", "modified", "created_by", "modified_by")
-
-
-class UserSerializer(serializers.ModelSerializer):
-    """The message sender or recipient serializer."""
-
-    avatar_thumbnail = serializers.ImageField(read_only=True)
-    avatar = serializers.ImageField(read_only=True)
-
-    class Meta:
-        """The metainformation."""
-
-        model = User
-
-        fields = ("id", "email", "first_name", "last_name", "avatar",
-                  "avatar_thumbnail")
 
 
 class LatestMessageSerializer(serializers.ModelSerializer):

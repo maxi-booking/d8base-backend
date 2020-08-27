@@ -11,8 +11,14 @@ from users.models import User, UserLocation, UserSettings
 pytestmark = pytest.mark.django_db
 
 
+def test_user_public_last_name(user: User):
+    """Should return a user public last name."""
+    user.last_name_getter = lambda: "test"  # type: ignore
+    assert user.public_last_name == "test"
+
+
 def test_user_preferred_language(user: User):
-    """Should return a users prefferred language."""
+    """Should return a user prefferred language."""
     assert user.preferred_language == settings.LANGUAGE_CODE
     UserSettings.objects.create(user=user, language="de")
     assert user.preferred_language == "de"

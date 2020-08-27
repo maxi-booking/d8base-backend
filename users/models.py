@@ -1,5 +1,5 @@
 """The users models module."""
-from typing import List
+from typing import Callable, List
 
 from cities.models import Country
 from django.conf import settings
@@ -22,6 +22,7 @@ from location.services import LocationAutofiller
 from .managers import (UserContactManager, UserLanguageManager,
                        UserLocationManager, UserManager,
                        UserSavedProfessionalManager, UserSettingsManager)
+from .services import get_user_public_last_name
 from .validators import validate_birthday
 
 
@@ -31,6 +32,8 @@ class CalculatedUserUnits:
 
 class User(AbstractUser):
     """The user class."""
+
+    last_name_getter: Callable[["User"], str] = get_user_public_last_name
 
     ACCOUNT_USER: str = "user"
     ACCOUNT_PROFESSIONAL: str = "professional"
@@ -120,6 +123,11 @@ class User(AbstractUser):
         ],
         format="PNG",
     )
+
+    @property
+    def public_last_name(self) -> str:
+        """Get the public user last name."""
+        return self.last_name_getter()
 
     @property
     def preferred_language(self) -> str:

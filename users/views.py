@@ -9,6 +9,7 @@ from rest_registration.utils.verification_notifications import \
     send_register_verification_email_notification
 
 from d8b.units import is_imperial_units
+from d8b.viewsets import AllowAnyViewSetMixin
 
 from .interfaces import UserCalculatedUnits
 from .models import (User, UserContact, UserLanguage, UserLocation,
@@ -38,11 +39,10 @@ def resend_verify_registration(request):
     return Response({"detail": "a message has been sent"})
 
 
-class UserCalculatedUnitsViewSet(viewsets.ViewSet):
+class UserCalculatedUnitsViewSet(AllowAnyViewSetMixin, viewsets.ViewSet):
     """The user calculated units viewset."""
 
     serializer_class = UserCalculatedUnitsSerializer
-    permission_classes = (AllowAny, )
 
     def list(self, request):
         """Return units."""

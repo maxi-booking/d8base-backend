@@ -1,5 +1,14 @@
 """The schedule views module."""
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
+from rest_framework.request import Request
+from rest_framework.response import Response
+
+from d8b.viewsets import AllowAnyViewSetMixin
+from schedule.calendar.exceptions import CalendarError
+from schedule.calendar.generator import get_calendar_generator
+from schedule.calendar.request import HTTPToCalendarRequestConverter
 
 from .filtersets import (ProfessionalClosedPeriodFilterSet,
                          ProfessionalScheduleFilterSet,
@@ -7,10 +16,32 @@ from .filtersets import (ProfessionalClosedPeriodFilterSet,
                          ServiceScheduleFilterSet)
 from .models import (ProfessionalClosedPeriod, ProfessionalSchedule,
                      ServiceClosedPeriod, ServiceSchedule)
-from .serializers import (ProfessionalClosedPeriodSerializer,
+from .schemes import ProfessionalCalendarSchema
+from .serializers import (ProfessionalCalendarSerializer,
+                          ProfessionalClosedPeriodSerializer,
                           ProfessionalScheduleSerializer,
                           ServiceClosedPeriodSerializer,
                           ServiceScheduleSerializer)
+
+
+class ProfessionalCalendarViewSet(AllowAnyViewSetMixin, viewsets.ViewSet):
+    """The professional calendar viewset."""
+
+    serializer_class = ProfessionalCalendarSerializer
+
+    @swagger_auto_schema(**ProfessionalCalendarSchema.list_schema)
+    def list(self, request: Request):
+        """Return the professional calendar."""
+        try:
+            converter = HTTPToCalendarRequestConverter(request)
+            calendar_request = converter.get()
+            generator = get_calendar_generator()
+            response = generator.get(calendar_request)
+            serializer = self.serializer_class(instance=response, many=True)
+        except CalendarError as error:
+            raise ValidationError({"error": str(error)})
+
+        return Response(serializer.data)
 
 
 class ProfessionalScheduleViewSet(viewsets.ModelViewSet):

@@ -249,8 +249,11 @@ function-naming-style=snake_case
 good-names=i,
            j,
            k,
+           pk,
+           id,
            ex,
            Run,
+           T,
            _,
           pytestmark
 

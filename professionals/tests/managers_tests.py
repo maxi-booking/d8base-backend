@@ -8,6 +8,17 @@ from professionals.models import (Professional, ProfessionalLocation,
 pytestmark = pytest.mark.django_db
 
 
+def test_professional_manager_get_by_params(professionals: QuerySet):
+    """Should return a professional."""
+    expected = professionals.first()
+    professional = Professional.objects.get_by_params(
+        pk=expected.pk,
+        name=expected.name,
+    )
+    assert professional == expected
+    assert Professional.objects.get_by_params(pk=0) is None
+
+
 def test_professional_manager_get_user_list(professionals: QuerySet):
     """Should return the filtered list of professionals."""
     user = professionals[0].user

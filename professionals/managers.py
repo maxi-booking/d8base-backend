@@ -1,9 +1,15 @@
 """The professionals managers module."""
+from typing import TYPE_CHECKING, Optional
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.query import QuerySet
 from modeltranslation.manager import MultilingualManager
 
 from users.models import User
+
+if TYPE_CHECKING:
+    from professionals.models import Professional
 
 
 class ProfessionalLocationManager(models.Manager):
@@ -111,12 +117,26 @@ class ProfessionalTagManager(models.Manager):
 class ProfessionalManager(models.Manager):
     """The professional manager."""
 
+    def get_by_params(self, **kwargs) -> Optional["Professional"]:
+        """Return a professional by a pk."""
+        try:
+            return self.select_related(
+                "created_by",
+                "modified_by",
+                "user",
+                "subcategory",
+                "subcategory__category",
+            ).get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
+
     def get_list(self) -> QuerySet:
         """Return a list of professionals."""
         return self.all().select_related(
             "created_by",
             "modified_by",
             "user",
+            "user__settings",
             "subcategory",
             "subcategory__category",
         )

@@ -11,6 +11,21 @@ from .models import (User, UserContact, UserLanguage, UserLocation,
 from .registration import get_auth_tokens
 
 
+class UserSerializer(serializers.ModelSerializer):
+    """The message sender or recipient serializer."""
+
+    avatar_thumbnail = serializers.ImageField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
+
+    class Meta:
+        """The metainformation."""
+
+        model = User
+
+        fields = ("id", "first_name", "public_last_name", "avatar",
+                  "avatar_thumbnail")
+
+
 class UserCalculatedUnitsSerializer(serializers.Serializer):
     """The user calculated units serializer."""
 

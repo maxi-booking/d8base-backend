@@ -1,8 +1,16 @@
 """The services managers module."""
+from typing import TYPE_CHECKING, Optional
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Min
 from django.db.models.query import QuerySet
 
 from users.models import User
+
+if TYPE_CHECKING:
+    from services.models import Service
+    from professionals.models import Professional
 
 
 class ServiceManager(models.Manager):
@@ -21,6 +29,27 @@ class ServiceManager(models.Manager):
     def get_user_list(self, user: User) -> QuerySet:
         """Return a list of services filtered by user."""
         return self.get_list().filter(professional__user=user)
+
+    def get_by_params(self, **kwargs) -> Optional["Service"]:
+        """Return an object by a pk."""
+        try:
+            return self.select_related(
+                "professional__user",
+                "professional",
+                "price",
+                "created_by",
+                "modified_by",
+            ).get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
+
+    def get_min_duration(self, professional: "Professional") -> int:
+        """Get the minimum duration of the professional services."""
+        result = self.filter(
+            professional=professional,
+            is_enabled=True,
+        ).aggregate(Min("duration"))["duration__min"]
+        return result or 0
 
 
 class ServiceTagManager(models.Manager):

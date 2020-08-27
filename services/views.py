@@ -3,6 +3,8 @@ from djmoney.contrib.exchange.models import Rate
 from rest_framework import viewsets
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
+from d8b.viewsets import AllowAnyViewSetMixin
+
 from .filtersets import (PriceFilterSet, ServiceFilterSet,
                          ServiceLocationFilterSet, ServicePhotoFilterSet,
                          ServiceTagFilterSet)
@@ -75,7 +77,11 @@ class ServicePhotoViewSet(viewsets.ModelViewSet):
     filterset_class = ServicePhotoFilterSet
 
 
-class RateViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
+class RateViewSet(
+        CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The rate viewset."""
 
     pagination_class = None

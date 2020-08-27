@@ -212,11 +212,6 @@ class Professional(CommonInfo):
         related_name="professionals",
         verbose_name=_("user"),
     )
-    is_last_name_hidden = models.BooleanField(
-        _("is last name hidden?"),
-        default=False,
-        help_text=_("Is the last name hidden?"),
-    )
 
     def __str__(self) -> str:
         """Return the string representation."""

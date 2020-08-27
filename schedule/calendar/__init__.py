@@ -1,0 +1,1 @@
+"""The calendar initialization module."""

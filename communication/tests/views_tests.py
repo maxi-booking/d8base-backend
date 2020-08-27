@@ -547,7 +547,7 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 1
     assert data[0]["subject"] == obj.subject
-    assert data[0]["sender"]["email"] == obj.sender.email
+    assert data[0]["sender"]["id"] == obj.sender.id
 
     Message.objects.create(
         sender=admin,
@@ -557,7 +557,7 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 1
     assert data[0]["body"] == "admin->user"
-    assert data[0]["sender"]["email"] == admin.email
+    assert data[0]["sender"]["id"] == admin.id
 
     Message.objects.create(
         sender=user,
@@ -567,7 +567,7 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 1
     assert data[0]["body"] == "user->admin"
-    assert data[0]["sender"]["email"] == user.email
+    assert data[0]["sender"]["id"] == user.id
 
     # Send message to the another user from admin
     Message.objects.create(
@@ -578,7 +578,7 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 1
     assert data[0]["body"] == "user->admin"
-    assert data[0]["sender"]["email"] == user.email
+    assert data[0]["sender"]["id"] == user.id
 
     # Send message to the another user from the user
     Message.objects.create(
@@ -589,8 +589,8 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 2
     assert data[0]["body"] == "user->another"
-    assert data[0]["sender"]["email"] == user.email
-    assert data[0]["recipient"]["email"] == user_another.email
+    assert data[0]["sender"]["id"] == user.id
+    assert data[0]["recipient"]["id"] == user_another.id
 
     # Delete message to the another user from the user
     Message.objects.filter(
@@ -609,8 +609,8 @@ def test_latest_distinct_messages_list(
     data = request()
     assert len(data) == 2
     assert data[0]["body"] == "another->user"
-    assert data[0]["sender"]["email"] == user_another.email
-    assert data[0]["recipient"]["email"] == user.email
+    assert data[0]["sender"]["id"] == user_another.id
+    assert data[0]["recipient"]["id"] == user.id
 
     # Delete message to the user from the another user
     Message.objects.filter(

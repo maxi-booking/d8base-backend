@@ -74,6 +74,8 @@ class MessageManager(models.Manager):
         return self.all().select_related(
             "sender",
             "recipient",
+            "sender__settings",
+            "recipient__settings",
             "created_by",
             "modified_by",
         )

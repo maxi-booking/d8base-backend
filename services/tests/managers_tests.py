@@ -7,6 +7,33 @@ from services.models import Service, ServiceTag
 pytestmark = pytest.mark.django_db
 
 
+def test_services_manager_get_min_duration(services: QuerySet):
+    """Should return a minimum duration."""
+    professional = services.first().professional
+    manager = Service.objects
+    assert manager.get_min_duration(professional) == 60
+
+    manager.update(is_enabled=True)
+    service = services.filter(professional=professional).first()
+    service.duration = 15
+    service.save()
+    assert manager.get_min_duration(professional) == 15
+
+    manager.filter(professional=professional).delete()
+    assert manager.get_min_duration(professional) == 0
+
+
+def test_services_manager_get_by_params(services: QuerySet):
+    """Should return a service."""
+    expected = services.first()
+    service = Service.objects.get_by_params(
+        pk=expected.pk,
+        name=expected.name,
+    )
+    assert service == expected
+    assert Service.objects.get_by_params(pk=0) is None
+
+
 def test_service_manager_get_user_list(services: QuerySet):
     """Should return the filtered list of services."""
     user = services[0].professional.user

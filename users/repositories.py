@@ -19,10 +19,10 @@ class GroupRepository():
     user_group_name: str = settings.GROUP_USER_NAME
     user_group_permissions: List[str] = settings.GROUP_USER_PERMISSIONS
 
-    def get_or_create_user_group(self) -> Group:
+    def get_or_create_user_group(self, *, force_update: bool = False) -> Group:
         """Return or create the users group."""
         group, created = Group.objects.get_or_create(name=self.user_group_name)
-        if not created:
+        if not created and not force_update:
             return group
 
         for perm in self.user_group_permissions:

@@ -1,10 +1,27 @@
 """The schedule serializers module."""
+from rest_framework import serializers
+
 from d8b.serializers import ModelCleanFieldsSerializer
 from professionals.serializer_fields import AccountProfessionalForeignKey
 from services.serializer_fields import AccountServiceForeignKey
 
 from .models import (ProfessionalClosedPeriod, ProfessionalSchedule,
                      ServiceClosedPeriod, ServiceSchedule)
+
+
+class ProfessionalCalendarSerializer(serializers.Serializer):
+    """The professional calendar day serializer."""
+
+    # pylint: disable=abstract-method
+
+    service = serializers.PrimaryKeyRelatedField(
+        many=False,
+        read_only=True,
+    )
+    timezone = serializers.CharField()
+    period_start = serializers.DateTimeField()
+    period_end = serializers.DateTimeField()
+    is_open = serializers.BooleanField()
 
 
 class ServiceClosedPeriodSerializer(ModelCleanFieldsSerializer):

@@ -1,4 +1,6 @@
 """The repositories tests module."""
+from typing import List
+
 import pytest
 from django.conf import settings
 from django.utils import timezone
@@ -14,11 +16,23 @@ def test_group_repository_get_or_create_user_group():
     """Should create or return the users group."""
     repo = GroupRepository()
     group = repo.get_or_create_user_group()
+    expected_permissions = sorted(settings.GROUP_USER_PERMISSIONS)
 
-    codenames = [p.codename for p in group.permissions.all()]
-    assert sorted(codenames) == sorted(settings.GROUP_USER_PERMISSIONS)
-    assert group == repo.get_or_create_user_group()
+    def get_codenames(group) -> List[str]:
+        """Return the group permissions codenames."""
+        return sorted([p.codename for p in group.permissions.all()])
+
+    assert get_codenames(group) == expected_permissions
+
+    group = repo.get_or_create_user_group()
     assert group.name == settings.GROUP_USER_NAME
+
+    group.permissions.clear()
+    group = repo.get_or_create_user_group()
+    assert get_codenames(group) != expected_permissions
+
+    group = repo.get_or_create_user_group(force_update=True)
+    assert get_codenames(group) == expected_permissions
 
 
 def test_oauth_repository_init():
