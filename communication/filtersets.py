@@ -74,7 +74,7 @@ class MessagesListFilterSet(filters.FilterSet):
         """The metainformation."""
 
         model = Message
-        fields = ("is_read", "interlocutor")
+        fields = ("is_read", "interlocutor", "sender", "recipient")
 
 
 class SentMessagesFilterSet(filters.FilterSet):
