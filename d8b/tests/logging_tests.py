@@ -1,6 +1,6 @@
 """The logging tests module."""
 
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from d8b.logging import log
 

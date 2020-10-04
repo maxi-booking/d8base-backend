@@ -32,8 +32,8 @@ def _validate_schedule(schedule: "Schedule"):
             raise ValidationError(_("The interval is incorrect"))
         if model.objects.get_overlapping_entries(schedule).count():
             raise ValidationError(_("Time intervals should not overlap"))
-    except ObjectDoesNotExist:
-        raise ValidationError(_("The owner is empty"))
+    except ObjectDoesNotExist as error:
+        raise ValidationError(_("The owner is empty")) from error
 
 
 def validate_professional_schedule(schedule: "ProfessionalSchedule"):
@@ -56,8 +56,8 @@ def _validate_closed_period(period: "ClosedPeriod"):
             raise ValidationError(_("The interval is incorrect"))
         if model.objects.get_overlapping_entries(period).count():
             raise ValidationError(_("Datetime intervals should not overlap"))
-    except ObjectDoesNotExist:
-        raise ValidationError(_("The owner is empty"))
+    except ObjectDoesNotExist as error:
+        raise ValidationError(_("The owner is empty")) from error
 
 
 def validate_professional_closed_period(period: "ProfessionalClosedPeriod"):

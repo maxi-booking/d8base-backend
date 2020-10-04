@@ -1,7 +1,7 @@
 """The routers tests module."""
 import pytest
 from django.urls import reverse
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from d8b.routers import DefaultRouter, get_router_urls
 

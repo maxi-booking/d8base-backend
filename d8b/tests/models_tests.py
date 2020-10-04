@@ -4,7 +4,7 @@ from django.db import connection
 from django.db.utils import ProgrammingError
 from django.test.client import Client
 from django.urls import reverse
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 import d8b.middleware
 from d8b.models import CommonInfo, ValidationMixin

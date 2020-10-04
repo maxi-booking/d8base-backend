@@ -39,7 +39,7 @@ class ProfessionalCalendarViewSet(AllowAnyViewSetMixin, viewsets.ViewSet):
             response = generator.get(calendar_request)
             serializer = self.serializer_class(instance=response, many=True)
         except CalendarError as error:
-            raise ValidationError({"error": str(error)})
+            raise ValidationError({"error": str(error)}) from error
 
         return Response(serializer.data)
 

@@ -166,7 +166,7 @@ class ListLanguagesView(CacheResponseMixin, viewsets.ViewSet):
         """Return a language object."""
         try:
             lang = LanguageRepository().get(kwargs["pk"])
-        except ObjectDoesNotExist:
-            raise NotFound
+        except ObjectDoesNotExist as error:
+            raise NotFound from error
         serializer = self.serializer(lang)
         return Response(serializer.data)

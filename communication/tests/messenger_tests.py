@@ -1,6 +1,6 @@
 """The services tests module."""
 import pytest
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from communication.notifications.messenger import Messenger
 from communication.notifications.tasks import send_email

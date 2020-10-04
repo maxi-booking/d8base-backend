@@ -3,7 +3,7 @@ import pytest
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 from rest_framework.request import Request
 
 from schedule.calendar.request import HTTPToCalendarRequestConverter

@@ -1,7 +1,7 @@
 """The d8b serializers tests module."""
 import pytest
 from django.contrib.auth import get_user_model
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from d8b.serializers import ModelCleanFieldsSerializer
 

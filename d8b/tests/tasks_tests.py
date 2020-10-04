@@ -1,6 +1,6 @@
 """The tasks tests module."""
 from djmoney import settings
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from d8b.tasks import update_rates
 

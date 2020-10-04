@@ -57,7 +57,7 @@ class DeleteSaver(AbstractSaver):
             professional=self._slots[0].professional,
             service=self._slots[0].service,
             start=self._request.start_datetime,
-            end=self._request.end_datetime,
+            end=self._request.end_datetime.shift(days=1),  # type: ignore
         ).delete()
 
     def _save(self):

@@ -77,7 +77,7 @@ class CommonInfo(TimeStampedModel):
     def save(self, **kwargs) -> None:
         """Save the object."""
         self._set_user_fields(self.get_current_user())
-        super(CommonInfo, self).save(**kwargs)
+        super().save(**kwargs)
 
     class Meta(TimeStampedModel.Meta):
         """The metainformation."""

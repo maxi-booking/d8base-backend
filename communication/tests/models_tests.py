@@ -1,7 +1,7 @@
 """The models tests module."""
 import pytest
 from django.db.models.query import QuerySet
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 from communication.models import Message, Review, ReviewComment
 from d8b.fields import RatingField

@@ -2,7 +2,7 @@
 import pytest
 from django.core.management import call_command
 from django.db.models.query import QuerySet
-from pytest_mock.plugin import MockFixture
+from pytest_mock import MockFixture
 
 pytestmark = pytest.mark.django_db
 
