@@ -10,6 +10,7 @@ pytest-cache
 pytest-cov
 pytest-flakes
 pytest-mypy
+pytest-mccabe
 pytest-xdist
 pytest-lazy-fixture
 yapf

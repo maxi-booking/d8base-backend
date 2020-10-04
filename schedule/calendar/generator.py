@@ -14,7 +14,6 @@ class CalendarGenerator():
 
     def get(self, request: CalendarRequest) -> Tuple[AvailabilitySlot, ...]:
         """Return the generated response."""
-        print(request.start_datetime)
         response = self._manager.get_between_dates(
             professional=request.professional,
             service=request.service,
