@@ -45,7 +45,7 @@ class UserReviewViewSet(viewsets.ModelViewSet):
     is_owner_filter_enabled = True
     serializer_class = ReviewSerializer
     queryset = Review.objects.get_list()
-    filterset_fields = ("rating", "created", "modified")
+    filterset_fields = ("rating", "professional", "created", "modified")
     search_fields = ("=id", "professional__name", "professional__description",
                      "title", "description")
 

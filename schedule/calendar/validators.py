@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, Any
 
 import arrow
 
-import schedule.calendar
 from professionals.models import Professional
 from services.models import Service
 
@@ -40,18 +39,12 @@ def _validate_calendar_isinstance(value: Any, expected: Any, title: str):
 def validate_calendar_request(request: "CalendarRequest"):
     """Validate the calendar request."""
     _validate_calendar_not_empty(request, "professional")
-    _validate_calendar_not_empty(request, "period")
     _validate_calendar_not_empty(request, "start_datetime")
     _validate_calendar_not_empty(request, "end_datetime")
 
     _validate_calendar_isinstance(request.professional, Professional,
                                   "professional")
     _validate_calendar_isinstance(request.service, Service, "service")
-    _validate_calendar_isinstance(
-        request.period,
-        schedule.calendar.request.CalendarPeriod,
-        "period",
-    )
 
     _validate_calendar_datetime(request.start_datetime, "start")
     _validate_calendar_datetime(request.end_datetime, "end")

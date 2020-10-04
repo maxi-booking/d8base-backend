@@ -1,5 +1,5 @@
 """The professionals managers module."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -140,6 +140,16 @@ class ProfessionalManager(models.Manager):
             "subcategory",
             "subcategory__category",
         )
+
+    def get_for_avaliability_generation(
+        self,
+        ids: Optional[List[int]],
+    ) -> QuerySet:
+        """Return a list of professionals for availability generation."""
+        query = self.get_list()
+        if not ids:
+            return query
+        return query.filter(pk__in=ids)
 
     def get_user_list(self, user: User) -> QuerySet:
         """Return a list of professionals filtered by user."""

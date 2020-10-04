@@ -5,18 +5,10 @@ import arrow
 from django.utils.timezone import get_current_timezone
 from rest_framework.request import Request
 
-from d8b.enum import Enum
 from professionals.models import Professional
 from services.models import Service
 
 from .validators import validate_calendar_request
-
-
-class CalendarPeriod(Enum):
-    """The calendar period class."""
-
-    DAY: str = "day"
-    SLOT: str = "slot"
 
 
 class CalendarRequest():
@@ -24,7 +16,6 @@ class CalendarRequest():
 
     professional: Professional
     service: Optional[Service] = None
-    period: CalendarPeriod = CalendarPeriod.DAY
     start_datetime: arrow.Arrow
     end_datetime: arrow.Arrow
 
@@ -63,14 +54,6 @@ class HTTPToCalendarRequestConverter():
         self.calendar_request.service = Service.objects.\
             get_by_params(pk=pk)
 
-    def _set_period(self):
-        """Set a period to the calendart request."""
-        try:
-            self.calendar_request.period = CalendarPeriod(
-                self._get_query_param(self.PERIOD_PARAM))
-        except ValueError:
-            pass
-
     def _set_datetime(self, name: str):
         """Set a datetime to the calendart request."""
         date_str = str(self._get_query_param(name))
@@ -85,7 +68,6 @@ class HTTPToCalendarRequestConverter():
         self.calendar_request = CalendarRequest()
         self._set_professional()
         self._set_service()
-        self._set_period()
         self._set_datetime(self.START_DATETIME_PARAM)
         self._set_datetime(self.END_DATETIME_PARAM)
         self.validator(self.calendar_request)

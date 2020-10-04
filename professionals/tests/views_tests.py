@@ -610,6 +610,7 @@ def test_user_professional_education_create(
         reverse("user-professional-education-list"),
         {
             "university": "test university",
+            "start_date": "2016-10-01",
             "professional": obj.pk,
         },
     )
@@ -628,6 +629,7 @@ def test_user_professional_education_update(
         reverse("user-professional-education-detail", args=[obj.pk]),
         {
             "university": "new university",
+            "start_date": "2010-10-01",
         },
     )
     obj.refresh_from_db()
@@ -728,6 +730,7 @@ def test_user_professional_experience_create(
         {
             "title": "test title",
             "company": "test company",
+            "start_date": "2016-10-01",
             "professional": obj.pk,
         },
     )
@@ -746,6 +749,7 @@ def test_user_professional_experience_update(
         reverse("user-professional-experience-detail", args=[obj.pk]),
         {
             "company": "new company",
+            "start_date": "2016-11-01",
         },
     )
     obj.refresh_from_db()

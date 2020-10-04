@@ -6,10 +6,12 @@ from reversion.admin import VersionAdmin
 
 from d8b.admin import (FieldsetFieldsUpdateMixin, ListDisplayUpdateMixin,
                        ListFilterUpdateMixin, ListLinksUpdateMixin)
+from professionals.models import Professional
 
 from .admin_fiters import ProfessionalFilter, ServiceFilter
-from .models import (ProfessionalClosedPeriod, ProfessionalSchedule,
-                     ServiceClosedPeriod, ServiceSchedule)
+from .models import (AvailabilitySlot, ProfessionalClosedPeriod,
+                     ProfessionalSchedule, ServiceClosedPeriod,
+                     ServiceSchedule)
 
 
 class ClosedPeriodMixin(VersionAdmin):
@@ -43,16 +45,21 @@ class ScheduleMixin(VersionAdmin):
     """The schedule mixin admin class."""
 
     list_display = [
-        "id", "day_of_week", "start_time", "end_time", "is_enabled", "created",
-        "modified"
+        "id", "day_of_week", "start_time", "end_time", "timezone",
+        "is_enabled", "created", "modified"
     ]
     list_display_links = ["id"]
-    readonly_fields = ("created", "modified", "created_by", "modified_by")
+    readonly_fields = (
+        "created",
+        "modified",
+        "created_by",
+        "modified_by",
+    )
     list_filter = ("day_of_week", "is_enabled")
 
     fieldsets = [
         ("General", {
-            "fields": ["day_of_week", "start_time", "end_time"]
+            "fields": ["day_of_week", "start_time", "end_time", "timezone"]
         }),
         ("Options", {
             "fields": [
@@ -176,3 +183,44 @@ class ServiceClosedPeriodAdmin(
         "service__professional",
         "service__professional__user",
     )
+
+
+@admin.register(AvailabilitySlot)
+class AvailabilitySlotAdmin(VersionAdmin):
+    """The availability slot admin."""
+
+    def weekday(self, obj: AvailabilitySlot) -> str:
+        # pylint: disable=no-self-use
+        """Return a weekday."""
+        start = obj.start_datetime.strftime("%A")
+        end = obj.end_datetime.strftime("%A")
+
+        return start if start == end else f"{start} - {end}"
+
+    def changelist_view(self, request, extra_context=None):
+        """List the entries."""
+        professional = Professional.objects.get_list().first()
+        if not request.GET.get("professional__pk__exact") and professional:
+            query = request.GET.copy()
+            query["professional__pk__exact"] = professional.pk
+            request.GET = query
+            request.META["QUERY_STRING"] = request.GET.urlencode()
+        return super().changelist_view(request, extra_context=extra_context)
+
+    list_display = [
+        "id", "start_datetime", "end_datetime", "weekday", "professional",
+        "service"
+    ]
+    readonly_fields = ["weekday"]
+    list_display_links = ["id"]
+    list_filter = (
+        "start_datetime",
+        "end_datetime",
+        ProfessionalFilter,
+        ServiceFilter,
+    )
+    list_select_related = ("service", "professional", "professional__user")
+    autocomplete_fields = ("service", "professional")
+
+    class Media:
+        """Required for the AutocompleteFilter."""

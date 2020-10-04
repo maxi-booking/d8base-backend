@@ -10,6 +10,79 @@ from users.models import User
 pytestmark = pytest.mark.django_db
 
 
+def test_professional_calendar_list_error(
+    availability_slots: QuerySet,
+    client_with_token: Client,
+):
+    """Should return an error."""
+    professional = availability_slots.first().professional
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=-2)
+    response = client_with_token.get(
+        reverse("schedule-calendar-list"), {
+            "professional": professional.pk,
+            "start_datetime": start.format("YYYY-MM-DD"),
+            "end_datetime": end.format("YYYY-MM-DD")
+        })
+    assert response.status_code == 400
+
+
+def test_professional_calendar_list(
+    availability_slots: QuerySet,
+    client_with_token: Client,
+):
+    """Should return a professional schedules list."""
+    professional = availability_slots.first().professional
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=2)
+    response = client_with_token.get(
+        reverse("schedule-calendar-list"), {
+            "professional": professional.pk,
+            "start_datetime": start.format("YYYY-MM-DD"),
+            "end_datetime": end.format("YYYY-MM-DD")
+        })
+    data = response.json()
+    assert response.status_code == 200
+    assert len(data) == 2
+    assert data[0]["professional"] == professional.pk
+
+
+def test_professional_calendar_service_list(
+    availability_slots: QuerySet,
+    client_with_token: Client,
+):
+    """Should return a professional schedules list for a service."""
+    service = availability_slots.filter(service__isnull=False).first().service
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=2)
+    response = client_with_token.get(
+        reverse("schedule-calendar-list"), {
+            "professional": service.professional.pk,
+            "service": service.pk,
+            "start_datetime": start.format("YYYY-MM-DD"),
+            "end_datetime": end.format("YYYY-MM-DD")
+        })
+    data = response.json()
+    assert response.status_code == 200
+    assert len(data) == 2
+    assert data[0]["service"] == service.pk
+
+
 def test_user_professional_schedule_list(
     user: User,
     client_with_token: Client,

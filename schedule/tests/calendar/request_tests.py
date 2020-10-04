@@ -6,8 +6,7 @@ from django.utils import timezone
 from pytest_mock.plugin import MockFixture
 from rest_framework.request import Request
 
-from schedule.calendar.request import (CalendarPeriod,
-                                       HTTPToCalendarRequestConverter)
+from schedule.calendar.request import HTTPToCalendarRequestConverter
 
 pytestmark = pytest.mark.django_db
 
@@ -53,4 +52,3 @@ def test_http_to_calendar_request_converter(
         datetime_format)
     assert end_datetime == result.end_datetime.to(tz_name).format(
         datetime_format)
-    assert result.period == CalendarPeriod.SLOT

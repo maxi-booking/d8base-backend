@@ -10,18 +10,21 @@ from .models import (ProfessionalClosedPeriod, ProfessionalSchedule,
 
 
 class ProfessionalCalendarSerializer(serializers.Serializer):
-    """The professional calendar day serializer."""
+    """The professional calendar serializer."""
 
     # pylint: disable=abstract-method
 
-    service = serializers.PrimaryKeyRelatedField(
+    start_datetime = serializers.DateTimeField()
+    end_datetime = serializers.DateTimeField()
+    professional = serializers.PrimaryKeyRelatedField(
         many=False,
         read_only=True,
     )
-    timezone = serializers.CharField()
-    period_start = serializers.DateTimeField()
-    period_end = serializers.DateTimeField()
-    is_open = serializers.BooleanField()
+    service = serializers.PrimaryKeyRelatedField(
+        many=False,
+        read_only=True,
+        allow_null=True,
+    )
 
 
 class ServiceClosedPeriodSerializer(ModelCleanFieldsSerializer):

@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 
 
 def test_update_user_group(user: User):
-    """Should filter a queryset by user."""
+    """Should update user groups."""
     group = user.groups.first()
     group.permissions.clear()
     assert not group.permissions.count()

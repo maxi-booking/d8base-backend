@@ -1,0 +1,1 @@
+"""The availability initialization module."""

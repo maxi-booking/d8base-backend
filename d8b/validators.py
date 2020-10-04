@@ -5,7 +5,7 @@ import arrow
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from .interfaces import StartEndDateEntry
+from d8b.interfaces import StartEndDateEntry
 
 
 def validate_start_end_dates(obj: StartEndDateEntry) -> None:
@@ -23,12 +23,7 @@ def validate_start_end_dates(obj: StartEndDateEntry) -> None:
 
 def validate_date_in_past(date: datetime.date) -> None:
     """Make sure that the date is in the past."""
-    if date > arrow.utcnow().replace(
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0,
-    ).datetime:
+    if date > arrow.utcnow().date():
         raise ValidationError(_("The date must be in the past."))
 
 

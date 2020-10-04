@@ -261,6 +261,8 @@ REST_FRAMEWORK = {
         "d8b.pagination.StandardPagination",
     "PAGE_SIZE":
         100,
+    "HTML_SELECT_CUTOFF":
+        100,
     "DEFAULT_PERMISSION_CLASSES": [
         "d8b.permissions.DjangoModelPermissionsGet",
         "rest_framework.permissions.IsAuthenticated",

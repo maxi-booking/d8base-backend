@@ -17,48 +17,50 @@ pytestmark = pytest.mark.django_db
 
 
 # pylint: disable=no-member
-@pytest.mark.parametrize("repo,expected_count,entries", [
-    (
-        ContinentRepository(),
-        OBJECTS_TO_CREATE + 7,
-        pytest.lazy_fixture("continents"),
-    ),
-    (
-        CountryRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("countries"),
-    ),
-    (
-        RegionRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("regions"),
-    ),
-    (
-        SubregionRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("subregions"),
-    ),
-    (
-        CityRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("cities"),
-    ),
-    (
-        DistrictRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("districts"),
-    ),
-    (
-        PostalCodeRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("postal_codes"),
-    ),
-    (
-        AlternativeNameRepository(),
-        OBJECTS_TO_CREATE,
-        pytest.lazy_fixture("alternative_names"),
-    ),
-])
+@pytest.mark.parametrize(
+    "repo,expected_count,entries",
+    [
+        (
+            ContinentRepository(),
+            OBJECTS_TO_CREATE + 7,
+            pytest.lazy_fixture("continents"),  # type: ignore
+        ),
+        (
+            CountryRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("countries"),  # type: ignore
+        ),
+        (
+            RegionRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("regions"),  # type: ignore
+        ),
+        (
+            SubregionRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("subregions"),  # type: ignore
+        ),
+        (
+            CityRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("cities"),  # type: ignore
+        ),
+        (
+            DistrictRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("districts"),  # type: ignore
+        ),
+        (
+            PostalCodeRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("postal_codes"),  # type: ignore
+        ),
+        (
+            AlternativeNameRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("alternative_names"),  # type: ignore
+        ),
+    ])
 def test_repositories_get_list(
     repo: BaseRepository,
     expected_count: int,

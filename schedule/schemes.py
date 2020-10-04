@@ -1,8 +1,7 @@
 """The schedule schemes module."""
 from drf_yasg import openapi
 
-from schedule.calendar.request import (CalendarPeriod,
-                                       HTTPToCalendarRequestConverter)
+from schedule.calendar.request import HTTPToCalendarRequestConverter
 
 from .serializers import ProfessionalCalendarSerializer
 
@@ -22,12 +21,6 @@ class ProfessionalCalendarSchema():
                 HTTPToCalendarRequestConverter.SERVICE_PARAM,
                 openapi.IN_QUERY,
                 description="service pk",
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                HTTPToCalendarRequestConverter.PERIOD_PARAM,
-                openapi.IN_QUERY,
-                description=f"type of period: {CalendarPeriod.values()}",
                 type=openapi.TYPE_STRING,
             ),
             openapi.Parameter(

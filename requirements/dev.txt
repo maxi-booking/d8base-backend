@@ -3,6 +3,7 @@ ipdb
 pytest==5.4.3
 pytest-env
 pytest-codestyle
+pytest-sugar
 pycodestyle
 pytest-django
 pytest-forked

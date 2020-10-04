@@ -66,7 +66,7 @@ class Service(CommonInfo):
         choices=TYPE_CHOICES,
     )
     is_base_schedule = models.BooleanField(
-        default=False,
+        default=True,
         verbose_name=_("is the base schedule used?"),
         db_index=True,
     )

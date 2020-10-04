@@ -1,12 +1,64 @@
 """The services managers module."""
-from typing import TYPE_CHECKING
+from collections import defaultdict
+from typing import TYPE_CHECKING, DefaultDict, List, Optional
 
+import arrow
 from django.db import models
 from django.db.models.query import QuerySet
 
 if TYPE_CHECKING:
+    from professionals.models import Professional
+    from services.models import Service
     from .models import (ProfessionalSchedule, ServiceSchedule,
-                         ProfessionalClosedPeriod, ServiceClosedPeriod)
+                         AvailabilitySlot, ProfessionalClosedPeriod,
+                         ServiceClosedPeriod)
+
+
+class AvailabilitySlotManager(models.Manager):
+    """The availability slot manager."""
+
+    def get_list(self) -> QuerySet:
+        """Return a list of objects."""
+        return self.all().select_related(
+            "professional__user",
+            "professional",
+            "service",
+        )
+
+    def get_overlapping_entries(
+        self,
+        slot: "AvailabilitySlot",
+    ) -> QuerySet:
+        """Return the overlapping entries."""
+        query = self.get_list().filter(
+            start_datetime__lt=slot.end_datetime,
+            end_datetime__gt=slot.start_datetime,
+            professional=slot.professional,
+            service=slot.service,
+        )
+        if slot.pk:
+            query = query.exclude(pk=slot.pk)
+        return query
+
+    def get_between_dates(
+        self,
+        start: arrow.Arrow,
+        end: arrow.Arrow,
+        professional: "Professional",
+        service: Optional["Professional"] = None,
+    ) -> QuerySet:
+        """Return between the dates."""
+        query = self.filter(
+            professional=professional,
+            start_datetime__lte=end.datetime,
+            end_datetime__gte=start.datetime,
+        )
+        if service:
+            query = query.filter(service=service)
+        else:
+            query = query.filter(service__isnull=True)
+
+        return query
 
 
 class ProfessionalClosedPeriodManager(models.Manager):
@@ -19,6 +71,20 @@ class ProfessionalClosedPeriodManager(models.Manager):
             "professional",
             "created_by",
             "modified_by",
+        )
+
+    def get_between_dates(
+        self,
+        start: arrow.Arrow,
+        end: arrow.Arrow,
+        professional: "Professional",
+    ) -> QuerySet:
+        """Return between the dates."""
+        return self.get_list().filter(
+            start_datetime__lt=end.datetime,
+            end_datetime__gt=start.datetime,
+            professional=professional,
+            is_enabled=True,
         )
 
     def get_overlapping_entries(
@@ -47,6 +113,18 @@ class ProfessionalScheduleManager(models.Manager):
             "created_by",
             "modified_by",
         )
+
+    def get_by_days(
+        self,
+        professional: "Professional",
+    ) -> DefaultDict[int, List["ProfessionalSchedule"]]:
+        """Get professional schedules grouped by days."""
+        result = defaultdict(list)
+        schedules = self.get_list().filter(professional=professional).order_by(
+            "day_of_week", "start_time")
+        for entry in schedules:
+            result[entry.day_of_week].append(entry)
+        return result
 
     def get_overlapping_entries(
         self,
@@ -92,6 +170,18 @@ class ServiceScheduleManager(models.Manager):
             query = query.exclude(pk=schedule.pk)
         return query
 
+    def get_by_days(
+        self,
+        service: "Service",
+    ) -> DefaultDict[int, List["ServiceSchedule"]]:
+        """Get professional schedules grouped by days."""
+        result = defaultdict(list)
+        schedules = self.get_list().filter(service=service).order_by(
+            "day_of_week", "start_time")
+        for entry in schedules:
+            result[entry.day_of_week].append(entry)
+        return result
+
 
 class ServiceClosedPeriodManager(models.Manager):
     """The service closed period manager."""
@@ -104,6 +194,20 @@ class ServiceClosedPeriodManager(models.Manager):
             "service__professional",
             "created_by",
             "modified_by",
+        )
+
+    def get_between_dates(
+        self,
+        start: arrow.Arrow,
+        end: arrow.Arrow,
+        service: "Service",
+    ) -> QuerySet:
+        """Return between the dates."""
+        return self.get_list().filter(
+            start_datetime__lt=end.datetime,
+            end_datetime__gt=start.datetime,
+            service=service,
+            is_enabled=True,
         )
 
     def get_overlapping_entries(

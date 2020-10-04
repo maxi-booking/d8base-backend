@@ -4,16 +4,19 @@ from typing import Iterable
 
 from django.conf import settings
 from django.db import models
+from django.utils.timezone import get_current_timezone
 from django.utils.translation import gettext_lazy as _
 
-from d8b.fields import DayOfWeekField
+from d8b.fields import DayOfWeekField, TimezoneField
 from d8b.models import CommonInfo, ValidationMixin
 from d8b.validators import validate_datetime_in_future
 
-from .managers import (ProfessionalClosedPeriodManager,
+from .managers import (AvailabilitySlotManager,
+                       ProfessionalClosedPeriodManager,
                        ProfessionalScheduleManager, ServiceClosedPeriodManager,
                        ServiceScheduleManager)
-from .validators import (validate_professional_closed_period,
+from .validators import (validate_availability_slot,
+                         validate_professional_closed_period,
                          validate_professional_schedule,
                          validate_schedule_time_span,
                          validate_service_closed_period,
@@ -44,11 +47,21 @@ class Schedule(CommonInfo, ValidationMixin):
         verbose_name=_("is enabled?"),
         db_index=True,
     )
+    timezone = TimezoneField(
+        verbose_name=_("timezone"),
+        blank=True,
+    )
 
     def __str__(self) -> str:
         """Return the string representation."""
         day = self.get_day_of_week_display()
         return f"{day}: {self.start_time}-{self.end_time}"
+
+    def save(self, **kwargs):
+        """Save the object."""
+        if not self.pk:
+            self.timezone = get_current_timezone()
+        super().save(**kwargs)
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""
@@ -167,10 +180,47 @@ class ServiceClosedPeriod(ClosedPeriod):
         abstract = False
 
 
-# class TimeOffset(CommonInfo, ValidationMixin):
-#     """The calendar entry class."""
+class AvailabilitySlot(ValidationMixin):
+    """The availability slots class."""
 
-#     class Meta(CommonInfo.Meta):
-#         """The metainformation."""
+    id = models.BigAutoField(primary_key=True, editable=False)
 
-#         abstract = True
+    validators = [validate_availability_slot]
+
+    objects = AvailabilitySlotManager()
+
+    professional = models.ForeignKey(
+        "professionals.Professional",
+        on_delete=models.CASCADE,
+        related_name="slots",
+        verbose_name=_("professional"),
+    )
+    service = models.ForeignKey(
+        "services.Service",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="slots",
+        verbose_name=_("service"),
+    )
+    start_datetime = models.DateTimeField(
+        verbose_name=_("start datetime"),
+        validators=[validate_datetime_in_future],
+        db_index=True,
+    )
+    end_datetime = models.DateTimeField(
+        verbose_name=_("end datetime"),
+        validators=[validate_datetime_in_future],
+        db_index=True,
+    )
+
+    def save(self, *args, **kwargs):
+        """Save the object."""
+        # pylint: disable=signature-differs
+        if self.service:
+            self.professional = self.service.professional
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f"{self.start_datetime}-{self.end_datetime}"

@@ -1,4 +1,5 @@
 """The d8b validators tests module."""
+
 import arrow
 import pytest
 from django.core.exceptions import ValidationError
@@ -12,7 +13,6 @@ def test_validate_datetime_in_future():
     """Should raise an error if the datetime is not in the future."""
     future_date = arrow.utcnow().shift(days=1).datetime
     past_date = arrow.utcnow().shift(days=-1).datetime
-
     with pytest.raises(ValidationError):
         validate_datetime_in_future(past_date)
     validate_datetime_in_future(future_date)
@@ -20,18 +20,8 @@ def test_validate_datetime_in_future():
 
 def test_validate_date_in_past():
     """Should raise an error if the date is not in the past."""
-    future_date = arrow.utcnow().shift(days=1).replace(
-        hour=0,
-        minute=0,
-        second=0,
-        microsecond=0,
-    ).datetime
-    past_date = arrow.utcnow().shift(days=-1).replace(
-        hour=0,
-        minute=0,
-        second=0,
-        microsecond=0,
-    ).datetime
+    future_date = arrow.utcnow().shift(days=1).date()
+    past_date = arrow.utcnow().shift(days=-1).date()
 
     with pytest.raises(ValidationError):
         validate_date_in_past(future_date)

@@ -8,7 +8,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 
-from schedule.validators import (validate_professional_closed_period,
+from schedule.validators import (validate_availability_slot,
+                                 validate_professional_closed_period,
                                  validate_professional_schedule,
                                  validate_schedule_time_span,
                                  validate_service_closed_period,
@@ -28,6 +29,7 @@ def test_validate_schedule_time_span():
         validate_schedule_time_span(time(9, 0, 0, 10))
 
     validate_schedule_time_span(time(9, span))
+    validate_schedule_time_span(time(23, 59))
 
 
 def test_validate_service_closed_periods(service_closed_periods: QuerySet):
@@ -131,3 +133,28 @@ def test_validate_service_schedule(service_schedules: QuerySet):
     schedule.service = None
     with pytest.raises(ValidationError):
         validate_service_schedule(schedule)
+
+
+def test_validate_availability_slot(availability_slots: QuerySet):
+    """Should validate an availability slots."""
+    slot = availability_slots.first()
+    slot.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    slot.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_availability_slot(slot)
+
+    slot.start_datetime = arrow.utcnow().shift(days=+1).datetime
+    slot.end_datetime = arrow.utcnow().shift(days=+15).datetime
+    with pytest.raises(ValidationError):
+        validate_availability_slot(slot)
+
+    slot.start_datetime = None
+    slot.end_datetime = arrow.utcnow().shift(days=+1).datetime
+    with pytest.raises(ValidationError):
+        validate_availability_slot(slot)
+
+    slot.start_datetime = arrow.utcnow().shift(days=+2).datetime
+    slot.end_datetime = arrow.utcnow().shift(days=+4).datetime
+    slot.professional = None
+    with pytest.raises(ValidationError):
+        validate_availability_slot(slot)

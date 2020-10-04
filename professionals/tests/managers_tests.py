@@ -8,6 +8,16 @@ from professionals.models import (Professional, ProfessionalLocation,
 pytestmark = pytest.mark.django_db
 
 
+def test_professional_manager_get_for_avaliability_generation(
+        professionals: QuerySet):
+    """Should return professionals by the ids."""
+    first = professionals.first()
+    last = professionals.last()
+    ids = [first.pk, last.pk]
+    professionals = Professional.objects.get_for_avaliability_generation(ids)
+    assert sorted(ids) == sorted([p.pk for p in professionals])
+
+
 def test_professional_manager_get_by_params(professionals: QuerySet):
     """Should return a professional."""
     expected = professionals.first()

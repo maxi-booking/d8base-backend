@@ -164,8 +164,13 @@ class SavedProfessionlInlineAdmin(admin.TabularInline):
     fields = ("id", "professional", "note", "created", "modified",
               "created_by", "modified_by")
     readonly_fields = ("created", "modified", "created_by", "modified_by")
+    # raw_id_fields = ("professional", )
+    autocomplete_fields = ("professional", )
     extra = 1
     classes = ["collapse"]
+
+    class Media:
+        """Required for the AutocompleteFilter."""
 
 
 @admin.register(User)

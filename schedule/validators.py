@@ -9,13 +9,15 @@ from django.utils.translation import gettext_lazy as _
 
 if TYPE_CHECKING:
     from .models import (ProfessionalSchedule, ServiceSchedule, Schedule,
-                         ProfessionalClosedPeriod, ServiceClosedPeriod,
-                         ClosedPeriod)
+                         AvailabilitySlot, ProfessionalClosedPeriod,
+                         ServiceClosedPeriod, ClosedPeriod)
 
 
 def validate_schedule_time_span(val: time):
     """Validate the schedule span of time."""
     span = settings.SCHEDULE_MINIMAL_TIME_SPAN
+    if val.minute == 59 and val.hour == 23:
+        return
     if val.second != 0 or val.microsecond != 0 or val.minute % span != 0:
         raise ValidationError(_(f"The minimal time interval is {span}"))
 
@@ -66,3 +68,8 @@ def validate_professional_closed_period(period: "ProfessionalClosedPeriod"):
 def validate_service_closed_period(period: "ServiceClosedPeriod"):
     """Validate the service closed period."""
     _validate_closed_period(period)
+
+
+def validate_availability_slot(slot: "AvailabilitySlot"):
+    """Validate the availability slot."""
+    _validate_closed_period(slot)

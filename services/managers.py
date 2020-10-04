@@ -1,5 +1,5 @@
 """The services managers module."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -50,6 +50,16 @@ class ServiceManager(models.Manager):
             is_enabled=True,
         ).aggregate(Min("duration"))["duration__min"]
         return result or 0
+
+    def get_for_avaliability_generation(
+        self,
+        ids: Optional[List[int]],
+    ) -> QuerySet:
+        """Return a list of services for availability generation."""
+        query = self.get_list()
+        if not ids:
+            return query
+        return query.filter(pk__in=ids, is_base_schedule=True)
 
 
 class ServiceTagManager(models.Manager):

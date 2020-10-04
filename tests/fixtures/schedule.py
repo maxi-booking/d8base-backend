@@ -1,13 +1,15 @@
 """The schedule fixtures module."""
 
 from datetime import time
+from typing import List
 
 import arrow
 import pytest
 from django.db.models.query import QuerySet
 
-from schedule.models import (ProfessionalClosedPeriod, ProfessionalSchedule,
-                             ServiceClosedPeriod, ServiceSchedule)
+from schedule.models import (AvailabilitySlot, ProfessionalClosedPeriod,
+                             ProfessionalSchedule, ServiceClosedPeriod,
+                             ServiceSchedule)
 
 # pylint: disable=redefined-outer-name
 
@@ -85,3 +87,40 @@ def service_closed_periods(services: QuerySet) -> QuerySet:
             end_datetime=arrow.utcnow().shift(days=+10).datetime,
         )
     return ServiceClosedPeriod.objects.get_list()
+
+
+@pytest.fixture
+def availability_slots(
+    professionals: QuerySet,
+    services: QuerySet,
+) -> QuerySet:
+    """Return a availability slots queryset."""
+    slots: List[AvailabilitySlot] = []
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=60)
+    for professional in professionals:
+        for current in arrow.Arrow.range("day", start, end):
+            slot = AvailabilitySlot()
+            slot.professional = professional
+            slot.start_datetime = current.replace(hour=9).datetime
+            slot.end_datetime = current.replace(hour=17, minute=30).datetime
+            slots.append(slot)
+
+    for service in services:
+        for current in arrow.Arrow.range("day", start, end):
+            slot = AvailabilitySlot()
+            slot.professional = service.professional
+            slot.service = service
+            slot.start_datetime = current.replace(hour=11).datetime
+            slot.end_datetime = current.replace(hour=15).datetime
+            slots.append(slot)
+
+    AvailabilitySlot.objects.all().delete()
+    AvailabilitySlot.objects.bulk_create(slots)
+
+    return AvailabilitySlot.objects.get_list()
