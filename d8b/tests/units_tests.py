@@ -59,6 +59,8 @@ def test_units_from_timezone():
 
 def test_is_imperial_units(user: User):
     """Should return units from the current timezone."""
+    timezone.activate(settings.TIME_ZONE)
+    UserSettings.objects.filter(user=user).delete()
     assert not units.is_imperial_units(user)
 
     UserSettings.objects.create(user=user, units=settings.UNITS_IMPERIAL)

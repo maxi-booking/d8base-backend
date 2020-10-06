@@ -145,6 +145,7 @@ def test_default_generator_get_professional(professional_schedules: QuerySet):
         second=0,
         microsecond=0,
     )
+    start = start.shift(days=-start.weekday())
     end = start.shift(days=7)
     request = Request()
     request.professional = professional
@@ -153,23 +154,23 @@ def test_default_generator_get_professional(professional_schedules: QuerySet):
     generator.set_request(request)
 
     slots = generator.get()
-    assert len(slots) == 5 * 2
+    assert len(slots) == 6 * 2
     assert slots[0].professional == professional
     assert slots[0].start_datetime.utcoffset().total_seconds() == 0
 
-    expected = start.replace(hour=9).shift(days=(7 - start.weekday()))
+    expected = start.replace(hour=9)
     assert slots[0].start_datetime == expected.datetime
 
-    expected = start.replace(hour=14).shift(days=(7 - start.weekday()))
+    expected = start.replace(hour=14)
     assert slots[0].end_datetime == expected.datetime
 
-    expected = start.replace(hour=15).shift(days=(7 - start.weekday()))
+    expected = start.replace(hour=15)
     assert slots[1].start_datetime == expected.datetime
 
-    expected = start.replace(hour=18).shift(days=(7 - start.weekday()))
+    expected = start.replace(hour=18)
     assert slots[1].end_datetime == expected.datetime
 
-    expected = start.replace(hour=9).shift(days=(8 - start.weekday()))
+    expected = start.replace(hour=9).shift(days=1)
     assert slots[2].start_datetime == expected.datetime
 
 
@@ -185,6 +186,7 @@ def test_default_generator_get_service(service_schedules: QuerySet):
         second=0,
         microsecond=0,
     )
+    start = start.shift(days=-start.weekday())
     end = start.shift(days=7)
     request = Request()
     request.professional = service.professional
@@ -194,7 +196,7 @@ def test_default_generator_get_service(service_schedules: QuerySet):
     generator.set_request(request)
     slots = generator.get()
 
-    assert len(slots) == 5 * 2
+    assert len(slots) == 6 * 2
     assert slots[0].professional == service.professional
     assert slots[0].service == service
     assert slots[0].start_datetime.utcoffset().total_seconds() == 0
