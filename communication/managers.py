@@ -54,6 +54,10 @@ class ReviewManager(models.Manager):
             "modified_by",
         )
 
+    def get_list_with_comments(self) -> QuerySet:
+        """Return a list of reviews with comments."""
+        return self.get_list().select_related("comment")
+
     def get_professional_rating(
             self, professional: "Professional") -> Optional[Decimal]:
         """Get the average professional rating."""
