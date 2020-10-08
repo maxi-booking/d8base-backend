@@ -235,6 +235,23 @@ def test_device_fcm_create(
     assert device.registration_id == "test id"
 
 
+def test_reviews_list(
+    user: User,
+    client_with_token: Client,
+    review_comments: QuerySet,
+):
+    """Should return a  reviews list."""
+    comment = review_comments.filter(user=user).first()
+    review = comment.review
+    response = client_with_token.get(reverse("reviews-list"))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["count"] == 2
+    assert data["results"][0]["title"] == review.title
+    assert data["results"][0]["comment"]["title"] == comment.title
+    assert data["results"][0]["comment"]["id"] == comment.pk
+
+
 def test_user_reviews_list(
     user: User,
     client_with_token: Client,

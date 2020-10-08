@@ -120,8 +120,10 @@ class ProfessionalScheduleManager(models.Manager):
     ) -> DefaultDict[int, List["ProfessionalSchedule"]]:
         """Get professional schedules grouped by days."""
         result = defaultdict(list)
-        schedules = self.get_list().filter(professional=professional).order_by(
-            "day_of_week", "start_time")
+        schedules = self.get_list().filter(
+            professional=professional,
+            is_enabled=True,
+        ).order_by("day_of_week", "start_time")
         for entry in schedules:
             result[entry.day_of_week].append(entry)
         return result
@@ -176,8 +178,10 @@ class ServiceScheduleManager(models.Manager):
     ) -> DefaultDict[int, List["ServiceSchedule"]]:
         """Get professional schedules grouped by days."""
         result = defaultdict(list)
-        schedules = self.get_list().filter(service=service).order_by(
-            "day_of_week", "start_time")
+        schedules = self.get_list().filter(
+            service=service,
+            is_enabled=True,
+        ).order_by("day_of_week", "start_time")
         for entry in schedules:
             result[entry.day_of_week].append(entry)
         return result

@@ -44,6 +44,10 @@ def validate_professional_schedule(schedule: "ProfessionalSchedule"):
 def validate_service_schedule(schedule: "ServiceSchedule"):
     """Validate the service schedule."""
     _validate_schedule(schedule)
+    if schedule.service.is_base_schedule:
+        raise ValidationError(
+            _("Not allowed to create schedules for a service \
+with base schedule enabled."))
 
 
 def _validate_closed_period(period: "ClosedPeriod"):

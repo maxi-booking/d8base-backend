@@ -16,13 +16,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     avatar_thumbnail = serializers.ImageField(read_only=True)
     avatar = serializers.ImageField(read_only=True)
+    last_name = serializers.SerializerMethodField()
+
+    def get_last_name(self, obj: User) -> str:
+        # pylint: disable=no-self-use
+        """Return a public last name."""
+        return obj.public_last_name
 
     class Meta:
         """The metainformation."""
 
         model = User
 
-        fields = ("id", "first_name", "public_last_name", "gender", "avatar",
+        fields = ("id", "first_name", "last_name", "gender", "avatar",
                   "avatar_thumbnail", "is_confirmed")
 
 

@@ -107,7 +107,7 @@ class ReviewComment(CommonInfo, ValidationMixin):
     review = models.OneToOneField(
         Review,
         on_delete=models.CASCADE,
-        related_name="review_comments",
+        related_name="comment",
         unique=True,
         verbose_name=_("review"),
     )

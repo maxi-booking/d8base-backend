@@ -3,14 +3,19 @@ from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet
 from rest_framework.routers import SimpleRouter
 
 from .views import (LatestMessagesViewSet, MessagesListViewSet,
-                    ReceivedMessagesViewSet, SentMessagesViewSet,
-                    SuggestedMessageViewSet, UserReviewCommentViewSet,
-                    UserReviewViewSet)
+                    ReceivedMessagesViewSet, ReviewListViewSet,
+                    SentMessagesViewSet, SuggestedMessageViewSet,
+                    UserReviewCommentViewSet, UserReviewViewSet)
 
 
 def get_router() -> SimpleRouter:
     """Return the app router."""
     router = SimpleRouter()
+    router.register(
+        r"communication/reviews",
+        ReviewListViewSet,
+        "reviews",
+    )
     router.register(
         r"accounts/reviews",
         UserReviewViewSet,

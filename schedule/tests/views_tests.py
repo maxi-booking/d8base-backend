@@ -260,6 +260,8 @@ def test_user_service_schedule_create(
 ):
     """Should be able to create a user service schedule object."""
     obj = services.filter(professional__user=user).first()
+    obj.is_base_schedule = False
+    obj.save()
     response = client_with_token.post(
         reverse("user-service-schedule-list"),
         {
@@ -284,6 +286,9 @@ def test_user_service_schedule_update(
     """Should be able to update a user service schedule."""
     service_schedules.filter(day_of_week=6).delete()
     obj = service_schedules.filter(service__professional__user=user).first()
+    service = obj.service
+    service.is_base_schedule = False
+    service.save()
     start_time = obj.start_time
     end_time = obj.end_time
     response = client_with_token.patch(

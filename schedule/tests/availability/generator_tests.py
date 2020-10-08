@@ -263,6 +263,7 @@ def test_availability_get_generator(
     assert isinstance(generator.request_processor, RequestAppendProcessor)
 
     caplog.clear()
+    AvailabilitySlot.objects.all().delete()
     assert AvailabilitySlot.objects.all().count() == 0
     generator.generate()
     assert "AvailabilityGenerator report: request" in caplog.records[0].message

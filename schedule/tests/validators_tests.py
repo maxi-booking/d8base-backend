@@ -115,24 +115,40 @@ def test_validate_service_schedule(service_schedules: QuerySet):
 
     schedule.start_time = time(4)
     schedule.end_time = time(3)
-    with pytest.raises(ValidationError):
-        validate_professional_schedule(schedule)
+
+    with pytest.raises(ValidationError) as error:
+        validate_service_schedule(schedule)
+    assert "interval is incorrect" in str(error)
 
     schedule.start_time = time(3)
     schedule.end_time = time(23)
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError) as error:
         validate_service_schedule(schedule)
+    assert "not overlap" in str(error)
 
     schedule.start_time = None
     schedule.end_time = time(4)
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError) as error:
         validate_service_schedule(schedule)
+    assert "is not set" in str(error)
+
+    service = schedule.service
 
     schedule.start_time = time(3)
     schedule.end_time = time(4)
     schedule.service = None
-    with pytest.raises(ValidationError):
+    with pytest.raises(ValidationError) as error:
         validate_service_schedule(schedule)
+    assert "owner is empty" in str(error)
+
+    schedule.service = service
+    with pytest.raises(ValidationError) as error:
+        validate_service_schedule(schedule)
+    assert "Not allowed to create schedules" in str(error)
+
+    schedule.service.is_base_schedule = False
+    schedule.service.save()
+    validate_service_schedule(schedule)
 
 
 def test_validate_availability_slot(availability_slots: QuerySet):

@@ -13,8 +13,8 @@ from .filtersets import (MessagesListFilterSet, ReciviedMessagesFilterSet,
 from .models import Message, Review, ReviewComment, SuggestedMessage
 from .serializers import (LatestMessageSerializer, MessageSerializer,
                           ReceivedMessageSerializer, ReviewCommentSerializer,
-                          ReviewSerializer, SentMessageSerializer,
-                          SuggestedMessageSerializer)
+                          ReviewListSerializer, ReviewSerializer,
+                          SentMessageSerializer, SuggestedMessageSerializer)
 from .services import (delete_message_from_recipient,
                        delete_message_from_sender, mark_message_read)
 
@@ -37,6 +37,16 @@ class UserReviewCommentViewSet(viewsets.ModelViewSet):
     filterset_class = ReviewCommentFilterSet
     search_fields = ("=id", "review__title", "review__description", "title",
                      "description", "review__user__last_name")
+
+
+class ReviewListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The review list viewset."""
+
+    serializer_class = ReviewListSerializer
+    queryset = Review.objects.get_list()
+    filterset_fields = ("rating", "professional", "created", "modified")
+    search_fields = ("=id", "professional__name", "professional__description",
+                     "title", "description")
 
 
 class UserReviewViewSet(viewsets.ModelViewSet):
