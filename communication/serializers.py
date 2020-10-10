@@ -58,14 +58,15 @@ class ReviewListSerializer(serializers.ModelSerializer):
     """The review list serializer."""
 
     comment = ReviewCommentInlineSerializer(many=False, read_only=True)
+    user = UserSerializer(many=False, read_only=True)
 
     class Meta:
         """The metainformation."""
 
         model = Review
 
-        fields = ("id", "professional", "title", "description", "rating",
-                  "comment", "created", "modified")
+        fields = ("id", "professional", "user", "title", "description",
+                  "rating", "comment", "created", "modified")
         read_only_fields = ("created", "modified")
 
 

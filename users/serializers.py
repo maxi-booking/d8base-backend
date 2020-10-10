@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
 
         fields = ("id", "first_name", "last_name", "gender", "avatar",
-                  "avatar_thumbnail", "is_confirmed")
+                  "avatar_thumbnail", "is_confirmed", "nationality")
 
 
 class UserCalculatedUnitsSerializer(serializers.Serializer):
