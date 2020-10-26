@@ -276,7 +276,7 @@ def test_availability_generator_exception(
 ):
     """Should raise an exception."""
 
-    def mock(reqest: Request):
+    def mock(request: Request):
         """Raise an exception."""
         raise AvailabilityValueError()
 

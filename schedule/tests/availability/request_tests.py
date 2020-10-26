@@ -57,7 +57,8 @@ def test_availability_request_validator(
         validator.validate(request)
     assert "be less" in str(error)
 
-    request.end_datetime = request.end_datetime.replace(tzinfo="Europe/London")
+    request.end_datetime = request.end_datetime.replace(
+        tzinfo="America/Toronto")
     with pytest.raises(AvailabilityValueError) as error:
         validator.validate(request)
     assert "datetime is invalid" in str(error)

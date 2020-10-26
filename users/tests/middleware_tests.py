@@ -1,4 +1,5 @@
 """The middleware tests module."""
+from datetime import timedelta
 from typing import Optional
 
 import arrow
@@ -23,7 +24,7 @@ def test_user_timezone_middleware(
     """Should set the timezone of the current user."""
     lang = user_languages.filter(user=user).first()
 
-    def get_offset(header: Optional[str] = None) -> str:
+    def get_offset(header: Optional[str] = None) -> timedelta:
         """Return a date offset."""
         response = client_with_token.get(
             reverse(
@@ -33,21 +34,23 @@ def test_user_timezone_middleware(
             **{UserTimezoneMiddleware.TIME_ZONE_HEADER: header},
         )
         assert timezone.get_current_timezone_name() == settings.TIME_ZONE
-        return arrow.get(response.json()["created"]).format("ZZ")
+        return arrow.get(response.json()["created"]).utcoffset()
 
-    assert get_offset() == "+00:00"
+    assert get_offset() == arrow.utcnow().utcoffset()
 
     user.locations.create(timezone="Europe/London")
-    assert get_offset() == "+01:00"
+    assert get_offset() == arrow.now("Europe/London").utcoffset()
 
     user.locations.all().delete()
     user.locations.create(timezone="America/Toronto")
-    assert get_offset() == "-04:00"
+    assert get_offset() == arrow.now("America/Toronto").utcoffset()
 
     user.locations.all().delete()
-    assert get_offset() == "+00:00"
+    assert get_offset() == arrow.utcnow().utcoffset()
 
-    assert get_offset(header="Europe/Moscow") == "+03:00"
-    assert get_offset(header="Europe/London") == "+01:00"
-    assert get_offset(header="invalid") == "+00:00"
-    assert get_offset() == "+00:00"
+    assert get_offset(
+        header="Europe/Moscow") == arrow.now("Europe/Moscow").utcoffset()
+    assert get_offset(
+        header="Europe/London") == arrow.now("Europe/London").utcoffset()
+    assert get_offset(header="invalid") == arrow.utcnow().utcoffset()
+    assert get_offset() == arrow.utcnow().utcoffset()

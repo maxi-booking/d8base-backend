@@ -44,7 +44,7 @@ class ReviewListViewSet(viewsets.ReadOnlyModelViewSet):
 
     serializer_class = ReviewListSerializer
     queryset = Review.objects.get_list_with_comments()
-    # filterset_fields = ("rating", "professional", "created", "modified")
+    filterset_fields = ("rating", "professional", "created", "modified")
     search_fields = ("=id", "professional__name", "professional__description",
                      "title", "description")
 
