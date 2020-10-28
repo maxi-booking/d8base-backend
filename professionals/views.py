@@ -111,7 +111,8 @@ class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
     """The professional list viewset."""
 
     serializer_class = ProfessionalListSerializer
-    queryset = Professional.objects.get_list()
+    queryset = Professional.objects.get_list().\
+        prefetch_related("user__languages")
     search_fields = ("=id", "name", "user__email")
     filterset_class = ProfessionalListFilterSet
 

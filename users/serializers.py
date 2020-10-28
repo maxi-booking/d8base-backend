@@ -11,28 +11,6 @@ from .models import (User, UserContact, UserLanguage, UserLocation,
 from .registration import get_auth_tokens
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """The message sender or recipient serializer."""
-
-    avatar_thumbnail = serializers.ImageField(read_only=True)
-    avatar = serializers.ImageField(read_only=True)
-    last_name = serializers.SerializerMethodField()
-
-    def get_last_name(self, obj: User) -> str:
-        # pylint: disable=no-self-use
-        """Return a public last name."""
-        return obj.public_last_name
-
-    class Meta:
-        """The metainformation."""
-
-        model = User
-
-        fields = ("id", "first_name", "last_name", "gender", "avatar",
-                  "avatar_thumbnail", "is_confirmed", "nationality",
-                  "birthday")
-
-
 class UserCalculatedUnitsSerializer(serializers.Serializer):
     """The user calculated units serializer."""
 
@@ -182,3 +160,37 @@ class UserLocationSerializer(
                   "is_default", "units", "timezone", "created", "modified",
                   "created_by", "modified_by")
         read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """The user serializer."""
+
+    avatar_thumbnail = serializers.ImageField(read_only=True)
+    avatar = serializers.ImageField(read_only=True)
+    last_name = serializers.SerializerMethodField()
+
+    def get_last_name(self, obj: User) -> str:
+        # pylint: disable=no-self-use
+        """Return a public last name."""
+        return obj.public_last_name
+
+    class Meta:
+        """The metainformation."""
+
+        model = User
+
+        fields = [
+            "id", "first_name", "last_name", "gender", "avatar",
+            "avatar_thumbnail", "is_confirmed", "nationality", "birthday"
+        ]
+
+
+class UserExtendedSerializer(UserSerializer):
+    """The user extended serializer."""
+
+    languages = UserLanguageSerializer(many=True, read_only=True)
+
+    class Meta(UserSerializer.Meta):
+        """The metainformation."""
+
+        fields = UserSerializer.Meta.fields + ["languages"]

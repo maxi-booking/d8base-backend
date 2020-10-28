@@ -535,6 +535,7 @@ def test_user_professional_locations_delete_restricted_entry(
 def test_professionals_list(
     client_with_token: Client,
     professionals: QuerySet,
+    user_languages: QuerySet,
 ):
     """Should return a professionals list."""
     obj = professionals.filter().first()
@@ -542,12 +543,16 @@ def test_professionals_list(
     data = response.json()
     assert response.status_code == 200
     assert data["count"] == 4
-    assert data["results"][0]["name"] == obj.name
+    entry = data["results"][0]
+    assert entry["name"] == obj.name
+    lang = user_languages.filter(user__pk=entry["user"]["id"]).first()
+    assert entry["user"]["languages"][0]["language"] == lang.language
 
 
 def test_professional_detail(
     client_with_token: Client,
     professionals: QuerySet,
+    user_languages: QuerySet,
 ):
     """Should return a user professional object."""
     obj = professionals.filter().first()
@@ -556,6 +561,8 @@ def test_professional_detail(
     data = response.json()
     assert response.status_code == 200
     assert data["experience"] == obj.experience
+    lang = user_languages.filter(user__pk=data["user"]["id"]).first()
+    assert data["user"]["languages"][0]["language"] == lang.language
 
 
 def test_user_professional_education_list(

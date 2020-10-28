@@ -83,4 +83,7 @@ class CommonInfo(TimeStampedModel):
         """The metainformation."""
 
         ordering: Iterable[str] = ("-modified", "-created")
+        indexes: Iterable[models.Index] = [
+            models.Index(fields=["-modified", "-created"]),
+        ]
         abstract = True

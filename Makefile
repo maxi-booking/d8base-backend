@@ -64,10 +64,8 @@ django_superuser:
 	@$(dockerc) exec web python ${manage} createsuperuser --no-input  -email ${DJANGO_SUPERUSER_EMAIL}
 	@$(dockerc) exec web python ${manage} changepassword --no-input  -email ${DJANGO_SUPERUSER_EMAIL}
 
-#RUN python manage.py migrate && python manage.py createsuperuser --no-input --email $SUPERUSER_EMAIL --password $SUPERUSER_PASSWORD
-
 coverage:
-	pytest  --cov=./ --cov-report html
+	pytest -n auto  --cov=./ --cov-report html
 	${BROWSER} htmlcov/index.html
 tox:
 	@echo 'Start tests'

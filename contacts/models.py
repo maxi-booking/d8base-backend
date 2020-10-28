@@ -9,7 +9,7 @@ from .managers import ContactsManager
 
 
 class Contact(CommonInfo):
-    """The user language class."""
+    """The user contact class."""
 
     objects = ContactsManager()
 

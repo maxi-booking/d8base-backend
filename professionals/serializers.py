@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from d8b.serializers import ModelCleanFieldsSerializer
 from users.serializer_fields import AccountUserLocationForeignKey
-from users.serializers import UserHiddenFieldMixin, UserSerializer
+from users.serializers import UserExtendedSerializer, UserHiddenFieldMixin
 
 from .models import (Category, Professional, ProfessionalCertificate,
                      ProfessionalContact, ProfessionalEducation,
@@ -73,7 +73,7 @@ class ProfessionalTagListSerializer(serializers.ModelSerializer):
 class ProfessionalListSerializer(serializers.ModelSerializer):
     """The professional list serializer."""
 
-    user = UserSerializer(many=False, read_only=True)
+    user = UserExtendedSerializer(many=False, read_only=True)
 
     class Meta:
         """The professional list class serializer META class."""
