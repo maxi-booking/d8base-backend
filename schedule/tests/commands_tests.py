@@ -7,28 +7,26 @@ from pytest_mock import MockFixture
 pytestmark = pytest.mark.django_db
 
 
-def test_generate_slots(
+def test_command_generate_slots(
     professionals: QuerySet,
     services: QuerySet,
     mocker: MockFixture,
 ):
     """Should filter a queryset by user."""
-    generator = mocker.MagicMock()
-    get_generator = mocker.MagicMock(return_value=generator)
-    mocker.patch(
-        "schedule.availability.generator.get_availability_generator",
-        new=get_generator,
-    )
+    professionals_generator = mocker.patch(
+        "schedule.availability.generate_for_professional")
+    services_generator = mocker.patch(
+        "schedule.availability.generate_for_service")
     call_command("generate_slots")
-    total = professionals.count() + services.count()
-    assert get_generator.called
-    assert get_generator.call_count == total
-    assert generator.generate.called
-    assert generator.generate.call_count == total
+    total_professionals = professionals.count()
+    total_services = services.count()
+    assert professionals_generator.call_count == total_professionals
+    assert services_generator.call_count == total_services
 
     call_command(
         "generate_slots",
         professionals=[professionals.first().pk],
-        services=[services.filter(is_base_schedule=True).first().pk],
+        services=[services.filter(is_base_schedule=False).first().pk],
     )
-    assert generator.generate.call_count == total + 2
+    assert professionals_generator.call_count == total_professionals + 1
+    assert services_generator.call_count == total_services + 1

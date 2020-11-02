@@ -59,7 +59,7 @@ class ServiceManager(models.Manager):
         query = self.get_list()
         if not ids:
             return query
-        return query.filter(pk__in=ids, is_base_schedule=True)
+        return query.filter(pk__in=ids, is_base_schedule=False)
 
 
 class ServiceTagManager(models.Manager):

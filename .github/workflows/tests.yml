@@ -1,6 +1,6 @@
 name: tests
 
-on: [push,workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
@@ -16,10 +16,10 @@ jobs:
       - uses: actions/checkout@v1
       - uses: huaxk/postgis-action@v1
         with:
-          postgresql version: '11'
-          postgresql password: 'postgres'
-          postgresql user: 'postgres'
-          postgresql db: 'd8b'
+          postgresql version: "11"
+          postgresql password: "postgres"
+          postgresql user: "postgres"
+          postgresql db: "d8b"
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -27,14 +27,14 @@ jobs:
 
       - name: Install environments
         run: |
-            ### sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
-            sudo apt-get update
-            sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev binutils libproj-dev gdal-bin
+          ### sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
+          sudo apt-get update
+          sudo apt-get install -y gettext sqlite3 libsqlite3-dev libpq-dev python3.8-dev python3.7-dev binutils libproj-dev gdal-bin
 
       - name: Copy configs
         run: |
-            cp -n d8b/settings/.env_dist d8b/settings/.env
-            cp -n d8b/settings/.env_test_dist d8b/settings/.env_test
+          cp -n d8b/settings/.env_dist d8b/settings/.env
+          cp -n d8b/settings/.env_test_dist d8b/settings/.env_test
 
       - name: Install dependencies
         run: |
@@ -66,9 +66,9 @@ jobs:
           passphrase: ${{ secrets.STAGEDEPLPASS }}
           key: ${{ secrets.STAGEDEPLKEY }}
           script: |
-              cd ${{ secrets.BACKDIR }}
-              git pull
-              
+            cd ${{ secrets.BACKDIR }}
+            git pull
+
       - name: Install nmp dependencies
         uses: appleboy/ssh-action@master
         with:
@@ -158,12 +158,12 @@ jobs:
           server_port: 465
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: Failure - ${{github.repository}} - tests or deploy on push 
+          subject: Failure - ${{github.repository}} - tests or deploy on push
           body: Tests or deploy on push are failure - ${{github.repository}}
           to: ${{secrets.FAIL_MAIL_RECEPIENTS}}
           from: Github actions
           content_type: text/html
-              
+
       - name: Send email if tests and deploy are successful
         uses: dawidd6/action-send-mail@v2
         if: ${{ success() }}

@@ -58,6 +58,7 @@ def services(
             duration=45,
             service_type=Service.TYPE_CLIENT_LOCATION,
             is_enabled=False,
+            is_base_schedule=False,
         )
         second.price = Price.objects.create(
             service=second,

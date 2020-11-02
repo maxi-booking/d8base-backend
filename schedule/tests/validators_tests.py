@@ -111,7 +111,8 @@ def test_validate_professional_schedule(professional_schedules: QuerySet):
 
 def test_validate_service_schedule(service_schedules: QuerySet):
     """Should validate a service schedule."""
-    schedule = service_schedules.first()
+    schedule = service_schedules.filter(service__is_base_schedule=True).first()
+    service = schedule.service
 
     schedule.start_time = time(4)
     schedule.end_time = time(3)
@@ -131,8 +132,6 @@ def test_validate_service_schedule(service_schedules: QuerySet):
     with pytest.raises(ValidationError) as error:
         validate_service_schedule(schedule)
     assert "is not set" in str(error)
-
-    service = schedule.service
 
     schedule.start_time = time(3)
     schedule.end_time = time(4)

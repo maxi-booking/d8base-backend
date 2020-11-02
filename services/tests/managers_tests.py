@@ -9,8 +9,8 @@ pytestmark = pytest.mark.django_db
 
 def test_services_manager_get_for_avaliability_generation(services: QuerySet):
     """Should return services by the ids."""
-    first = services.filter(is_base_schedule=True).first()
-    last = services.filter(is_base_schedule=True).last()
+    first = services.filter(is_base_schedule=False).first()
+    last = services.filter(is_base_schedule=False).last()
     ids = [first.pk, last.pk]
     services = Service.objects.get_for_avaliability_generation(ids)
     assert sorted(ids) == sorted([p.pk for p in services])

@@ -219,7 +219,13 @@ class AvailabilitySlotAdmin(VersionAdmin):
         ProfessionalFilter,
         ServiceFilter,
     )
-    list_select_related = ("service", "professional", "professional__user")
+    list_select_related = (
+        "service",
+        "professional",
+        "professional__user",
+        "service__professional",
+        "service__professional__user",
+    )
     autocomplete_fields = ("service", "professional")
 
     class Media:

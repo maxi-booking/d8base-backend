@@ -7,8 +7,8 @@ from django.core.management.base import BaseCommand
 from tqdm import tqdm
 
 from professionals.models import Professional
-from schedule.availability.generator import get_availability_generator
-from schedule.availability.request import Request
+from schedule.availability import (generate_for_professional,
+                                   generate_for_service)
 from services.models import Service
 
 
@@ -37,20 +37,11 @@ class Command(BaseCommand):
 
     def _generate_for_professional(self, professional: Professional) -> None:
         """Generate for the professional."""
-        request = Request()
-        request.professional = professional
-        request.start_datetime = self.start
-        request.end_datetime = self.end
-        get_availability_generator(request).generate()
+        generate_for_professional(professional, self.start, self.end)
 
     def _generate_for_service(self, service: Service) -> None:
         """Generate for the service."""
-        request = Request()
-        request.professional = service.professional
-        request.service = service
-        request.start_datetime = self.start
-        request.end_datetime = self.end
-        get_availability_generator(request).generate()
+        generate_for_service(service, self.start, self.end)
 
     def handle(self, *args, **options):
         """Run the command."""

@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 from schedule.availability import (generate_for_professional,
                                    generate_for_service)
+from services.models import Service
 
 from .models import ProfessionalSchedule, ServiceSchedule
 
@@ -12,14 +13,14 @@ from .models import ProfessionalSchedule, ServiceSchedule
 @receiver(
     post_save,
     sender=ProfessionalSchedule,
-    dispatch_uid="professional_post_save",
+    dispatch_uid="professional_schedule_post_save",
 )
 @receiver(
     post_delete,
     sender=ProfessionalSchedule,
-    dispatch_uid="professional_post_delete",
+    dispatch_uid="professional_schedule_post_delete",
 )
-def professional_generator_receiver(
+def professional_schedule_receiver(
     sender,
     instance: ProfessionalSchedule,
     **kwargs,
@@ -32,14 +33,14 @@ def professional_generator_receiver(
 @receiver(
     post_save,
     sender=ServiceSchedule,
-    dispatch_uid="service_generator_post_save",
+    dispatch_uid="service_schedule_post_save",
 )
 @receiver(
     post_delete,
     sender=ServiceSchedule,
-    dispatch_uid="service_generator_post_delete",
+    dispatch_uid="service_schedule_post_delete",
 )
-def service_generator_receiver(
+def service_schedule_receiver(
     sender,
     instance: ServiceSchedule,
     **kwargs,
@@ -47,3 +48,19 @@ def service_generator_receiver(
     """Run the update availability tasks."""
     # pylint: disable=unused-argument
     generate_for_service(instance.service)
+
+
+@receiver(
+    post_save,
+    sender=Service,
+    dispatch_uid="service_post_save",
+)
+def service_receiver(
+    sender,
+    instance: Service,
+    **kwargs,
+):
+    """Run the update availability tasks."""
+    # pylint: disable=unused-argument
+    if not instance.is_base_schedule:
+        generate_for_service(instance)
