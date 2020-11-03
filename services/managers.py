@@ -53,13 +53,13 @@ class ServiceManager(models.Manager):
 
     def get_for_avaliability_generation(
         self,
-        ids: Optional[List[int]],
+        ids: Optional[List[int]] = None,
     ) -> QuerySet:
         """Return a list of services for availability generation."""
-        query = self.get_list()
+        query = self.get_list().filter(is_base_schedule=False)
         if not ids:
             return query
-        return query.filter(pk__in=ids, is_base_schedule=False)
+        return query.filter(pk__in=ids)
 
 
 class ServiceTagManager(models.Manager):

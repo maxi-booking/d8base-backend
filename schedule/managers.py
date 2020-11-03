@@ -60,6 +60,16 @@ class AvailabilitySlotManager(models.Manager):
 
         return query
 
+    def get_expired_entries(self) -> QuerySet:
+        """Return the expired entries."""
+        today = arrow.utcnow().replace(
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0,
+        )
+        return self.filter(end_datetime__lt=today.datetime)
+
 
 class ProfessionalClosedPeriodManager(models.Manager):
     """The professional closed period manager."""

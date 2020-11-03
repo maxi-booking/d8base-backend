@@ -24,7 +24,10 @@ def test_http_to_calendar_request_converter(
     timezone.activate(tz_name)
     validator = mocker.MagicMock(return_value=None)
     professional = professionals.first()
-    service = services.filter(professional=professional).first()
+    service = services.filter(
+        professional=professional,
+        is_base_schedule=False,
+    ).first()
     request = HttpRequest()
     request.GET["professional"] = professional.pk
     request.GET["service"] = service.pk
@@ -40,12 +43,15 @@ def test_http_to_calendar_request_converter(
     end_datetime = "2021-08-23T16:19:43"
     request.GET["start_datetime"] = start_datetime
     request.GET["end_datetime"] = end_datetime
-    request.GET["period"] = "slot"
+    service.is_base_schedule = True
+    service.save()
+    request.GET["service"] = service.pk
 
     result = HTTPToCalendarRequestConverter(Request(request)).get()
 
     assert result.start_datetime
     assert result.end_datetime
+    assert result.service is None
     assert result.start_datetime.utcoffset().total_seconds() == 0
     assert result.end_datetime.utcoffset().total_seconds() == 0
     assert start_datetime == result.start_datetime.to(tz_name).format(

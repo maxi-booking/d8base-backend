@@ -143,7 +143,7 @@ class ProfessionalManager(models.Manager):
 
     def get_for_avaliability_generation(
         self,
-        ids: Optional[List[int]],
+        ids: Optional[List[int]] = None,
     ) -> QuerySet:
         """Return a list of professionals for availability generation."""
         query = self.get_list()

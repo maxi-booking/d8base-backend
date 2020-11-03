@@ -52,7 +52,7 @@ class HTTPToCalendarRequestConverter():
         """Set a service to the calendart request."""
         pk = self._get_query_param(self.SERVICE_PARAM)
         self.calendar_request.service = Service.objects.\
-            get_by_params(pk=pk)
+            get_by_params(pk=pk, is_base_schedule=False)
 
     def _set_datetime(self, name: str):
         """Set a datetime to the calendart request."""

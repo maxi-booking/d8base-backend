@@ -19,7 +19,7 @@ def test_command_generate_slots(
         "schedule.availability.generate_for_service")
     call_command("generate_slots")
     total_professionals = professionals.count()
-    total_services = services.count()
+    total_services = services.filter(is_base_schedule=False).count()
     assert professionals_generator.call_count == total_professionals
     assert services_generator.call_count == total_services
 
