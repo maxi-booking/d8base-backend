@@ -7,6 +7,7 @@ COPY ./setup.py ./README.md ./
 COPY ./requirements/dev.txt ./requirements/
 RUN pip install -e .
 RUN pip install --no-cache-dir -r ./requirements/dev.txt
+RUN apt update && apt -y --no-install-recommends install python-celery
 
 COPY . .
 COPY .docker/entrypoint.sh /entrypoint.sh
