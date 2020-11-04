@@ -1,7 +1,8 @@
 """The services routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import (PriceViewSet, RateViewSet, ServiceLocationViewSet,
+from .views import (PriceViewSet, RateViewSet, ServiceListViewSet,
+                    ServiceLocationViewSet, ServicePhotoListViewSet,
                     ServicePhotoViewSet, ServiceTagListViewSet,
                     ServiceTagViewSet, ServiceViewSet)
 
@@ -18,6 +19,16 @@ def get_router() -> SimpleRouter:
         r"services/tags",
         ServiceTagListViewSet,
         "service-tags",
+    )
+    router.register(
+        r"services/service-photos",
+        ServicePhotoListViewSet,
+        "service-photos",
+    )
+    router.register(
+        r"services/services",
+        ServiceListViewSet,
+        "services",
     )
     router.register(
         r"accounts/service-tags",

@@ -35,6 +35,68 @@ def test_rates_list(
     assert "FRANCE" in data[1]["countries"]
 
 
+def test_services_list(
+    client_with_token: Client,
+    services: QuerySet,
+):
+    """Should return a services list."""
+    obj = services.first()
+    response = client_with_token.get(reverse("services-list"))
+    data = response.json()
+
+    assert response.status_code == 200
+    assert data["count"] == services.count()
+    assert data["results"][0]["name"] == obj.name
+    assert data["results"][0]["price"]["start_price"] == str(
+        obj.price.start_price.amount)
+    assert len(data["results"][0]["tags"]) == obj.tags.count()
+    assert len(data["results"][0]["locations"]) == obj.locations.count()
+
+
+def test_services_detail(
+    client_with_token: Client,
+    services: QuerySet,
+):
+    """Should return a service details."""
+    obj = services.first()
+    response = client_with_token.get(reverse("services-detail", args=[obj.pk]))
+    data = response.json()
+
+    assert response.status_code == 200
+    assert data["name"] == obj.name
+    assert data["price"]["start_price"] == str(obj.price.start_price.amount)
+    assert len(data["tags"]) == obj.tags.count()
+    assert len(data["locations"]) == obj.locations.count()
+
+
+def test_service_photos_list(
+    client_with_token: Client,
+    services: QuerySet,
+):
+    """Should return a service photos list."""
+    obj = services.first().photos.first()
+    response = client_with_token.get(reverse("service-photos-list"))
+    data = response.json()
+
+    assert response.status_code == 200
+    assert data["count"] == services.count()
+    assert data["results"][0]["name"] == obj.name
+
+
+def test_service_photos_detail(
+    client_with_token: Client,
+    services: QuerySet,
+):
+    """Should return a service photo details."""
+    obj = services.first().photos.first()
+    response = client_with_token.get(
+        reverse("service-photos-detail", args=[obj.pk]))
+    data = response.json()
+
+    assert response.status_code == 200
+    assert data["description"] == obj.description
+
+
 def test_user_services_list(
     user: User,
     client_with_token: Client,

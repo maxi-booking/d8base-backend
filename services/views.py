@@ -10,7 +10,8 @@ from .filtersets import (PriceFilterSet, ServiceFilterSet,
                          ServiceTagFilterSet)
 from .models import Price, Service, ServiceLocation, ServicePhoto, ServiceTag
 from .serializers import (PriceSerializer, RateSerializer,
-                          ServiceLocationSerializer, ServicePhotoSerializer,
+                          ServiceListSerializer, ServiceLocationSerializer,
+                          ServicePhotoListSerializer, ServicePhotoSerializer,
                           ServiceSerializer, ServiceTagListSerializer,
                           ServiceTagSerializer)
 
@@ -24,6 +25,15 @@ class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.get_list()
     search_fields = ("=id", "name", "description")
     filterset_class = ServiceFilterSet
+
+
+class ServiceListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The service viewset."""
+
+    serializer_class = ServiceListSerializer
+    queryset = Service.objects.get_extended_list()
+    search_fields = ("=id", "name", "description")
+    filterset_fields = ("professional", "is_enabled")
 
 
 class PriceViewSet(viewsets.ModelViewSet):
@@ -75,6 +85,15 @@ class ServicePhotoViewSet(viewsets.ModelViewSet):
     queryset = ServicePhoto.objects.get_list()
     search_fields = ("=id", "name", "description")
     filterset_class = ServicePhotoFilterSet
+
+
+class ServicePhotoListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The service photo list viewset."""
+
+    serializer_class = ServicePhotoListSerializer
+    queryset = ServicePhoto.objects.get_list()
+    search_fields = ("=id", "name", "description")
+    filterset_fields = ("service", "service__professional")
 
 
 class RateViewSet(

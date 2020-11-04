@@ -296,6 +296,32 @@ def test_professional_tags_list(
     assert data["results"][0]["name"] == obj.name
 
 
+def test_professional_photos_list(
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should return a professional photos list."""
+    obj = professional_photos.first()
+    response = client_with_token.get(reverse("professional-photos-list"))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["count"] == professional_photos.count()
+    assert data["results"][0]["name"] == obj.name
+
+
+def test_professional_photos_detail(
+    client_with_token: Client,
+    professional_photos: QuerySet,
+):
+    """Should return a professional photos detail."""
+    obj = professional_photos.first()
+    response = client_with_token.get(
+        reverse("professional-photos-detail", args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["name"] == obj.name
+
+
 def test_user_professional_contacts_list(
     user: User,
     client_with_token: Client,
@@ -553,16 +579,32 @@ def test_professional_detail(
     client_with_token: Client,
     professionals: QuerySet,
     user_languages: QuerySet,
+    professional_educations: QuerySet,
+    professional_experience: QuerySet,
+    professional_locations: QuerySet,
+    professional_contacts: QuerySet,
+    professional_tags: QuerySet,
 ):
     """Should return a user professional object."""
     obj = professionals.filter().first()
     response = client_with_token.get(
         reverse("professionals-detail", args=[obj.pk]))
     data = response.json()
+
     assert response.status_code == 200
     assert data["experience"] == obj.experience
     lang = user_languages.filter(user__pk=data["user"]["id"]).first()
     assert data["user"]["languages"][0]["language"] == lang.language
+    assert len(data["educations"]) == professional_educations.filter(
+        professional=obj).count()
+    assert len(data["experience_entries"]) == professional_experience.filter(
+        professional=obj).count()
+    assert len(data["locations"]) == professional_locations.filter(
+        professional=obj).count()
+    assert len(data["contacts"]) == professional_contacts.filter(
+        professional=obj).count()
+    assert len(data["tags"]) == professional_tags.\
+        filter(professional=obj).count()
 
 
 def test_user_professional_education_list(

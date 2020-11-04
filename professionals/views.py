@@ -18,9 +18,10 @@ from .serializers import (
     CategorySerializer, ProfessionalCertificateSerializer,
     ProfessionalContactSerializer, ProfessionalEducationSerializer,
     ProfessionalExperienceSerializer, ProfessionalListSerializer,
-    ProfessionalLocationSerializer, ProfessionalPhotoSerializer,
-    ProfessionalSerializer, ProfessionalTagListSerializer,
-    ProfessionalTagSerializer, SubcategorySerializer)
+    ProfessionalLocationSerializer, ProfessionalPhotoListSerializer,
+    ProfessionalPhotoSerializer, ProfessionalSerializer,
+    ProfessionalTagListSerializer, ProfessionalTagSerializer,
+    SubcategorySerializer)
 
 
 class ProfessionalLocationViewSet(viewsets.ModelViewSet):
@@ -64,6 +65,15 @@ class ProfessionalPhotoViewSet(viewsets.ModelViewSet):
     queryset = ProfessionalPhoto.objects.get_list()
     search_fields = ("=id", "name", "description")
     filterset_class = ProfessionalPhotoFilterSet
+
+
+class ProfessionalPhotoListViewSet(viewsets.ReadOnlyModelViewSet):
+    """The professional photo list viewset."""
+
+    serializer_class = ProfessionalPhotoListSerializer
+    queryset = ProfessionalPhoto.objects.get_list()
+    search_fields = ("=id", "name", "description")
+    filterset_fields = ("professional", )
 
 
 class ProfessionalCertificateViewSet(viewsets.ModelViewSet):
@@ -111,8 +121,7 @@ class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
     """The professional list viewset."""
 
     serializer_class = ProfessionalListSerializer
-    queryset = Professional.objects.get_list().\
-        prefetch_related("user__languages")
+    queryset = Professional.objects.get_extended_list()
     search_fields = ("=id", "name", "user__email")
     filterset_class = ProfessionalListFilterSet
 

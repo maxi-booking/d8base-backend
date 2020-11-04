@@ -26,6 +26,13 @@ class ServiceManager(models.Manager):
             "modified_by",
         )
 
+    def get_extended_list(self) -> QuerySet:
+        """Return a list of objects."""
+        return self.get_list().prefetch_related(
+            "tags",
+            "locations",
+        )
+
     def get_user_list(self, user: User) -> QuerySet:
         """Return a list of services filtered by user."""
         return self.get_list().filter(professional__user=user)

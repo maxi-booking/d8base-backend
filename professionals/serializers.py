@@ -32,6 +32,18 @@ class ProfessionalLocationSerializer(ModelCleanFieldsSerializer):
         read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
+class ProfessionalLocationInlineSerializer(serializers.ModelSerializer):
+    """The professional inline location serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalLocation
+
+        fields = ("id", "country", "region", "subregion", "city", "district",
+                  "postal_code", "address", "coordinates", "units", "timezone")
+
+
 class ProfessionalContactSerializer(serializers.ModelSerializer):
     """The professional contact serializer."""
 
@@ -44,6 +56,16 @@ class ProfessionalContactSerializer(serializers.ModelSerializer):
         fields = ("id", "professional", "contact", "contact_display", "value",
                   "created", "modified", "created_by", "modified_by")
         read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class ProfessionalContactInlineSerializer(serializers.ModelSerializer):
+    """The professional inline contact serializer."""
+
+    class Meta:
+        """The professional contact class serializer META class."""
+
+        model = ProfessionalContact
+        fields = ("id", "contact", "contact_display", "value")
 
 
 class ProfessionalTagSerializer(serializers.ModelSerializer):
@@ -70,20 +92,120 @@ class ProfessionalTagListSerializer(serializers.ModelSerializer):
         fields = ("name", )
 
 
+class ProfessionalExperienceSerializer(ModelCleanFieldsSerializer):
+    """The professional experience serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalExperience
+        fields = ("id", "professional", "title", "company", "is_still_here",
+                  "start_date", "end_date", "description", "created",
+                  "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class ProfessionalExperienceInlineSerializer(serializers.ModelSerializer):
+    """The professional inline experience serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalExperience
+        fields = ("id", "title", "company", "is_still_here", "start_date",
+                  "end_date", "description")
+
+
+class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
+    """The professional education serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalEducation
+        fields = ("id", "professional", "university", "deegree",
+                  "field_of_study", "is_still_here", "start_date", "end_date",
+                  "description", "created", "modified", "created_by",
+                  "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class ProfessionalEducationInlineSerializer(ModelCleanFieldsSerializer):
+    """The professional inline education serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalEducation
+        fields = ("id", "university", "deegree", "field_of_study",
+                  "is_still_here", "start_date", "end_date", "description")
+
+
+class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
+    """The professional certificate serializer."""
+
+    professional = AccountProfessionalForeignKey()
+
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=False)
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalCertificate
+        fields = ("id", "professional", "name", "organization", "date",
+                  "certificate_id", "url", "photo", "photo_thumbnail",
+                  "created", "modified", "created_by", "modified_by")
+        read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class ProfessionalCertificateInlineSerializer(ModelCleanFieldsSerializer):
+    """The professional inline certificate serializer."""
+
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=False, read_only=True)
+
+    class Meta:
+        """The metainformation."""
+
+        model = ProfessionalCertificate
+        fields = ("id", "name", "organization", "date", "certificate_id",
+                  "url", "photo", "photo_thumbnail")
+
+
 class ProfessionalListSerializer(serializers.ModelSerializer):
     """The professional list serializer."""
 
     user = UserExtendedSerializer(many=False, read_only=True)
+    tags = ProfessionalTagListSerializer(many=True, read_only=True)
+    contacts = ProfessionalContactInlineSerializer(many=True, read_only=True)
+    locations = ProfessionalLocationInlineSerializer(many=True, read_only=True)
+    experience_entries = ProfessionalExperienceInlineSerializer(
+        many=True,
+        read_only=True,
+    )
+    educations = ProfessionalEducationInlineSerializer(
+        many=True,
+        read_only=True,
+    )
+    certificates = ProfessionalCertificateInlineSerializer(
+        many=True,
+        read_only=True,
+    )
 
     class Meta:
         """The professional list class serializer META class."""
 
         model = Professional
-        fields = ("id", "user", "name", "description", "company", "experience",
-                  "level", "rating", "subcategory", "created", "modified",
-                  "created_by", "modified_by")
-        read_only_fields = ("rating", "created", "modified", "created_by",
-                            "modified_by")
+        fields = ("id", "user", "name", "description", "company", "level",
+                  "rating", "subcategory", "experience", "tags", "contacts",
+                  "locations", "experience_entries", "educations",
+                  "certificates", "created", "modified")
+        read_only_fields = ("rating", "created", "modified")
 
 
 class ProfessionalSerializer(
@@ -119,24 +241,6 @@ class SubcategorySerializer(serializers.ModelSerializer):
         read_only_fields = ("order", )
 
 
-class ProfessionalCertificateSerializer(ModelCleanFieldsSerializer):
-    """The professional certificate serializer."""
-
-    professional = AccountProfessionalForeignKey()
-
-    photo_thumbnail = serializers.ImageField(read_only=True)
-    photo = Base64ImageField(required=False)
-
-    class Meta:
-        """The metainformation."""
-
-        model = ProfessionalCertificate
-        fields = ("id", "professional", "name", "organization", "date",
-                  "certificate_id", "url", "photo", "photo_thumbnail",
-                  "created", "modified", "created_by", "modified_by")
-        read_only_fields = ("created", "modified", "created_by", "modified_by")
-
-
 class ProfessionalPhotoSerializer(ModelCleanFieldsSerializer):
     """The professional photo serializer."""
 
@@ -155,32 +259,16 @@ class ProfessionalPhotoSerializer(ModelCleanFieldsSerializer):
         read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
-class ProfessionalEducationSerializer(ModelCleanFieldsSerializer):
-    """The professional education serializer."""
+class ProfessionalPhotoListSerializer(serializers.ModelSerializer):
+    """The professional photo list serializer."""
 
-    professional = AccountProfessionalForeignKey()
-
-    class Meta:
-        """The metainformation."""
-
-        model = ProfessionalEducation
-        fields = ("id", "professional", "university", "deegree",
-                  "field_of_study", "is_still_here", "start_date", "end_date",
-                  "description", "created", "modified", "created_by",
-                  "modified_by")
-        read_only_fields = ("created", "modified", "created_by", "modified_by")
-
-
-class ProfessionalExperienceSerializer(ModelCleanFieldsSerializer):
-    """The professional experience serializer."""
-
-    professional = AccountProfessionalForeignKey()
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=False, read_only=True)
 
     class Meta:
         """The metainformation."""
 
-        model = ProfessionalExperience
-        fields = ("id", "professional", "title", "company", "is_still_here",
-                  "start_date", "end_date", "description", "created",
-                  "modified", "created_by", "modified_by")
-        read_only_fields = ("created", "modified", "created_by", "modified_by")
+        model = ProfessionalPhoto
+        fields = ("id", "professional", "name", "description", "order",
+                  "photo", "photo_thumbnail", "created", "modified")
+        read_only_fields = ("created", "modified")

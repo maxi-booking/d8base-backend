@@ -14,6 +14,7 @@ from rest_framework import serializers
 from d8b.serializer_fields import DistanceField
 from d8b.serializers import ModelCleanFieldsSerializer
 from professionals.serializer_fields import AccountProfessionalForeignKey
+from professionals.serializers import ProfessionalLocationInlineSerializer
 
 from .models import Price, Service, ServiceLocation, ServicePhoto, ServiceTag
 from .serializer_fields import (AccountProfessionalLocationForeignKey,
@@ -96,6 +97,46 @@ class ServiceSerializer(serializers.ModelSerializer):
         read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
+class ServiceLocationInlineSerializer(ModelCleanFieldsSerializer):
+    """The service location inline serializer."""
+
+    location = ProfessionalLocationInlineSerializer(
+        many=False,
+        read_only=True,
+    )
+    max_distance = DistanceField(
+        max_digits=7,
+        decimal_places=1,
+        coerce_to_string=False,
+        user=serializers.CurrentUserDefault(),
+    )
+
+    class Meta:
+        """The metainformation."""
+
+        model = ServiceLocation
+        fields = ("id", "location", "max_distance", "created", "modified")
+        read_only_fields = ("created", "modified")
+
+
+class ServiceListSerializer(serializers.ModelSerializer):
+    """The service list serializer."""
+
+    price = PriceSerializer(many=False, read_only=True)
+    tags = ServiceTagListSerializer(many=True, read_only=True)
+    locations = ServiceLocationInlineSerializer(many=True, read_only=True)
+
+    class Meta:
+        """The metainformation."""
+
+        model = Service
+        fields = ("id", "professional", "name", "description", "duration",
+                  "service_type", "is_base_schedule",
+                  "is_auto_order_confirmation", "is_enabled", "price", "tags",
+                  "locations", "created", "modified")
+        read_only_fields = ("created", "modified")
+
+
 class ServiceLocationSerializer(ModelCleanFieldsSerializer):
     """The service location serializer."""
 
@@ -167,3 +208,18 @@ class ServicePhotoSerializer(ModelCleanFieldsSerializer):
                   "photo_thumbnail", "created", "modified", "created_by",
                   "modified_by")
         read_only_fields = ("created", "modified", "created_by", "modified_by")
+
+
+class ServicePhotoListSerializer(ModelCleanFieldsSerializer):
+    """The service photo list serializer."""
+
+    photo_thumbnail = serializers.ImageField(read_only=True)
+    photo = Base64ImageField(required=False, read_only=True)
+
+    class Meta:
+        """The metainformation."""
+
+        model = ServicePhoto
+        fields = ("id", "service", "name", "description", "order", "photo",
+                  "photo_thumbnail", "created", "modified")
+        read_only_fields = ("created", "modified")

@@ -141,6 +141,18 @@ class ProfessionalManager(models.Manager):
             "subcategory__category",
         )
 
+    def get_extended_list(self) -> QuerySet:
+        """Return a list of professionals."""
+        return self.get_list().prefetch_related(
+            "user__languages",
+            "tags",
+            "contacts",
+            "locations",
+            "experience_entries",
+            "educations",
+            "certificates",
+        )
+
     def get_for_avaliability_generation(
         self,
         ids: Optional[List[int]] = None,
