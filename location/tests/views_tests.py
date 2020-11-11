@@ -2,7 +2,7 @@
 from typing import List
 
 import pytest
-from cities.models import City
+from cities.models import City, PostalCode
 from django.conf import settings
 from django.urls import reverse
 from rest_framework.test import APIClient
@@ -51,6 +51,23 @@ def test_cities_list_filter(
     data = response.json()
     assert data["count"] == 1
     assert data["results"][0]["name"] == "test name"
+
+
+def test_postal_codes_list_filter(
+    client_with_token: APIClient,
+    postal_codes: List[PostalCode],
+):
+    """Should return a filtered list of languages."""
+    code = postal_codes[0]
+    city = code.city
+    code.pk = None
+    code.city = None
+    code.save()
+    response = client_with_token.get(
+        reverse("postal-codes-list") + f"?city={city.pk}")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == len(postal_codes) + 1
 
 
 def test_languages_get(admin_client):

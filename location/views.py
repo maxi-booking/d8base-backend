@@ -2,13 +2,12 @@
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.viewsets import AllowAnyViewSetMixin, DistanceFilterViewSetMixin
 
-from .filtersets import CityFilterSet
+from .filtersets import CityFilterSet, PostalCodeFilterSet
 from .repositories import (AlternativeNameRepository, CityRepository,
                            ContinentRepository, CountryRepository,
                            DistrictRepository, LanguageRepository,
@@ -116,7 +115,7 @@ class DistrictViewSet(
 
 
 class PostalCodeViewSet(
-        CacheResponseMixin,
+        # CacheResponseMixin,
         AllowAnyViewSetMixin,
         DistanceFilterViewSetMixin,
         viewsets.ReadOnlyModelViewSet,
@@ -131,7 +130,7 @@ class PostalCodeViewSet(
                      "region__name", "subregion__name", "city__name",
                      "district__name")
 
-    filterset_fields = ("country", "region", "subregion", "city", "district")
+    filterset_class = PostalCodeFilterSet
 
 
 class AlternativeNameViewSet(
@@ -150,11 +149,14 @@ class AlternativeNameViewSet(
                         "is_colloquial", "is_historic")
 
 
-class ListLanguagesView(CacheResponseMixin, viewsets.ViewSet):
+class ListLanguagesView(
+        CacheResponseMixin,
+        AllowAnyViewSetMixin,
+        viewsets.ViewSet,
+):
     """List all languages."""
 
     serializer = LanguageSerializer
-    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         """Return a list of all languages."""

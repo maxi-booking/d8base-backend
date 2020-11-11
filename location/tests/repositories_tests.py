@@ -5,6 +5,7 @@ import pytest
 from cities.models import City, Country, Place
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django_filters.filters import QuerySetRequestMixin
 
 from conftest import OBJECTS_TO_CREATE
 from location.repositories import (AlternativeNameRepository, BaseRepository,
@@ -115,3 +116,25 @@ def test_city_repository_find_by_name(cities: List[City]):
     assert repo.find_by_name(name="tes").first().name == "test name"
     assert not repo.find_by_name(name="tes", queryset=queryset).count()
     assert repo.find_by_name(name="city", queryset=queryset).count() == 1
+
+
+def test_postal_code_repository_find_by_city(postal_codes: List[City]):
+    """Should be able to find postal codes by the city."""
+    code = postal_codes[0]
+    city = code.city
+    code.pk = None
+    code.city = None
+    code.save()
+
+    repo = PostalCodeRepository()
+    queryset = repo.get_list()
+
+    assert repo.find_by_city(
+        city_id=city.pk,
+        queryset=queryset,
+    ).count() == len(postal_codes) + 1
+
+    assert repo.find_by_city(
+        city_id=-1,
+        queryset=queryset,
+    ).count() == 1

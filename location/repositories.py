@@ -109,7 +109,7 @@ class CityRepository(BaseRepository):
         name: str,
         queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
-        """Find cities by name."""
+        """Find cities by the name."""
         if not queryset:
             queryset = self.get_list()
         return queryset.filter(
@@ -140,6 +140,15 @@ class PostalCodeRepository(BaseRepository):
         "city",
     ]
     prefetch_related: List[str] = ["alt_names"]
+
+    @staticmethod
+    def find_by_city(
+        *,
+        city_id: int,
+        queryset: QuerySet,
+    ) -> QuerySet:
+        """Find postal codes by the city."""
+        return queryset.filter(Q(city__pk=city_id) | Q(city__isnull=True))
 
 
 class AlternativeNameRepository(BaseRepository):
