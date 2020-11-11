@@ -1,9 +1,12 @@
 """The professionals views module."""
 
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from d8b.viewsets import AllowAnyViewSetMixin
+from schedule.availability import generate_for_professional
 
 from .filtersets import (
     ProfessionalCertificateFilterSet, ProfessionalContactFilterSet,
@@ -133,6 +136,13 @@ class ProfessionalViewSet(viewsets.ModelViewSet):
     serializer_class = ProfessionalSerializer
     queryset = Professional.objects.get_list()
     search_fields = ("=id", "name")
+
+    @action(detail=True, methods=["post"])
+    def generate_calendar(self, request, pk=None):
+        # pylint: disable=unused-argument
+        """Generate the professional calendar."""
+        generate_for_professional(self.get_object())
+        return Response({"status": "ok"})
 
 
 class CategoryViewSet(

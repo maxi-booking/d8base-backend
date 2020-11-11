@@ -5,7 +5,6 @@ import pytest
 from cities.models import City, Country, Place
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django_filters.filters import QuerySetRequestMixin
 
 from conftest import OBJECTS_TO_CREATE
 from location.repositories import (AlternativeNameRepository, BaseRepository,

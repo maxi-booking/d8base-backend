@@ -4,6 +4,7 @@ from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
 from django.utils.text import slugify
+from pytest_mock import MockFixture
 
 from conftest import OBJECTS_TO_CREATE
 from d8b.lang import select_locale
@@ -79,6 +80,23 @@ def test_user_professionals_detail(
     data = response.json()
     assert response.status_code == 200
     assert data["level"] == obj.level
+
+
+def test_user_professionals_generate_calendar(
+    user: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+    mocker: MockFixture,
+):
+    """Should return a user professional."""
+    mock = mocker.patch("professionals.views.generate_for_professional")
+    obj = professionals.filter(user=user).first()
+    response = client_with_token.post(
+        reverse("user-professionals-generate-calendar", args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["status"] == "ok"
+    mock.assert_called_once_with(obj)
 
 
 def test_user_professionals_detail_restricted_entry(

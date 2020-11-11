@@ -1,5 +1,7 @@
 """The professionals serializers module."""
 
+from typing import Tuple
+
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
@@ -201,10 +203,25 @@ class ProfessionalListSerializer(serializers.ModelSerializer):
         """The professional list class serializer META class."""
 
         model = Professional
-        fields = ("id", "user", "name", "description", "company", "level",
-                  "rating", "subcategory", "experience", "tags", "contacts",
-                  "locations", "experience_entries", "educations",
-                  "certificates", "created", "modified")
+        fields: Tuple[str, ...] = (
+            "id",
+            "user",
+            "name",
+            "description",
+            "company",
+            "level",
+            "rating",
+            "subcategory",
+            "experience",
+            "tags",
+            "contacts",
+            "locations",
+            "experience_entries",
+            "educations",
+            "certificates",
+            "created",
+            "modified",
+        )
         read_only_fields = ("rating", "created", "modified")
 
 
@@ -217,6 +234,9 @@ class ProfessionalSerializer(
 
     class Meta(ProfessionalListSerializer.Meta):
         """The professional class serializer META class."""
+
+        fields = ("id", "user", "name", "description", "company", "level",
+                  "rating", "subcategory", "experience", "created", "modified")
 
 
 class CategorySerializer(serializers.ModelSerializer):
