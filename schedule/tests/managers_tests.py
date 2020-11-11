@@ -130,3 +130,63 @@ def test_availability_slot_manager_get_get_between_dates(
     end = start.shift(days=100)
     result = manager.get_between_dates(start, end, professional)
     assert result.count() == 61
+
+
+def test_professional_closed_period_manager_get_get_between_dates(
+        professional_closed_periods: QuerySet):
+    """Should return slots between the dates."""
+    professional = professional_closed_periods.first().professional
+    manager = ProfessionalClosedPeriod.objects
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=10)
+
+    result = manager.get_between_dates(start, end, professional)
+    assert result.count() == 2
+    assert result.first().professional == professional
+
+    assert manager.get_between_dates(
+        start.shift(days=6),
+        start.shift(days=15),
+        professional,
+    ).count() == 1
+
+    assert manager.get_between_dates(
+        start.shift(days=20),
+        start.shift(days=30),
+        professional,
+    ).count() == 0
+
+
+def test_service_closed_period_manager_get_get_between_dates(
+        service_closed_periods: QuerySet):
+    """Should return slots between the dates."""
+    service = service_closed_periods.first().service
+    manager = ServiceClosedPeriod.objects
+    start = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    end = start.shift(days=10)
+
+    result = manager.get_between_dates(start, end, service)
+    assert result.count() == 2
+    assert result.first().service == service
+
+    assert manager.get_between_dates(
+        start.shift(days=6),
+        start.shift(days=15),
+        service,
+    ).count() == 1
+
+    assert manager.get_between_dates(
+        start.shift(days=20),
+        start.shift(days=30),
+        service,
+    ).count() == 0

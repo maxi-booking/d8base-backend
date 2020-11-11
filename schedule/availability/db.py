@@ -1,40 +1,16 @@
 """The availability db module."""
 
 from abc import ABC, abstractmethod
-from typing import List, TypeVar
 
 from django.db import transaction
 
 from schedule.models import AvailabilitySlot
 
-from .exceptions import AvailabilityValueError
-from .request import Request
-
-T = TypeVar("T", bound="AbstractSaver")
+from .mixins import RequestSlotsSetterMixin
 
 
-class AbstractSaver(ABC):
+class AbstractSaver(ABC, RequestSlotsSetterMixin):
     """The abstract saver."""
-
-    _request: Request
-    _slots: List[AvailabilitySlot]
-
-    def set_request(self: T, request: Request) -> T:
-        """Set a request."""
-        self._request = request
-        return self
-
-    def set_slots(self: T, slots: List[AvailabilitySlot]) -> T:
-        """Set slots."""
-        self._slots = slots
-        return self
-
-    def _check_request(self):
-        """Check if the request is set."""
-        if not getattr(self, "_request", None):
-            raise AvailabilityValueError("The request is not set.")
-        if getattr(self, "_slots", None) is None:
-            raise AvailabilityValueError("The slots are not set.")
 
     @abstractmethod
     def _save(self) -> None:

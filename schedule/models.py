@@ -70,8 +70,8 @@ class Schedule(CommonInfo, ValidationMixin):
         abstract = True
 
 
-class ClosedPeriod(CommonInfo, ValidationMixin):
-    """The closed period class."""
+class AbstractPeriod(models.Model):
+    """The abstract period class."""
 
     start_datetime = models.DateTimeField(
         verbose_name=_("start datetime"),
@@ -83,15 +83,25 @@ class ClosedPeriod(CommonInfo, ValidationMixin):
         validators=[validate_datetime_in_future],
         db_index=True,
     )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f"{self.start_datetime}-{self.end_datetime}"
+
+    class Meta(CommonInfo.Meta):
+        """The metainformation."""
+
+        abstract = True
+
+
+class ClosedPeriod(AbstractPeriod, CommonInfo, ValidationMixin):
+    """The closed period class."""
+
     is_enabled = models.BooleanField(
         default=True,
         verbose_name=_("is enabled?"),
         db_index=True,
     )
-
-    def __str__(self) -> str:
-        """Return the string representation."""
-        return f"{self.start_datetime}-{self.end_datetime}"
 
     class Meta(CommonInfo.Meta):
         """The metainformation."""

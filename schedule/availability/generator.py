@@ -14,6 +14,7 @@ from .db import AbstractSaver, DeleteSaver
 from .exceptions import AvailabilityError, AvailabilityValueError
 from .request import (AbstractRequestProcessor, Request,
                       RequestAppendProcessor, RequestYearProcessor)
+from .restrictions import AbstractRestriction, ClosedPeriodsRestriction
 
 T = TypeVar("T", bound="AbstractGenerator")
 
@@ -118,16 +119,28 @@ class AvailabilityGenerator():
     saver: AbstractSaver = DeleteSaver()
     request_processor: AbstractRequestProcessor
     logger: logging.Logger
+    restrictions: List[AbstractRestriction] = [ClosedPeriodsRestriction()]
 
     def __init__(self, request: Request):
         """Construct the object."""
         self.request = request
+
+    def _apply_restrictions(
+        self,
+        slots: List[AvailabilitySlot],
+    ) -> List[AvailabilitySlot]:
+        """Apply the restrictions."""
+        for restriction in self.restrictions:
+            slots = restriction.set_request(self.request).\
+                set_slots(slots).apply()
+        return slots
 
     def generate(self) -> None:
         """Generate the availability slots."""
         try:
             self.request = self.request_processor.get(self.request)
             slots = self.generator.set_request(self.request).get()
+            slots = self._apply_restrictions(slots)
             self.saver.set_request(self.request).set_slots(slots).save()
             self.logger.info(
                 "AvailabilityGenerator report: request %s",

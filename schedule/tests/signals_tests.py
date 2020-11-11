@@ -60,6 +60,60 @@ def test_service_schedule_post_delete(
     generator.assert_called_with(schedule.service)
 
 
+def test_service_closed_period_post_save(
+    service_closed_periods: QuerySet,
+    mocker: MockFixture,
+):
+    """Should run the availability generator."""
+    generator = mocker.patch("schedule.signals.generate_for_service")
+    closed_period = service_closed_periods.first()
+    closed_period.is_enabled = False
+    closed_period.save()
+
+    assert generator.call_count == 1
+    generator.assert_called_with(closed_period.service)
+
+
+def test_service_closed_period_post_delete(
+    service_closed_periods: QuerySet,
+    mocker: MockFixture,
+):
+    """Should run the availability generator."""
+    generator = mocker.patch("schedule.signals.generate_for_service")
+    closed_period = service_closed_periods.first()
+    closed_period.delete()
+
+    assert generator.call_count == 1
+    generator.assert_called_with(closed_period.service)
+
+
+def test_professional_closed_period_post_save(
+    professional_closed_periods: QuerySet,
+    mocker: MockFixture,
+):
+    """Should run the availability generator."""
+    generator = mocker.patch("schedule.signals.generate_for_professional")
+    closed_period = professional_closed_periods.first()
+    closed_period.is_enabled = False
+    closed_period.save()
+
+    assert generator.call_count == 1
+    generator.assert_called_with(closed_period.professional)
+
+
+def test_professional_closed_period_post_delete(
+    professional_closed_periods: QuerySet,
+    mocker: MockFixture,
+):
+    """Should run the availability generator."""
+    generator = mocker.patch("schedule.signals.generate_for_professional")
+    closed_period = professional_closed_periods.first()
+    closed_period.delete()
+
+    assert generator.call_count == 1
+    generator.assert_called_with(closed_period.professional)
+
+
 def test_service_post_delete(
     services: QuerySet,
     mocker: MockFixture,

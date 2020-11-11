@@ -13,6 +13,7 @@ from schedule.availability.generator import (DefaultGenerator,
                                              get_availability_generator)
 from schedule.availability.request import (Request, RequestAppendProcessor,
                                            RequestYearProcessor)
+from schedule.availability.restrictions import AbstractRestriction
 from schedule.models import (AvailabilitySlot, ProfessionalSchedule,
                              ServiceSchedule)
 
@@ -287,3 +288,33 @@ def test_availability_generator_exception(
     generator.request_processor.get = mock  # type: ignore
     generator.generate()
     assert "AvailabilityGenerator error" in caplog.records[0].message
+
+
+def test_availability_generator_apply_restrictions():
+    """Should apply the restrictions to the slots."""
+
+    class RestrictionOne(AbstractRestriction):
+        """The mock class."""
+
+        def _apply(self):
+            """Apply the restriction to the availability slots."""
+            return [2, 3, 4]
+
+    class RestrictionTwo(AbstractRestriction):
+        """The mock class."""
+
+        def _apply(self):
+            """Apply the restriction to the availability slots."""
+            return [5, 6, 7]
+
+    request = Request()
+    generator = get_availability_generator(request)
+    generator.restrictions = [RestrictionOne()]
+    slots = generator._apply_restrictions([1, 2, 3])  # type: ignore
+
+    assert slots == [2, 3, 4]
+
+    generator.restrictions = [RestrictionOne(), RestrictionTwo()]
+    slots = generator._apply_restrictions([1, 2, 3])  # type: ignore
+
+    assert slots == [5, 6, 7]

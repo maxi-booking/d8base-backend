@@ -1,5 +1,7 @@
 """The signals module."""
 
+from typing import Union
+
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
@@ -7,7 +9,8 @@ from schedule.availability import (generate_for_professional,
                                    generate_for_service)
 from services.models import Service
 
-from .models import ProfessionalSchedule, ServiceSchedule
+from .models import (ProfessionalClosedPeriod, ProfessionalSchedule,
+                     ServiceClosedPeriod, ServiceSchedule)
 
 
 @receiver(
@@ -20,9 +23,19 @@ from .models import ProfessionalSchedule, ServiceSchedule
     sender=ProfessionalSchedule,
     dispatch_uid="professional_schedule_post_delete",
 )
+@receiver(
+    post_save,
+    sender=ProfessionalClosedPeriod,
+    dispatch_uid="professional_closed_period_post_save",
+)
+@receiver(
+    post_delete,
+    sender=ProfessionalClosedPeriod,
+    dispatch_uid="professional_closed_period_post_delete",
+)
 def professional_schedule_receiver(
     sender,
-    instance: ProfessionalSchedule,
+    instance: Union[ProfessionalSchedule, ProfessionalClosedPeriod],
     **kwargs,
 ):
     """Generate the professional schedule."""
@@ -40,9 +53,19 @@ def professional_schedule_receiver(
     sender=ServiceSchedule,
     dispatch_uid="service_schedule_post_delete",
 )
+@receiver(
+    post_save,
+    sender=ServiceClosedPeriod,
+    dispatch_uid="service_closed_period_post_save",
+)
+@receiver(
+    post_delete,
+    sender=ServiceClosedPeriod,
+    dispatch_uid="service_closed_period_post_delete",
+)
 def service_schedule_receiver(
     sender,
-    instance: ServiceSchedule,
+    instance: Union[ServiceSchedule, ServiceClosedPeriod],
     **kwargs,
 ):
     """Run the update availability tasks."""
