@@ -397,6 +397,7 @@ weak_cryptographic_key:
 exclude_dirs:
   - d8b/tests
   - users/tests
+  - orders/tests
   - contacts/tests
   - location/tests
   - professionals/tests

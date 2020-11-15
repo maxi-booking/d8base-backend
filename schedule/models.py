@@ -75,12 +75,10 @@ class AbstractPeriod(models.Model):
 
     start_datetime = models.DateTimeField(
         verbose_name=_("start datetime"),
-        validators=[validate_datetime_in_future],
         db_index=True,
     )
     end_datetime = models.DateTimeField(
         verbose_name=_("end datetime"),
-        validators=[validate_datetime_in_future],
         db_index=True,
     )
 

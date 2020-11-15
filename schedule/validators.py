@@ -7,6 +7,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from d8b.validators import validate_datetime_in_future
+
 if TYPE_CHECKING:
     from .models import (ProfessionalSchedule, ServiceSchedule, Schedule,
                          AvailabilitySlot, ProfessionalClosedPeriod,
@@ -56,6 +58,8 @@ def _validate_closed_period(period: "ClosedPeriod"):
         model = apps.get_model("schedule", period.__class__.__name__)
         if not period.start_datetime or not period.end_datetime:
             raise ValidationError(_("The interval is not set"))
+        validate_datetime_in_future(period.start_datetime)
+        validate_datetime_in_future(period.end_datetime)
         if period.start_datetime >= period.end_datetime:
             raise ValidationError(_("The interval is incorrect"))
         if model.objects.get_overlapping_entries(period).count():

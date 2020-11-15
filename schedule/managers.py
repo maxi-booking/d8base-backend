@@ -40,6 +40,25 @@ class AvailabilitySlotManager(models.Manager):
             query = query.exclude(pk=slot.pk)
         return query
 
+    def get_encompassing_interval(
+        self,
+        start: arrow.Arrow,
+        end: arrow.Arrow,
+        service: "Professional",
+    ) -> QuerySet:
+        """Get entries that encompass the specified interval."""
+        professional: "Professional" = service.professional
+        query = self.get_list().filter(
+            professional=professional,
+            start_datetime__lte=start.datetime,
+            end_datetime__gte=end.datetime,
+        )
+        if not service.is_base_schedule:
+            query = query.filter(service=service)
+        else:
+            query = query.filter(service__isnull=True)
+        return query
+
     def get_between_dates(
         self,
         start: arrow.Arrow,
@@ -53,7 +72,7 @@ class AvailabilitySlotManager(models.Manager):
             start_datetime__lte=end.datetime,
             end_datetime__gte=start.datetime,
         )
-        if service:
+        if service and not service.is_base_schedule:
             query = query.filter(service=service)
         else:
             query = query.filter(service__isnull=True)

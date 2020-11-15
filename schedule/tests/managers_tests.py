@@ -5,6 +5,7 @@ import arrow
 import pytest
 from django.db.models import QuerySet
 
+from schedule.managers import AvailabilitySlotManager
 from schedule.models import (AvailabilitySlot, ProfessionalClosedPeriod,
                              ProfessionalSchedule, ServiceClosedPeriod,
                              ServiceSchedule)
@@ -89,10 +90,73 @@ def test_service_schedule_manager_get_overlapping_entries(
     assert manager.get_overlapping_entries(schedule).count()
 
 
+def test_availability_slot_manager_get_encompassing_interval(
+        availability_slots: QuerySet):
+    """Should return entries that encompass the specified interval."""
+    service = availability_slots.exclude(service__isnull=True).first().service
+    service.is_base_schedule = False
+    service.save()
+    manager: AvailabilitySlotManager = AvailabilitySlot.objects
+    now = arrow.utcnow().replace(
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0,
+    )
+    result = manager.get_encompassing_interval(now, now.shift(days=1), service)
+    assert result.count() == 0
+
+    result = manager.get_encompassing_interval(
+        now,
+        now.shift(hours=12),
+        service,
+    )
+    assert result.count() == 0
+
+    result = manager.get_encompassing_interval(
+        now.shift(hours=12),
+        now.shift(hours=17),
+        service,
+    )
+    assert result.count() == 0
+
+    result = manager.get_encompassing_interval(
+        now.shift(hours=16),
+        now.shift(hours=17),
+        service,
+    )
+    assert result.count() == 0
+
+    result = manager.get_encompassing_interval(
+        now.shift(hours=11),
+        now.shift(hours=15),
+        service,
+    )
+    assert result.count() == 1
+
+    service.is_base_schedule = True
+    service.save()
+    result = manager.get_encompassing_interval(
+        now.shift(hours=11),
+        now.shift(hours=15),
+        service,
+    )
+    assert result.count() == 1
+    assert result.first().professional == service.professional
+    assert result.first().service is None
+
+    result = manager.get_encompassing_interval(
+        now.shift(hours=16),
+        now.shift(hours=17),
+        service,
+    )
+    assert result.count() == 1
+
+
 def test_availability_slot_manager_get_overlapping_entries(
         availability_slots: QuerySet):
     """Should return overlapping slots."""
-    manager = AvailabilitySlot.objects
+    manager: AvailabilitySlotManager = AvailabilitySlot.objects
     slot = availability_slots.first()
     assert not manager.get_overlapping_entries(slot).count()
     slot.start_datetime = arrow.utcnow().datetime
@@ -105,7 +169,7 @@ def test_availability_slot_manager_get_get_between_dates(
     """Should return slots between the dates."""
     professional = availability_slots.first().professional
     service = availability_slots.exclude(service__isnull=True).first().service
-    manager = AvailabilitySlot.objects
+    manager: AvailabilitySlotManager = AvailabilitySlot.objects
     start = arrow.utcnow().replace(
         hour=0,
         minute=0,

@@ -1,4 +1,4 @@
-"""The managers test module."""
+"""The models test module."""
 
 import arrow
 import pytest
