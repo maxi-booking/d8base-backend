@@ -1,4 +1,6 @@
 """The orders models module."""
+from typing import Type
+
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +12,7 @@ from d8b.models import CommonInfo, ValidationMixin
 from schedule.models import AbstractPeriod
 
 from .managers import OrdersManager
+from .services import OrderAutoFiller
 from .validators import (validate_order_availability, validate_order_client,
                          validate_order_dates, validate_order_status)
 
@@ -17,10 +20,7 @@ from .validators import (validate_order_availability, validate_order_client,
 class Order(AbstractPeriod, CommonInfo, ValidationMixin):
     """The order class."""
 
-    # TODO: implement
-    # status setter
-    # user autofiller
-    # price calculator
+    filler: Type = OrderAutoFiller
 
     validators = [
         validate_order_dates,
@@ -85,17 +85,21 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         db_index=True,
     )
     is_another_person = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name=_("Order for another person?"),
         db_index=True,
     )
     first_name = models.CharField(
         _('first name'),
         max_length=30,
+        null=False,
+        blank=True,
     )
     last_name = models.CharField(
         _('last name'),
         max_length=150,
+        null=False,
+        blank=True,
     )
     phone = PhoneNumberField(
         _('phone'),
@@ -103,6 +107,16 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         null=True,
         db_index=True,
     )
+
+    def clean(self):
+        """Validate the object."""
+        self.filler(self).fill()
+        return super().clean()
+
+    def save(self, **kwargs):
+        """Save the object."""
+        self.filler(self).fill()
+        super().save(**kwargs)
 
     @property
     def duration(self) -> int:

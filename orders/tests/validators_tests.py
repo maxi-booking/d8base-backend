@@ -80,6 +80,21 @@ def test_validate_order_client(user: User, services: QuerySet):
     assert "identical" in str(error)
 
     order.service = service
+    with pytest.raises(ValidationError) as error:
+        validate_order_client(order)
+    assert "name is empty" in str(error)
+
+    order.first_name = "first name"
+    with pytest.raises(ValidationError) as error:
+        validate_order_client(order)
+    assert "name is empty" in str(error)
+
+    order.last_name = "last name"
+    with pytest.raises(ValidationError) as error:
+        validate_order_client(order)
+    assert "phone is empty" in str(error)
+
+    order.phone = "phone"
     validate_order_client(order)
 
 
