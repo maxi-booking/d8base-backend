@@ -13,7 +13,7 @@ from .routers import get_router_urls
 
 urlpatterns = [
     re_path(r"^$", RedirectView.as_view(pattern_name="api-root")),
-    re_path(r"^admin/clearcache/", include('clearcache.urls')),
+    re_path(r"^admin/clearcache/", include("clearcache.urls")),
     path(settings.ADMIN_URL + "/", admin.site.urls),
     re_path(r"^adminactions/", include("adminactions.urls")),
     re_path(

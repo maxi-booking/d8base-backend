@@ -14,7 +14,8 @@ from .db import AbstractSaver, DeleteSaver
 from .exceptions import AvailabilityError, AvailabilityValueError
 from .request import (AbstractRequestProcessor, Request,
                       RequestAppendProcessor, RequestYearProcessor)
-from .restrictions import AbstractRestriction, ClosedPeriodsRestriction
+from .restrictions import (AbstractRestriction, ClosedPeriodsRestriction,
+                           OrderRestriction)
 
 T = TypeVar("T", bound="AbstractGenerator")
 
@@ -119,7 +120,10 @@ class AvailabilityGenerator():
     saver: AbstractSaver = DeleteSaver()
     request_processor: AbstractRequestProcessor
     logger: logging.Logger
-    restrictions: List[AbstractRestriction] = [ClosedPeriodsRestriction()]
+    restrictions: List[AbstractRestriction] = [
+        ClosedPeriodsRestriction(),
+        OrderRestriction()
+    ]
 
     def __init__(self, request: Request):
         """Construct the object."""

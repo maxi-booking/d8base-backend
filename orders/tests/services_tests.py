@@ -13,6 +13,8 @@ from users.models import User
 
 pytestmark = pytest.mark.django_db
 
+# pylint: disable=protected-access
+
 
 def test_order_auto_filler_set_status(services: QuerySet):
     """Should set the order status."""

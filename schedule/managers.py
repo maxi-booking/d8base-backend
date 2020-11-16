@@ -44,7 +44,7 @@ class AvailabilitySlotManager(models.Manager):
         self,
         start: arrow.Arrow,
         end: arrow.Arrow,
-        service: "Professional",
+        service: "Service",
     ) -> QuerySet:
         """Get entries that encompass the specified interval."""
         professional: "Professional" = service.professional
@@ -64,7 +64,7 @@ class AvailabilitySlotManager(models.Manager):
         start: arrow.Arrow,
         end: arrow.Arrow,
         professional: "Professional",
-        service: Optional["Professional"] = None,
+        service: Optional["Service"] = None,
     ) -> QuerySet:
         """Return between the dates."""
         query = self.filter(

@@ -1,4 +1,5 @@
 """The orders validators module."""
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 import arrow
@@ -11,6 +12,7 @@ from schedule.models import AvailabilitySlot
 
 if TYPE_CHECKING:
     from .models import Order
+    from services.models import Service
 
 
 def validate_order_dates(order: "Order"):
@@ -54,12 +56,59 @@ def validate_order_client(order: "Order"):
 
 def validate_order_availability(order: "Order"):
     """Validate the order availability."""
-    if order.status in [order.STATUS_COMPLETE, order.STATUS_CANCELED]:
+    if order.status in [order.STATUS_COMPLETED, order.STATUS_CANCELED]:
         return
+    if not order.service.is_enabled:
+        raise ValidationError("The service is disabled")
+
+    # new order
+    if not order.pk:
+        _validate_slots(
+            arrow.get(order.start_datetime),
+            arrow.get(order.end_datetime),
+            order.service,
+        )
+        return
+
+    manager = apps.get_model("orders", "Order").objects
+    saved_order: "Order" = manager.get(pk=order.pk)
+
+    # the edited order does not overlap with the existing order
+    if order.end_datetime <= saved_order.start_datetime or \
+            order.start_datetime >= saved_order.end_datetime:
+        _validate_slots(
+            order.start_datetime,
+            order.end_datetime,
+            order.service,
+        )
+    # the edited order overlaps with the existing order
+    else:
+        # tail
+        if order.start_datetime < saved_order.start_datetime:
+            _validate_slots(
+                order.start_datetime,
+                saved_order.start_datetime,
+                order.service,
+            )
+        # head
+        if order.end_datetime > saved_order.end_datetime:
+            _validate_slots(
+                saved_order.end_datetime,
+                order.end_datetime,
+                order.service,
+            )
+
+
+def _validate_slots(
+    start: datetime,
+    end: datetime,
+    service: "Service",
+):
+    """Validate the availability slots."""
     slots = AvailabilitySlot.objects.get_encompassing_interval(
-        arrow.get(order.start_datetime),
-        arrow.get(order.end_datetime),
-        order.service,
+        arrow.get(start),
+        arrow.get(end),
+        service,
     )
     if not slots.count():
         raise ValidationError("Availability slots not found")

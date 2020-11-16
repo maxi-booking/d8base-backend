@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import List, Optional
 
+from orders.models import Order
 from schedule.models import (AbstractPeriod, AvailabilitySlot, ClosedPeriod,
                              ProfessionalClosedPeriod, ServiceClosedPeriod)
 
@@ -128,6 +129,39 @@ class ClosedPeriodsRestriction(AbstractRestriction):
         for slot in self._slots:
             slots = [slot]
             for period in self._get_closed_periods_for_slot(slot):
+                slots = self._slots_modifier.get_processed_slots(slots, period)
+            processed_slots.extend(slots)
+        return processed_slots
+
+
+class OrderRestriction(AbstractRestriction):
+    """The order restriction."""
+
+    orders: Optional[List[Order]] = None
+
+    def _get_orders(self) -> List[Order]:
+        """Get the orders."""
+        if self.orders is None:
+            self.orders = list(
+                Order.objects.get_between_dates(
+                    self._request.start_datetime,
+                    self._request.end_datetime,
+                    self._request.professional,
+                    self._request.service,
+                ).exclude(status__in=(
+                    Order.STATUS_CANCELED,
+                    Order.STATUS_COMPLETED,
+                )))
+        return self.orders
+
+    def _apply(self) -> List[AvailabilitySlot]:
+        """Apply the restriction to the availability slots."""
+        processed_slots: List[AvailabilitySlot] = []
+        self.orders = None
+
+        for slot in self._slots:
+            slots = [slot]
+            for period in self._get_orders():
                 slots = self._slots_modifier.get_processed_slots(slots, period)
             processed_slots.extend(slots)
         return processed_slots

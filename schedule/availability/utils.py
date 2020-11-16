@@ -12,6 +12,7 @@ from .request import Request
 if TYPE_CHECKING:
     from professionals.models import Professional
     from services.models import Service
+    from orders.models import Order
 
 
 def delete_expired_availability_slots():
@@ -48,3 +49,10 @@ def generate_for_service(
     request.service = service
     request.append_days = append_days
     get_availability_generator(request).generate()
+
+
+def generate_for_order(order: "Order"):
+    """Generate slots form the order for the year."""
+    generate_for_professional(order.service.professional)
+    if not order.service.is_base_schedule:
+        generate_for_service(order.service)

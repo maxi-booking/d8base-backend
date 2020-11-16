@@ -34,13 +34,13 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
     STATUS_NOT_CONFIRMED: str = "not_confirmed"
     STATUS_CONFIRMED: str = "confirmed"
     STATUS_PAID: str = "paid"
-    STATUS_COMPLETE: str = "complete"
+    STATUS_COMPLETED: str = "complete"
     STATUS_CANCELED: str = "canceled"
     STATUS_CHOICES = [
         (STATUS_NOT_CONFIRMED, _("not confirmed")),
         (STATUS_CONFIRMED, _("confirmed")),
         (STATUS_PAID, _("paid")),
-        (STATUS_COMPLETE, _("complete")),
+        (STATUS_COMPLETED, _("complete")),
         (STATUS_CANCELED, _("canceled")),
     ]
 
@@ -90,19 +90,19 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         db_index=True,
     )
     first_name = models.CharField(
-        _('first name'),
+        _("first name"),
         max_length=30,
         null=False,
         blank=True,
     )
     last_name = models.CharField(
-        _('last name'),
+        _("last name"),
         max_length=150,
         null=False,
         blank=True,
     )
     phone = PhoneNumberField(
-        _('phone'),
+        _("phone"),
         blank=True,
         null=True,
         db_index=True,

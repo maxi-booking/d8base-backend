@@ -9,6 +9,7 @@ from django.db.models import QuerySet
 from schedule.availability.exceptions import AvailabilityValueError
 from schedule.availability.request import Request
 from schedule.availability.restrictions import (ClosedPeriodsRestriction,
+                                                OrderRestriction,
                                                 SlotsModifier)
 from schedule.models import (AvailabilitySlot, ProfessionalClosedPeriod,
                              ServiceClosedPeriod)
@@ -16,6 +17,63 @@ from schedule.models import (AvailabilitySlot, ProfessionalClosedPeriod,
 pytestmark = pytest.mark.django_db
 
 # pylint: disable=protected-access
+
+
+def test_order_restriction_get_orders(orders: QuerySet):
+    """Should return the orders."""
+    order = orders.first()
+    restriction = OrderRestriction()
+    request = Request()
+    request.start_datetime = arrow.utcnow()
+    request.end_datetime = arrow.utcnow().shift(days=2)
+    request.professional = order.service.professional
+    request.service = order.service
+
+    result = restriction.set_request(request)._get_orders()
+    assert len(result) == 1
+
+    request.service = None
+    restriction.orders = None
+    result = restriction.set_request(request)._get_orders()
+    assert len(result) == 2
+
+
+def test_order_restriction_apply(orders: QuerySet):
+    """Should apply the orders restriction."""
+    order = orders.first()
+    professional = order.service.professional
+    restriction = OrderRestriction()
+
+    start = arrow.utcnow()
+
+    request = Request()
+    request.start_datetime = start.shift(days=-1)
+    request.end_datetime = start.shift(days=20)
+    request.professional = professional
+
+    slot1 = AvailabilitySlot()
+    slot1.professional = professional
+    slot1.start_datetime = start.shift(hours=3).datetime
+    slot1.end_datetime = start.shift(hours=3, minutes=30).datetime
+
+    slot2 = AvailabilitySlot()
+    slot2.professional = professional
+    slot2.start_datetime = start.shift(days=2).datetime
+    slot2.end_datetime = start.shift(days=3).datetime
+
+    with pytest.raises(AvailabilityValueError) as error:
+        restriction.apply()
+    assert "request is not set." in str(error)
+
+    restriction.set_request(request)
+
+    with pytest.raises(AvailabilityValueError) as error:
+        restriction.apply()
+    assert "slots are not set." in str(error)
+
+    restriction.set_slots([slot1, slot2])
+    result = restriction.apply()
+    assert result == [slot2]
 
 
 def test_closed_periods_restriction_apply(

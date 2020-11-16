@@ -4,11 +4,31 @@ import pytest
 from django.db.models.query import QuerySet
 from pytest_mock import MockFixture
 
+from orders.models import Order
 from schedule.availability.utils import (delete_expired_availability_slots,
+                                         generate_for_order,
                                          generate_for_professional,
                                          generate_for_service)
 
 pytestmark = pytest.mark.django_db
+
+
+def test_generate_for_order(
+    services: QuerySet,
+    mocker: MockFixture,
+):
+    """Should run the generator."""
+    service = services.first()
+    service.is_base_schedule = False
+    order = Order()
+    order.service = service
+    professional_generator = mocker.patch(
+        "schedule.availability.utils.generate_for_professional")
+    service_generator = mocker.patch(
+        "schedule.availability.utils.generate_for_service")
+    generate_for_order(order)
+    professional_generator.assert_called_once_with(order.service.professional)
+    service_generator.assert_called_once_with(order.service)
 
 
 def test_generate_for_professional(

@@ -1,11 +1,14 @@
 """The orders managers module."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
+import arrow
 from django.db import models
 from django.db.models.query import QuerySet
 
 if TYPE_CHECKING:
     from .models import Order
+    from professionals.models import Professional
+    from services.models import Service
 
 
 class OrdersManager(models.Manager):
@@ -34,4 +37,24 @@ class OrdersManager(models.Manager):
         )
         if order.pk:
             query = query.exclude(pk=order.pk)
+        return query
+
+    def get_between_dates(
+        self,
+        start: arrow.Arrow,
+        end: arrow.Arrow,
+        professional: "Professional",
+        service: Optional["Service"] = None,
+    ) -> QuerySet:
+        """Return between the dates."""
+        if service and service.is_enabled:
+            services = [service]
+        else:
+            services = professional.services.all()
+        query = self.filter(
+            service__in=services,
+            start_datetime__lte=end.datetime,
+            end_datetime__gte=start.datetime,
+        )
+
         return query

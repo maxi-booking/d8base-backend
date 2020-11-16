@@ -103,8 +103,10 @@ def test_validate_order_availability(
     availability_slots: QuerySet,
 ):
     """Should validate orders availability."""
+    # pylint: disable=too-many-statements
     service = availability_slots.exclude(service__isnull=True).first().service
     service.is_base_schedule = False
+    service.is_enabled = False
     service.save()
     start = arrow.utcnow().replace(
         hour=0,
@@ -121,18 +123,62 @@ def test_validate_order_availability(
 
     with pytest.raises(ValidationError) as error:
         validate_order_availability(order)
+    assert "service is disabled" in str(error)
+
+    service.is_enabled = True
+    service.save()
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_availability(order)
     assert "slots not found" in str(error)
 
-    order.status = Order.STATUS_COMPLETE
+    order.status = Order.STATUS_COMPLETED
     validate_order_availability(order)
 
     order.status = Order.STATUS_CANCELED
     validate_order_availability(order)
 
+    # save a new order
     order.status = Order.STATUS_CONFIRMED
     order.start_datetime = start.shift(hours=11).datetime
     order.end_datetime = start.shift(hours=15).datetime
     validate_order_availability(order)
+    order.save()
+
+    # update the order: less than the saved order
+    order.start_datetime = start.shift(hours=13).datetime
+    order.end_datetime = start.shift(hours=14).datetime
+    validate_order_availability(order)
+    order.save()
+
+    # update the order: tail
+    order.start_datetime = start.shift(hours=12).datetime
+    order.end_datetime = start.shift(hours=14).datetime
+    validate_order_availability(order)
+    order.save()
+
+    # update the order: head
+    order.start_datetime = start.shift(hours=12).datetime
+    order.end_datetime = start.shift(hours=14, minutes=30).datetime
+    validate_order_availability(order)
+    order.save()
+
+    # update the order: head and tail
+    order.start_datetime = start.shift(hours=11).datetime
+    order.end_datetime = start.shift(hours=15).datetime
+    validate_order_availability(order)
+    order.save()
+
+    # update the order: the other date
+    order.start_datetime = start.shift(hours=11, days=2).datetime
+    order.end_datetime = start.shift(hours=15, days=2).datetime
+    validate_order_availability(order)
+    order.save()
+
+    order.start_datetime = start.shift(hours=11, days=1).datetime
+    order.end_datetime = start.shift(hours=15, days=1).datetime
+    validate_order_availability(order)
+    order.save()
 
 
 def test_validate_order_status():
