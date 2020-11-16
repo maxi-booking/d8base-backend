@@ -38,6 +38,7 @@ setup(
         "djangorestframework-gis==0.16",
         "django-rest-registration==0.5.6",
         "django-extra-fields==3.0.2",
+        "django-clearcache==1.1.1",
         "django-extensions==3.0.9",
         "django-debug-toolbar==3.1.1",
         "django-reversion==3.0.8",

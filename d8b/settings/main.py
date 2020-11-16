@@ -40,6 +40,7 @@ for domain in ENV.list("CORS_ORIGIN_REGEX_WHITELIST", default=[]):
 INSTALLED_APPS = [
     "corsheaders",
     "modeltranslation",
+    "clearcache",
     "django.contrib.postgres",
     "django.contrib.admin",
     "django.contrib.humanize",
