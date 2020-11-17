@@ -1,6 +1,7 @@
 """The orders calculator module."""
 
 from abc import ABC, abstractmethod
+from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -27,7 +28,8 @@ class Calculator(AbstractCalculator):
         try:
             price: "Price" = order.service.price
             if price.is_price_fixed and price.price:
-                return price.price
+                return price.price * Decimal(
+                    order.duration / order.service.duration)
         except ObjectDoesNotExist:
             pass
         return None

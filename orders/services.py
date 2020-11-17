@@ -1,8 +1,9 @@
 """The orders services module."""
-
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
+import arrow
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.module_loading import import_string
 
 from d8b.settings import get_settings
@@ -11,6 +12,12 @@ from .calc import AbstractCalculator
 
 if TYPE_CHECKING:
     from .models import Order
+
+
+# TODO: test it
+def is_sent_order_updatable(order: "Order") -> bool:
+    """Check if the order can be updated."""
+    return order.start_datetime > arrow.utcnow().datetime
 
 
 class OrderAutoFiller():
@@ -57,7 +64,10 @@ class OrderAutoFiller():
 
     def fill(self):
         """Fill the order."""
-        self._set_status()
-        self._set_end_datetime()
-        self._set_contacts()
-        self._set_price()
+        try:
+            self._set_status()
+            self._set_end_datetime()
+            self._set_contacts()
+            self._set_price()
+        except ObjectDoesNotExist:
+            pass

@@ -269,6 +269,11 @@ REST_FRAMEWORK = {
         "d8b.permissions.DjangoModelPermissionsGet",
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_RENDERER_CLASSES":
+        ["rest_framework.renderers.JSONRenderer"] if not DEBUG else [
+            "rest_framework.renderers.BrowsableAPIRenderer",
+            "rest_framework.renderers.JSONRenderer",
+        ],
     "DEFAULT_FILTER_BACKENDS": (
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",
@@ -281,7 +286,7 @@ REST_FRAMEWORK = {
     )
 }
 
-# Sentry
+# sentry
 if not DEBUG and not TESTS:  # pragma: no cover
     from sentry_sdk.integrations.django import DjangoIntegration
     import sentry_sdk

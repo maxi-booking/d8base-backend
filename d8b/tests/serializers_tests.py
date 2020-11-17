@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from pytest_mock import MockFixture
 
 from d8b.serializers import ModelCleanFieldsSerializer
+from users.models import User
 
 pytestmark = pytest.mark.django_db
 
@@ -23,12 +24,15 @@ def test_model_clean_fields_serializer(mocker: MockFixture):
     clean = mocker.Mock(return_value="clean")
     serializer = MockModelCleanFieldsSerializer()
     serializer.Meta.model.full_clean = full_clean
-    serializer.Meta.model.clean = clean
     serializer.validate({})
 
     assert full_clean.called
 
-    serializer.instance = {"instance": True}
+    copy_mock = mocker.patch("d8b.serializers.deepcopy")
+    copy_mock.return_value = clean
+    serializer.instance = User()
+    serializer.instance.clean = clean
     serializer.validate({})
 
-    assert clean.called
+    copy_mock.assert_called_once_with(serializer.instance)
+    clean.clean.assert_called_once()

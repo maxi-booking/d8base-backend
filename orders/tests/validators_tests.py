@@ -47,6 +47,12 @@ def test_validate_order_dates(user: User, services: QuerySet):
 
     order.service = service
     order.client = user
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_dates(order)
+    assert "be a multiple" in str(error)
+
+    order.service.duration = 60
     validate_order_dates(order)
     order.save()
 

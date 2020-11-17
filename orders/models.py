@@ -14,7 +14,9 @@ from schedule.models import AbstractPeriod
 from .managers import OrdersManager
 from .services import OrderAutoFiller
 from .validators import (validate_order_availability, validate_order_client,
-                         validate_order_dates, validate_order_status)
+                         validate_order_client_location, validate_order_dates,
+                         validate_order_service_location,
+                         validate_order_status)
 
 
 class Order(AbstractPeriod, CommonInfo, ValidationMixin):
@@ -26,6 +28,8 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         validate_order_dates,
         validate_order_status,
         validate_order_client,
+        validate_order_client_location,
+        validate_order_service_location,
         validate_order_availability,
     ]
 
@@ -46,9 +50,25 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
 
     service = models.ForeignKey(
         "services.Service",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="orders",
         verbose_name=_("service"),
+    )
+    service_location = models.ForeignKey(
+        "services.ServiceLocation",
+        on_delete=models.PROTECT,
+        related_name="orders",
+        verbose_name=_("service location"),
+        null=True,
+        blank=True,
+    )
+    client_location = models.ForeignKey(
+        "users.UserLocation",
+        on_delete=models.SET_NULL,
+        related_name="orders",
+        verbose_name=_("client location"),
+        null=True,
+        blank=True,
     )
     client = models.ForeignKey(
         "users.User",
@@ -108,6 +128,11 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         db_index=True,
     )
 
+    def full_clean(self, exclude=None, validate_unique=True):
+        """Validate the object."""
+        self.filler(self).fill()
+        return super().full_clean(exclude, validate_unique)
+
     def clean(self):
         """Validate the object."""
         self.filler(self).fill()
@@ -119,10 +144,10 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         super().save(**kwargs)
 
     @property
-    def duration(self) -> int:
+    def duration(self) -> float:
         """Return the order duration."""
         delta = self.end_datetime - self.start_datetime
-        return round(delta.total_seconds() / 60)
+        return delta.total_seconds() / 60
 
     def __str__(self) -> str:
         """Return the string representation."""

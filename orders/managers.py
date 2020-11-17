@@ -18,11 +18,13 @@ class OrdersManager(models.Manager):
         """Return a list of objects."""
         return self.all().select_related(
             "service",
+            "service_location",
+            "client_location",
             "service__professional",
             "service__professional__user",
+            "client",
             "created_by",
             "modified_by",
-            "client",
         )
 
     def get_overlapping_entries(

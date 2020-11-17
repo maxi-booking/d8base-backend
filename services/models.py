@@ -140,6 +140,10 @@ class ServiceLocation(CommonInfo, ValidationMixin):
         validators=[MinValueValidator(0.1)],
     )
 
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f"#{self.pk}: {self.location}"
+
     class Meta(CommonInfo.Meta):
         """The Metainformation."""
 

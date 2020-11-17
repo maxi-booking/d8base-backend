@@ -15,7 +15,8 @@ class OrderAdmin(VersionAdmin):
     readonly_fields = ("created", "modified", "created_by", "modified_by")
     list_display_links = ("id", )
 
-    autocomplete_fields = ("client", "service")
+    raw_id_fields = ("service_location", )
+    autocomplete_fields = ("client", "service", "client_location")
     list_filter = (
         "start_datetime",
         "end_datetime",
@@ -30,11 +31,11 @@ class OrderAdmin(VersionAdmin):
     fieldsets = (
         ("General", {
             "fields": ("service", "status", "start_datetime", "end_datetime",
-                       "note", "price")
+                       "note", "price", "service_location")
         }),
         ("Client", {
             "fields": ("client", "is_another_person", "first_name",
-                       "last_name", "phone")
+                       "last_name", "phone", "client_location")
         }),
         ("Options", {
             "fields": ("remind_before", "created", "modified", "created_by",

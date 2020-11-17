@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter as BaseRouter
 from communication.routers import get_router as get_communication_router
 from contacts.routers import get_router as get_contacts_router
 from location.routers import get_router as get_location_router
+from orders.routers import get_router as get_orders_router
 from professionals.routers import get_router as get_professionals_router
 from schedule.routers import get_router as get_schedule_router
 from services.routers import get_router as get_services_router
@@ -29,4 +30,5 @@ def get_router_urls() -> list:
     router.extend(get_communication_router())
     router.extend(get_services_router())
     router.extend(get_schedule_router())
+    router.extend(get_orders_router())
     return router.urls

@@ -1,4 +1,4 @@
-"""The professionals routers module."""
+"""The communication routers module."""
 from push_notifications.api.rest_framework import GCMDeviceAuthorizedViewSet
 from rest_framework.routers import SimpleRouter
 

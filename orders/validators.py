@@ -26,6 +26,10 @@ def validate_order_dates(order: "Order"):
     if order.start_datetime >= order.end_datetime:
         raise ValidationError(_("The dates is incorrect"))
     try:
+        # TODO: test it
+        if order.duration % order.service.duration != 0:
+            raise ValidationError(
+                _("The duration must be a multiple of the service duration"))
         if model.objects.get_overlapping_entries(order).count():
             raise ValidationError(_("Orders should not overlap"))
     except ObjectDoesNotExist as error:
@@ -37,6 +41,41 @@ def validate_order_status(order: "Order"):
     if order.start_datetime <= arrow.utcnow().datetime \
             and order.status == order.STATUS_CANCELED:
         raise ValidationError(_("Orders in the past cannot be canceled"))
+
+
+# TODO: test it
+def validate_order_service_location(order: "Order"):
+    """Validate the order service location."""
+    try:
+        service = order.service
+        if not service.service_type == service.TYPE_PROFESSIONAL_LOCATION:
+            return
+        location = order.service_location
+        if not location:
+            raise ValidationError(_("The service location is empty"))
+        if location.service != service:
+            raise ValidationError(
+                _("The service location from the other service"))
+    except ObjectDoesNotExist as error:
+        raise ValidationError(
+            _("The service or service location is empty")) from error
+
+
+# TODO: test it
+def validate_order_client_location(order: "Order"):
+    """Validate the order client location."""
+    try:
+        service = order.service
+        if not service.service_type == service.TYPE_CLIENT_LOCATION:
+            return
+        location = order.client_location
+        if not location:
+            raise ValidationError(_("The client location is empty"))
+        if location.user != order.client:
+            raise ValidationError(_("The client location from the other user"))
+    except ObjectDoesNotExist as error:
+        raise ValidationError(
+            _("The service, client, or client location is empty")) from error
 
 
 def validate_order_client(order: "Order"):
