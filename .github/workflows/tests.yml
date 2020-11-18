@@ -58,99 +58,7 @@ jobs:
         run: |
           codecov --token=${{ secrets.CODECOV_TOKEN }}
 
-      - name: git pull
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: |
-            cd ${{ secrets.BACKDIR }}
-            git pull
-
-      - name: Install nmp dependencies
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-npm-install.yml up
-
-      - name: Rebuild container of the d8b-back-django-cli service
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml build --no-cache d8b-back-django-cli
-
-      - name: Run migrations
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py migrate --no-input
-
-      - name: Static generate
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py collectstatic --no-input
-
-      - name: Messages generate
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py compilemessages -f
-
-      - name: Stop d8b-back-web container
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker container stop d8b-back-web
-
-      - name: Remove d8b-back-web container
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker container rm d8b-back-web
-
-      - name: Rebuild d8b-back-web container
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml build --no-cache d8b-back-web
-
-      - name: Start d8b-back-web container
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGEHOST }}
-          username: mb
-          passphrase: ${{ secrets.STAGEDEPLPASS }}
-          key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml up -d d8b-back-web
-
-      - name: Send email if tests or deploy are failure
+      - name: Send email if tests are failure
         uses: dawidd6/action-send-mail@v2
         if: ${{ failure() }}
         with:
@@ -158,13 +66,13 @@ jobs:
           server_port: 465
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: Failure - ${{github.repository}} - tests or deploy on push
-          body: Tests or deploy on push are failure - ${{github.repository}}
+          subject: Failure - ${{github.repository}} - tests on push
+          body: Tests on push are failure - ${{github.repository}}
           to: ${{secrets.FAIL_MAIL_RECEPIENTS}}
           from: Github actions
           content_type: text/html
 
-      - name: Send email if tests and deploy are successful
+      - name: Send email if tests are successful
         uses: dawidd6/action-send-mail@v2
         if: ${{ success() }}
         with:
@@ -172,8 +80,8 @@ jobs:
           server_port: 465
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: Success - ${{github.repository}} - tests and deploy on push
-          body: Tests and deploy on push are successful - ${{github.repository}}
+          subject: Success - ${{github.repository}} - tests on push
+          body: Tests on push are successful - ${{github.repository}}
           to: ${{secrets.SUCCESS_MAIL_RECEPIENTS}}
           from: Github actions
           content_type: text/html
