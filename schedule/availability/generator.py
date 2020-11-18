@@ -69,6 +69,9 @@ class DefaultGenerator(AbstractGenerator):
     def _combine_adjacent_slots(
             slots: List[AvailabilitySlot]) -> List[AvailabilitySlot]:
         """Combine adjacent slots."""
+        if not slots:
+            return []
+        result: List[AvailabilitySlot] = [slots[0]]
         i = 1
         while i < len(slots):
             prev = slots[i - 1]
@@ -76,10 +79,10 @@ class DefaultGenerator(AbstractGenerator):
             diff = (current.start_datetime - prev.end_datetime).total_seconds()
             if diff <= settings.AVAILABILITY_MIN_SLOT_DIFF_TO_COMBINE:
                 current.start_datetime = prev.start_datetime
-                del slots[i - 1]
+                result.pop() if result else None
+            result.append(current)
             i += 1
-
-        return slots
+        return result
 
     def _get(self) -> List[AvailabilitySlot]:
         """Generate and return availability slots."""

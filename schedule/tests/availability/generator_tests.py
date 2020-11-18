@@ -242,6 +242,70 @@ def test_default_generator_combine_adjacent_slots():
     assert result[0].start_datetime == now
     assert result[0].end_datetime == now.shift(hours=4)
 
+    slot2 = AvailabilitySlot()
+    slot2.start_datetime = slot1.end_datetime.shift(seconds=1)
+    slot2.end_datetime = slot2.start_datetime.shift(hours=1)
+
+    slot3 = AvailabilitySlot()
+    slot3.start_datetime = slot2.end_datetime.shift(seconds=1)
+    slot3.end_datetime = slot3.start_datetime.shift(hours=1)
+
+    slot4 = AvailabilitySlot()
+    slot4.start_datetime = slot3.end_datetime.shift(seconds=1)
+    slot4.end_datetime = slot4.start_datetime.shift(hours=1)
+
+    slot5 = AvailabilitySlot()
+    slot5.start_datetime = slot4.end_datetime.shift(seconds=1)
+    slot5.end_datetime = slot5.start_datetime.shift(hours=1)
+
+    result = DefaultGenerator._combine_adjacent_slots([
+        slot1,
+        slot2,
+        slot3,
+        slot4,
+        slot5,
+    ])
+    assert len(result) == 1
+    assert result[0].start_datetime == slot1.start_datetime
+    assert result[0].end_datetime == slot5.end_datetime
+
+    result = DefaultGenerator._combine_adjacent_slots([
+        slot1,
+        slot2,
+    ])
+    assert len(result) == 1
+    assert result[0].start_datetime == slot1.start_datetime
+    assert result[0].end_datetime == slot2.end_datetime
+
+    result = DefaultGenerator._combine_adjacent_slots([slot1])
+    assert len(result) == 1
+    assert result[0] == slot1
+
+    slot3 = AvailabilitySlot()
+    slot3.start_datetime = slot2.end_datetime.shift(hours=1)
+    slot3.end_datetime = slot3.start_datetime.shift(hours=1)
+
+    slot4 = AvailabilitySlot()
+    slot4.start_datetime = slot3.end_datetime.shift(seconds=1)
+    slot4.end_datetime = slot4.start_datetime.shift(hours=1)
+
+    slot5 = AvailabilitySlot()
+    slot5.start_datetime = slot4.end_datetime.shift(seconds=1)
+    slot5.end_datetime = slot5.start_datetime.shift(hours=1)
+
+    result = DefaultGenerator._combine_adjacent_slots([
+        slot1,
+        slot2,
+        slot3,
+        slot4,
+        slot5,
+    ])
+    assert len(result) == 2
+    assert result[0].start_datetime == slot1.start_datetime
+    assert result[0].end_datetime == slot2.end_datetime
+    assert result[1].start_datetime == slot3.start_datetime
+    assert result[1].end_datetime == slot5.end_datetime
+
     assert DefaultGenerator._combine_adjacent_slots([]) == []
 
 
