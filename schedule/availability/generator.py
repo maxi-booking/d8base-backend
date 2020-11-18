@@ -79,7 +79,8 @@ class DefaultGenerator(AbstractGenerator):
             diff = (current.start_datetime - prev.end_datetime).total_seconds()
             if diff <= settings.AVAILABILITY_MIN_SLOT_DIFF_TO_COMBINE:
                 current.start_datetime = prev.start_datetime
-                result.pop() if result else None
+                if result:
+                    result.pop()
             result.append(current)
             i += 1
         return result

@@ -205,6 +205,7 @@ def test_default_generator_get_service(service_schedules: QuerySet):
 
 def test_default_generator_combine_adjacent_slots():
     """Should combine the adjacent slots."""
+    # pylint: disable=too-many-statements
     slot1 = AvailabilitySlot()
     now = arrow.utcnow().replace(
         hour=0,
