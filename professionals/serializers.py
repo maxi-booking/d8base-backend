@@ -246,7 +246,7 @@ class CategorySerializer(serializers.ModelSerializer):
         """The category class serializer META class."""
 
         model = Category
-        fields = ("id", "name", "description", "order")
+        fields = ("id", "name", "description", "code", "order")
         read_only_fields = ("order", )
 
 
@@ -257,7 +257,7 @@ class SubcategorySerializer(serializers.ModelSerializer):
         """The subcategory class serializer META class."""
 
         model = Subcategory
-        fields = ("id", "category", "name", "description", "order")
+        fields = ("id", "category", "name", "description", "code", "order")
         read_only_fields = ("order", )
 
 

@@ -87,6 +87,14 @@ class BaseCategory(CommonInfo):
         null=True,
         db_index=True,
     )
+    code = models.CharField(
+        _("code"),
+        max_length=150,
+        blank=True,
+        null=True,
+        unique=True,
+        db_index=True,
+    )
     description = models.CharField(
         _("description"),
         max_length=255,

@@ -23,8 +23,8 @@ class SubcategoryInlineAdmin(SortableTabularInline, TranslationTabularInline):
     """The subcategories admin class."""
 
     model = Subcategory
-    fields = ("id", "name", "description", "created", "modified", "created_by",
-              "modified_by")
+    fields = ("id", "name", "description", "code", "created", "modified",
+              "created_by", "modified_by")
     readonly_fields = ("created", "modified", "created_by", "modified_by")
     extra = 3
 
@@ -34,8 +34,8 @@ class CategoryAdmin(SortableAdmin, VersionAdmin, TabbedTranslationAdmin):
     """The categories admin class."""
 
     model: Type = Category
-    list_display = ("id", "name", "created", "created_by")
-    search_fields = ("=id", "name")
+    list_display = ("id", "name", "code", "created", "created_by")
+    search_fields = ("=id", "name", "code")
     readonly_fields = ("created", "modified", "created_by", "modified_by")
     change_list_template_extends = "reversion/change_list.html"
 
@@ -43,7 +43,7 @@ class CategoryAdmin(SortableAdmin, VersionAdmin, TabbedTranslationAdmin):
 
     fieldsets: Tuple = (
         ("General", {
-            "fields": ("name", "description")
+            "fields": ("name", "description", "code")
         }),
         ("Options", {
             "fields": ("created", "modified", "created_by", "modified_by")
