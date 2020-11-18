@@ -91,7 +91,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
         model = Service
         fields = ("id", "professional", "name", "description", "duration",
-                  "service_type", "is_base_schedule",
+                  "booking_interval", "service_type", "is_base_schedule",
                   "is_auto_order_confirmation", "is_enabled", "price",
                   "created", "modified", "created_by", "modified_by")
         read_only_fields = ("created", "modified", "created_by", "modified_by")
@@ -131,7 +131,7 @@ class ServiceListSerializer(serializers.ModelSerializer):
 
         model = Service
         fields = ("id", "professional", "name", "description", "duration",
-                  "service_type", "is_base_schedule",
+                  "booking_interval", "service_type", "is_base_schedule",
                   "is_auto_order_confirmation", "is_enabled", "price", "tags",
                   "locations", "created", "modified")
         read_only_fields = ("created", "modified")

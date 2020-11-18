@@ -60,6 +60,12 @@ class Service(CommonInfo):
         db_index=True,
         help_text=_("duration in minutes"),
     )
+    booking_interval = models.PositiveIntegerField(
+        _("booking interval"),
+        db_index=True,
+        default=settings.D8B_BOOKING_INTERVAL,
+        help_text=_("step for booking in minutes"),
+    )
     service_type = models.CharField(
         _("account type"),
         max_length=20,
