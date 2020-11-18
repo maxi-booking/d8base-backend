@@ -1,0 +1,223 @@
+name: staging deploy
+on:
+  workflow_run:
+    workflows: ["tests"]
+    types:
+      - completed  
+  workflow_dispatch:
+
+jobs:
+  stage_deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}   
+    name: Stage deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: git pull
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: |
+              cd ${{ secrets.BACKDIR }}
+              git pull
+              
+      - name: Install nmp dependencies
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-npm-install.yml up
+
+      - name: Rebuild container of the d8b-back-django-cli service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml build --no-cache d8b-back-django-cli
+
+      - name: Run migrations
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py migrate --no-input
+
+      - name: Static generate
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py collectstatic --no-input
+
+      - name: Messages generate
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py compilemessages -f
+
+      - name: Stop d8b-back-uwsgi container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container stop d8b-back-uwsgi
+
+      - name: Remove d8b-back-uwsgi container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container rm d8b-back-uwsgi
+
+      - name: Build d8b-back-uwsgi container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml build --no-cache d8b-back-uwsgi
+
+      - name: Start d8b-back-uwsgi container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml up -d d8b-back-uwsgi
+
+      - name: Stop d8b-back-celery-beat container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container stop d8b-back-celery-beat
+
+      - name: Remove d8b-back-celery-beat container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container rm d8b-back-celery-beat
+
+      - name: Build d8b-back-celery-beat container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml build --no-cache d8b-back-celery-beat
+
+      - name: Start d8b-back-celery-beat container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml up -d d8b-back-celery-beat
+
+      - name: Stop d8b-back-celery-default container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container stop d8b-back-celery-default
+
+      - name: Remove d8b-back-celery-default container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker container rm d8b-back-celery-default
+
+      - name: Build d8b-back-celery-default container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml build --no-cache d8b-back-celery-default
+
+      - name: Start d8b-back-celery-default container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-main-composer.yml up -d d8b-back-celery-default
+
+      - name: Send email if staging deploy is failure
+        uses: dawidd6/action-send-mail@v2
+        if: ${{ failure() }}
+        with:
+          server_address: smtp.yandex.ru
+          server_port: 465
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: Failure - ${{github.repository}} - staging deploy on push 
+          body: Staging deploy on push are failure - ${{github.repository}}
+          to: ${{secrets.FAIL_MAIL_RECEPIENTS}}
+          from: Github actions
+          content_type: text/html
+              
+      - name: Send email if staging deploy is successful
+        uses: dawidd6/action-send-mail@v2
+        if: ${{ success() }}
+        with:
+          server_address: smtp.yandex.ru
+          server_port: 465
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: Success - ${{github.repository}} - staging deploy on push
+          body: Staging deploy on push are successful - ${{github.repository}}
+          to: ${{secrets.SUCCESS_MAIL_RECEPIENTS}}
+          from: Github actions
+          content_type: text/html
+
+  error_email:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}   
+    name: Send error email
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send email if tests are failure
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: smtp.yandex.ru
+          server_port: 465
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: Failure - ${{github.repository}} - tests are failure and skip staging deploy
+          body: Tests on ${{github.repository}} are failure. Staging deploy was skipped
+          to: ${{secrets.FAIL_MAIL_RECEPIENTS}}
+          from: Github actions
+          content_type: text/html
