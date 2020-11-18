@@ -26,7 +26,6 @@ def validate_order_dates(order: "Order"):
     if order.start_datetime >= order.end_datetime:
         raise ValidationError(_("The dates is incorrect"))
     try:
-        # TODO: test it
         if order.duration % order.service.duration != 0:
             raise ValidationError(
                 _("The duration must be a multiple of the service duration"))
@@ -43,7 +42,6 @@ def validate_order_status(order: "Order"):
         raise ValidationError(_("Orders in the past cannot be canceled"))
 
 
-# TODO: test it
 def validate_order_service_location(order: "Order"):
     """Validate the order service location."""
     try:
@@ -61,7 +59,6 @@ def validate_order_service_location(order: "Order"):
             _("The service or service location is empty")) from error
 
 
-# TODO: test it
 def validate_order_client_location(order: "Order"):
     """Validate the order client location."""
     try:

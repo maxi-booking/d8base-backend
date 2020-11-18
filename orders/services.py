@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from .models import Order
 
 
-# TODO: test it
 def is_sent_order_updatable(order: "Order") -> bool:
     """Check if the order can be updated."""
     return order.start_datetime > arrow.utcnow().datetime

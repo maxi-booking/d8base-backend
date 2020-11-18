@@ -79,6 +79,10 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "change_professionalclosedperiod",
     "delete_professionalclosedperiod",
 
+    # orders
+    "add_order",
+    "change_order",
+
     # contact
     "change_contact",
 

@@ -7,7 +7,6 @@ from rest_framework import serializers
 class ModelCleanFieldsSerializer(serializers.ModelSerializer):
     """The serializer to call the model clean method."""
 
-    # TODO: test it
     def validate(self, attrs):
         """Validate the object."""
         # pylint: disable=no-member

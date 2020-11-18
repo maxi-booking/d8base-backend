@@ -7,8 +7,12 @@ from django.db.models import QuerySet
 
 from orders.models import Order
 from orders.validators import (validate_order_availability,
-                               validate_order_client, validate_order_dates,
+                               validate_order_client,
+                               validate_order_client_location,
+                               validate_order_dates,
+                               validate_order_service_location,
                                validate_order_status)
+from services.models import Service
 from users.models import User
 
 pytestmark = pytest.mark.django_db
@@ -68,6 +72,74 @@ def test_validate_order_dates(user: User, services: QuerySet):
 
     order.start_datetime = now.shift(hours=6).datetime
     validate_order_dates(order)
+
+
+def test_validate_order_client_location(
+    user: User,
+    admin: User,
+    user_locations: QuerySet,
+    services: QuerySet,
+):
+    """Should validate orders client locations."""
+    service = services.exclude(professional__user=user).first()
+    order = Order()
+    order.client = user
+    order.service = service
+    order.service.service_type = Service.TYPE_CLIENT_LOCATION
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_client_location(order)
+    assert "client location is empty" in str(error)
+
+    order.client_location = user_locations.filter(user=admin).first()
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_client_location(order)
+    assert "client location from the other user" in str(error)
+
+    order.service.service_type = Service.TYPE_ONLINE
+    validate_order_client_location(order)
+
+    order.service.service_type = Service.TYPE_CLIENT_LOCATION
+    order.client_location = user_locations.filter(user=user).first()
+    validate_order_service_location(order)
+
+    order.service = None
+    with pytest.raises(ValidationError) as error:
+        validate_order_client_location(order)
+    assert "The service, client, or client location is empty" in str(error)
+
+
+def test_validate_order_service_location(user: User, services: QuerySet):
+    """Should validate orders service locations."""
+    service = services.exclude(professional__user=user).first()
+    other_service = services.filter(professional__user=user).exclude(
+        locations=None).first()
+    order = Order()
+    order.service = service
+    order.service.service_type = Service.TYPE_PROFESSIONAL_LOCATION
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_service_location(order)
+    assert "service location is empty" in str(error)
+
+    order.service_location = other_service.locations.first()
+
+    with pytest.raises(ValidationError) as error:
+        validate_order_service_location(order)
+    assert "service location from the other service" in str(error)
+
+    order.service.service_type = Service.TYPE_ONLINE
+    validate_order_service_location(order)
+
+    order.service.service_type = Service.TYPE_PROFESSIONAL_LOCATION
+    order.service_location = service.locations.first()
+    validate_order_service_location(order)
+
+    order.service = None
+    with pytest.raises(ValidationError) as error:
+        validate_order_service_location(order)
+    assert "The service or service location is empty" in str(error)
 
 
 def test_validate_order_client(user: User, services: QuerySet):

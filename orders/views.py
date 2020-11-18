@@ -1,6 +1,7 @@
 """The orders views module."""
 from typing import Optional
 
+from django.utils.translation import gettext_lazy as _
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
@@ -18,7 +19,6 @@ class SentOrdersViewSet(
 ):
     """The sent messages viewset."""
 
-    # http_method_names = ("get", "post", "head", "put")
     is_owner_filter_enabled = True
     owner_filter_field = "client"
     serializer_class = SentOrderSerializer
@@ -41,7 +41,7 @@ class SentOrdersViewSet(
     def _check_update_permission(self) -> Optional[Response]:
         if not is_sent_order_updatable(self.get_object()):
             return Response(
-                {"error": "Updating a started order is forbiden."},
+                {"error": _("Updating a started order is forbiden.")},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return None

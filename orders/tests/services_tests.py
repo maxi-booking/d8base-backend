@@ -2,18 +2,28 @@
 
 import arrow
 import pytest
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import QuerySet
 from djmoney.money import Money
 from pytest_mock import MockFixture
 
 from orders.calc import AbstractCalculator
 from orders.models import Order
-from orders.services import OrderAutoFiller
+from orders.services import OrderAutoFiller, is_sent_order_updatable
 from users.models import User
 
 pytestmark = pytest.mark.django_db
 
 # pylint: disable=protected-access
+
+
+def test_is_sent_order_updatable(orders: QuerySet):
+    """Should check if the sent order can be updated."""
+    order = orders.first()
+    assert is_sent_order_updatable(order)
+
+    order.start_datetime = arrow.utcnow().shift(seconds=-1).datetime
+    assert not is_sent_order_updatable(order)
 
 
 def test_order_auto_filler_set_status(services: QuerySet):
@@ -120,3 +130,16 @@ def test_order_auto_filler_fill(mocker: MockFixture):
     filler._set_contacts.assert_called_once()  # type: ignore
     filler._set_end_datetime.assert_called_once()  # type: ignore
     filler._set_price.assert_called_once()  # type: ignore
+
+
+def test_order_auto_filler_fill_exception(mocker: MockFixture):
+    """Should raise the exception."""
+    order = Order()
+    filler = OrderAutoFiller(order)
+    filler._set_status = mocker.MagicMock()  # type: ignore
+    filler._set_status.side_effect = ObjectDoesNotExist("test")  # type: ignore
+    filler._set_end_datetime = mocker.MagicMock(return_value=3)  # type: ignore
+    filler.fill()
+
+    filler._set_status.assert_called_once()  # type: ignore
+    filler._set_end_datetime.assert_not_called()  # type: ignore

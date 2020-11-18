@@ -14,8 +14,8 @@ def validate_service_location(location: "ServiceLocation"):
         if location.service.professional != location.location.professional:
             raise ValidationError(
                 {"location": _("Location from the other professional.")})
-    except ObjectDoesNotExist:
-        pass
+    except ObjectDoesNotExist as error:
+        raise ValidationError("Service or location is not set") from error
 
 
 def validate_service_price(price: "Price"):

@@ -22,11 +22,13 @@ class SentOrderSerializer(ModelCleanFieldsSerializer):
         many=False,
         queryset=ServiceLocation.objects.get_list(),
         allow_null=True,
+        required=False,
     )
     client_location = serializers.PrimaryKeyRelatedField(
         many=False,
         queryset=UserLocation.objects.get_list(),
         allow_null=True,
+        required=False,
     )
     price = serializers.HiddenField(default=None)
     price_amount = MoneyField(
@@ -35,7 +37,7 @@ class SentOrderSerializer(ModelCleanFieldsSerializer):
         read_only=True,
         source="price",
     )
-    end_datetime = serializers.DateTimeField(allow_null=True)
+    end_datetime = serializers.DateTimeField(allow_null=True, required=False)
 
     class Meta:
         """The metainformation."""

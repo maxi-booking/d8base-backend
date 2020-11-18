@@ -54,3 +54,8 @@ def test_validate_service_location(
 
     with pytest.raises(ValidationError):
         validate_service_location(location)
+
+    location.service = None
+    with pytest.raises(ValidationError) as error:
+        validate_service_location(location)
+    assert "is not set" in str(error)
