@@ -11,7 +11,23 @@ from d8b.settings import get_settings
 from .calc import AbstractCalculator
 
 if TYPE_CHECKING:
+    from users.models import User
     from .models import Order
+
+
+def copy_contacts_from_order_to_user(order: "Order") -> None:
+    """Copy the contacts from the order to its client."""
+    if order.is_another_person:
+        return
+    user: "User" = order.client
+    changed = False
+    for field in ("first_name", "last_name", "phone"):
+        value = getattr(order, field, None)
+        if not getattr(user, field, None) and value:
+            setattr(user, field, value)
+            changed = True
+    if changed:
+        user.save()
 
 
 def is_sent_order_updatable(order: "Order") -> bool:

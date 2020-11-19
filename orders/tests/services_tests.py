@@ -17,7 +17,34 @@ pytestmark = pytest.mark.django_db
 # pylint: disable=protected-access
 
 
-def test_is_sent_order_updatable(orders: QuerySet):
+def test_copy_contacts_from_order_to_user(orders: "QuerySet[Order]"):
+    """Should copy the contacts from the order to its client."""
+    order: Order = orders.first()
+    order.client.first_name = ""
+    order.client.last_name = ""
+    order.client.phone = None
+    order.client.save()
+    order.save()
+    order.refresh_from_db()
+
+    assert order.client.first_name == order.first_name
+    assert order.client.last_name == order.last_name
+    assert order.client.phone == order.phone
+
+    order.client.first_name = ""
+    order.client.last_name = ""
+    order.client.phone = None
+    order.client.save()
+    order.is_another_person = True
+    order.save()
+    order.refresh_from_db()
+
+    assert not order.client.first_name
+    assert not order.client.last_name
+    assert not order.client.phone
+
+
+def test_is_sent_order_updatable(orders: "QuerySet[Order]"):
     """Should check if the sent order can be updated."""
     order = orders.first()
     assert is_sent_order_updatable(order)

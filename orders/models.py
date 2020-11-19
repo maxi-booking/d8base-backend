@@ -1,5 +1,5 @@
 """The orders models module."""
-from typing import Type
+from typing import Callable, Type
 
 from django.conf import settings
 from django.db import models
@@ -12,7 +12,7 @@ from d8b.models import CommonInfo, ValidationMixin
 from schedule.models import AbstractPeriod
 
 from .managers import OrdersManager
-from .services import OrderAutoFiller
+from .services import OrderAutoFiller, copy_contacts_from_order_to_user
 from .validators import (validate_order_availability, validate_order_client,
                          validate_order_client_location, validate_order_dates,
                          validate_order_service_location,
@@ -23,6 +23,7 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
     """The order class."""
 
     filler: Type = OrderAutoFiller
+    copy_contacts: Callable[["Order"], None] = copy_contacts_from_order_to_user
 
     validators = [
         validate_order_dates,
@@ -142,6 +143,7 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         """Save the object."""
         self.filler(self).fill()
         super().save(**kwargs)
+        self.copy_contacts()
 
     @property
     def duration(self) -> float:

@@ -1,4 +1,5 @@
 pudb
+mypy
 ipdb
 pytest
 pytest-env
