@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class OrdersManager(models.Manager):
     """The orders slot manager."""
 
-    def get_list(self) -> QuerySet:
+    def get_list(self) -> "QuerySet[Order]":
         """Return a list of objects."""
         return self.all().select_related(
             "service",
@@ -23,9 +23,10 @@ class OrdersManager(models.Manager):
             "service__professional",
             "service__professional__user",
             "client",
+            "client__settings",
             "created_by",
             "modified_by",
-        )
+        ).prefetch_related("client__languages")
 
     def get_overlapping_entries(
         self,

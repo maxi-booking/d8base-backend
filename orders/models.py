@@ -33,18 +33,18 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         validate_order_availability,
     ]
 
-    objects = OrdersManager()
+    objects: OrdersManager = OrdersManager()
 
     STATUS_NOT_CONFIRMED: str = "not_confirmed"
     STATUS_CONFIRMED: str = "confirmed"
     STATUS_PAID: str = "paid"
-    STATUS_COMPLETED: str = "complete"
+    STATUS_COMPLETED: str = "completed"
     STATUS_CANCELED: str = "canceled"
     STATUS_CHOICES = [
         (STATUS_NOT_CONFIRMED, _("not confirmed")),
         (STATUS_CONFIRMED, _("confirmed")),
         (STATUS_PAID, _("paid")),
-        (STATUS_COMPLETED, _("complete")),
+        (STATUS_COMPLETED, _("completed")),
         (STATUS_CANCELED, _("canceled")),
     ]
 

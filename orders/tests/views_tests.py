@@ -5,12 +5,107 @@ from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
 
+from orders.models import Order
 from users.models import User
 
 pytestmark = pytest.mark.django_db
 
 
-def test_user_professional_send_orders_list(
+def test_user_received_order_list(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+):
+    """Should return a sent orders list."""
+    query = orders.filter(service__professional__user=user)
+    obj = query.first()
+    response = client_with_token.get(reverse("user-orders-received-list"))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["count"] == query.count()
+    assert data["results"][0]["service"] == obj.service.pk
+    assert data["results"][0]["note"] == obj.note
+    assert data["results"][0]["client"]["first_name"] == obj.client.first_name
+
+
+def test_user_received_order_detail(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+    user_locations: QuerySet,
+):
+    """Should return a received order."""
+    query = orders.filter(service__professional__user=user)
+    obj: Order = query.first()
+    obj.client_location = user_locations.filter(user=user).first()
+    obj.save()
+    response = client_with_token.get(
+        reverse("user-orders-received-detail", args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["service"] == obj.service.pk
+    assert data["note"] == obj.note
+    assert data["client"]["last_name"] == obj.client.last_name
+    assert data["client"]["gender"] == obj.client.gender
+    assert data["price"] == str(obj.price.amount)
+    assert data["price_currency"] == str(obj.price.currency)
+    assert data["client_location"]["country"] == obj.client_location.country.pk
+
+
+def test_user_received_order_display_restricted_entry(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+):
+    """Should deny access to someone else"s record."""
+    obj = orders.exclude(service__professional__user=user).first()
+    response = client_with_token.get(
+        reverse("user-orders-received-detail", args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_received_order_update(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+    availability_slots: QuerySet,
+):
+    """Should be able to update a received order."""
+    order: Order = orders.filter(service__professional__user=user).first()
+    price = order.price
+    slot = availability_slots.filter(service=order.service).last()
+    response = client_with_token.patch(
+        reverse("user-orders-received-detail", args=[order.pk]),
+        {
+            "note": "new note",
+            "start_datetime": slot.start_datetime.isoformat(),
+            "end_datetime": "",
+            "price": "",
+            "phone": "+12136210002",
+        },
+    )
+    order.refresh_from_db()
+    assert response.status_code == 200
+    assert order.price != price
+    assert order.price is not None
+    assert order.modified_by == user
+    assert order.end_datetime == arrow.get(
+        order.start_datetime).shift(minutes=order.service.duration).datetime
+
+
+def test_user_received_order_update_restricted_entry(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+):
+    """Should deny access to someone else"s record."""
+    obj: Order = orders.exclude(service__professional__user=user).first()
+    response = client_with_token.post(
+        reverse("user-orders-received-detail", args=[obj.pk]), {"note": "new"})
+    assert response.status_code == 405
+
+
+def test_user_send_orders_list(
     user: User,
     client_with_token: Client,
     orders: QuerySet,
@@ -27,7 +122,7 @@ def test_user_professional_send_orders_list(
     assert data["results"][0]["note"] == obj.note
 
 
-def test_user_professional_schedule_detail(
+def test_user_sent_order_detail(
     user: User,
     client_with_token: Client,
     orders: QuerySet,
@@ -44,7 +139,7 @@ def test_user_professional_schedule_detail(
     assert data["price_currency"] == str(obj.price.currency)
 
 
-def test_user_professional_schedule_restricted_entry(
+def test_user_sent_order_display_restricted_entry(
     client_with_token: Client,
     orders: QuerySet,
 ):

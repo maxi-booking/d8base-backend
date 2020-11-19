@@ -6,8 +6,33 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
 from .models import Order
-from .serializers import SentOrderSerializer
+from .serializers import ReceivedOrderSerializer, SentOrderSerializer
 from .services import is_sent_order_updatable
+
+
+class ReceivedOrdersViewSet(
+        mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet,
+):
+    """The received messages viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = "service__professional__user"
+    serializer_class = ReceivedOrderSerializer
+    queryset = Order.objects.get_list()
+
+    search_fields = ("=id", "note", "first_name", "last_name", "phone",
+                     "client__first_name", "client__last_name",
+                     "client__email", "service__name", "service__description")
+
+    filterset_fields = {
+        "start_datetime": ["gte", "lte", "exact", "gt", "lt"],
+        "end_datetime": ["gte", "lte", "exact", "gt", "lt"],
+        "is_another_person": ["exact"],
+        "status": ["in"],
+    }
 
 
 class SentOrdersViewSet(

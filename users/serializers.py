@@ -162,6 +162,18 @@ class UserLocationSerializer(
         read_only_fields = ("created", "modified", "created_by", "modified_by")
 
 
+class UserLocationInlineSerializer(serializers.ModelSerializer):
+    """The user inline location serializer."""
+
+    class Meta:
+        """The metainformation."""
+
+        model = UserLocation
+
+        fields = ("id", "country", "region", "subregion", "city", "district",
+                  "postal_code", "address", "coordinates", "units", "timezone")
+
+
 class UserSerializer(serializers.ModelSerializer):
     """The user serializer."""
 

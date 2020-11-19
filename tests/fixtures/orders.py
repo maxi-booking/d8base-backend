@@ -15,7 +15,7 @@ def orders(
     users: QuerySet,
     professionals: QuerySet,
     services: QuerySet,
-) -> QuerySet:
+) -> "QuerySet[Order]":
     """Return a services queryset."""
     # pylint: disable=unused-argument
     user = users.first()
