@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
+from .filtersets import ReceivedOrdersFilterSet
 from .models import Order
 from .serializers import ReceivedOrderSerializer, SentOrderSerializer
 from .services import is_sent_order_updatable
@@ -27,12 +28,7 @@ class ReceivedOrdersViewSet(
                      "client__first_name", "client__last_name",
                      "client__email", "service__name", "service__description")
 
-    filterset_fields = {
-        "start_datetime": ["gte", "lte", "exact", "gt", "lt"],
-        "end_datetime": ["gte", "lte", "exact", "gt", "lt"],
-        "is_another_person": ["exact"],
-        "status": ["in"],
-    }
+    filterset_class = ReceivedOrdersFilterSet
 
 
 class SentOrdersViewSet(
