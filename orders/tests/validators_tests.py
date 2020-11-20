@@ -5,17 +5,36 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 
-from orders.models import Order
-from orders.validators import (validate_order_availability,
-                               validate_order_client,
-                               validate_order_client_location,
-                               validate_order_dates,
-                               validate_order_service_location,
-                               validate_order_status)
+from orders.models import Order, OrderReminder
+from orders.validators import (
+    validate_order_availability, validate_order_client,
+    validate_order_client_location, validate_order_dates,
+    validate_order_reminder_recipient, validate_order_service_location,
+    validate_order_status)
 from services.models import Service
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_validate_order_reminder_recipient(
+    user: User,
+    orders: "QuerySet[Order]",
+):
+    """Should validate the order reminder recipient field."""
+    order: Order = orders.first()
+    reminder = OrderReminder()
+    reminder.order = order
+    reminder.recipient = user
+    with pytest.raises(ValidationError) as error:
+        validate_order_reminder_recipient(reminder)
+    assert "be either the client or the professional" in str(error)
+
+    reminder.recipient = order.client
+    validate_order_reminder_recipient(reminder)
+
+    reminder.recipient = order.service.professional.user
+    validate_order_reminder_recipient(reminder)
 
 
 def test_validate_order_dates(user: User, services: QuerySet):

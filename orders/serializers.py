@@ -88,7 +88,7 @@ class SentOrderSerializer(ModelCleanFieldsSerializer):
                   "client_location", "status", "note", "price", "price_amount",
                   "price_currency", "is_another_person", "first_name",
                   "last_name", "phone", "start_datetime", "end_datetime",
-                  "duration", "remind_before", "created", "modified")
+                  "duration", "created", "modified")
         read_only_fields = ("client", "status", "price", "price_currency",
                             "duration", "created", "modified", "created_by",
                             "modified_by")

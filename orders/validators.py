@@ -11,8 +11,17 @@ from d8b.validators import validate_datetime_in_future
 from schedule.models import AvailabilitySlot
 
 if TYPE_CHECKING:
-    from .models import Order
+    from .models import Order, OrderReminder
     from services.models import Service
+
+
+def validate_order_reminder_recipient(reminder: "OrderReminder"):
+    """Validate the order reminder recipient field."""
+    user = reminder.recipient
+    order = reminder.order
+    if user not in (order.client, order.service.professional.user):
+        raise ValidationError(
+            _("The recipient must be either the client or the professional"))
 
 
 def validate_order_dates(order: "Order"):

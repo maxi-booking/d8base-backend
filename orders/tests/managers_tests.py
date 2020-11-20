@@ -2,12 +2,41 @@
 
 import arrow
 import pytest
+from django.conf import settings
 from django.db.models import QuerySet
 
-from orders.models import Order
+from orders.models import Order, OrderReminder
 from services.models import Service
 
 pytestmark = pytest.mark.django_db
+
+
+def test_order_reminder_manager_get_for_notification(
+        orders: "QuerySet[Order]"):
+    """Should return a list of reminders to notify.."""
+    step: int = settings.D8B_REMINDER_INTERVAL
+    order: Order = orders.first()
+    for i in range(1, 5):
+        reminder = OrderReminder()
+        reminder.order = order
+        reminder.recipient = order.client
+        reminder.remind_before = i * step
+        reminder.save()
+
+    manager = OrderReminder.objects
+    assert not manager.get_for_notification().count()
+
+    order.start_datetime = arrow.utcnow().shift(minutes=-1).datetime
+    reminder.order = order
+    reminder.remind_before_datetime = step
+    reminder.save()
+
+    assert manager.get_for_notification().count() == 1
+
+    reminder.is_reminded = True
+    reminder.save()
+
+    assert not manager.get_for_notification().count()
 
 
 def test_order_manager_get_overlapping_entries(orders: QuerySet):

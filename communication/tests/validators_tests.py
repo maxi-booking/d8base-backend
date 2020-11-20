@@ -1,16 +1,26 @@
 """The services tests module."""
 import pytest
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models.query import QuerySet
 
 from communication.models import Review, ReviewComment
 from communication.validators import (validate_message_parent,
                                       validate_message_recipient,
+                                      validate_reminder_remind_before,
                                       validate_review_comment_user,
                                       validate_review_user)
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_validate_reminder_remind_before():
+    """Should validate remind_before field."""
+    step: int = settings.D8B_REMINDER_INTERVAL
+    with pytest.raises(ValidationError):
+        validate_reminder_remind_before(int(step * 1.5))
+    validate_reminder_remind_before(step * 3)
 
 
 def test_validate_review_comment_user(admin: User, reviews: QuerySet):

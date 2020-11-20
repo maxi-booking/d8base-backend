@@ -1,6 +1,7 @@
 """The orders models module."""
-from typing import TYPE_CHECKING, Callable, List, Type
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Type
 
+import arrow
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -8,16 +9,14 @@ from djmoney.models.fields import MoneyField
 from djmoney.models.validators import MinMoneyValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
+from communication.models import AbstractReminder
 from d8b.models import CommonInfo, ValidationMixin
+from orders import validators as orders_validators
 from schedule.models import AbstractPeriod
 
-from .managers import OrdersManager
+from .managers import OrderRemindersManager, OrdersManager
 from .services import (OrderAutoFiller, copy_contacts_from_order_to_user,
                        notify_order_update)
-from .validators import (validate_order_availability, validate_order_client,
-                         validate_order_client_location, validate_order_dates,
-                         validate_order_service_location,
-                         validate_order_status)
 
 if TYPE_CHECKING:
     from users.models import User, UserLocation
@@ -32,12 +31,12 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
     notifier: Callable[["Order", bool], None] = notify_order_update
 
     validators: List[Callable[["Order"], None]] = [
-        validate_order_dates,
-        validate_order_status,
-        validate_order_client,
-        validate_order_client_location,
-        validate_order_service_location,
-        validate_order_availability,
+        orders_validators.validate_order_dates,
+        orders_validators.validate_order_status,
+        orders_validators.validate_order_client,
+        orders_validators.validate_order_client_location,
+        orders_validators.validate_order_service_location,
+        orders_validators.validate_order_availability,
     ]
 
     objects: OrdersManager = OrdersManager()
@@ -104,13 +103,6 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         validators=[MinMoneyValidator(0)],
         db_index=True,
     )
-    remind_before = models.PositiveIntegerField(
-        _("remind"),
-        null=True,
-        blank=True,
-        help_text=_("number of minutes for a reminder before the event"),
-        db_index=True,
-    )
     is_another_person = models.BooleanField(
         default=False,
         verbose_name=_("Order for another person?"),
@@ -167,3 +159,45 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         """The metainformation."""
 
         abstract = False
+
+
+class OrderReminder(AbstractReminder):
+    """The order reminder."""
+
+    subject: str = _("An order reminder.")
+    template: str = "order_reminder"
+
+    objects: OrderRemindersManager = OrderRemindersManager()
+
+    validators: List[Callable[["OrderReminder"], None]] = [
+        orders_validators.validate_order_reminder_recipient
+    ]
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="reminders",
+        verbose_name=_("order"),
+    )
+
+    def get_data(self) -> Dict[str, Any]:
+        """Return the data."""
+        order: Order = self.order
+        return {
+            "id": order.pk,
+            "note": order.note,
+            "price": str(order.price),
+            "first_name": order.first_name,
+            "last_name": order.last_name,
+            "phone": str(order.phone),
+            "service": order.service.name,
+        }
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f"Order {super().__str__()}"
+
+    def set_remind_before_datetime(self):
+        """Set the remind_before_datetime field."""
+        self.remind_before_datetime = arrow.get(self.order.start_datetime).\
+            shift(minutes=-self.remind_before).datetime

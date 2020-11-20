@@ -1,5 +1,5 @@
 """The communication models module."""
-from typing import Callable
+from typing import Any, Callable, Dict, List
 
 from django.conf import settings
 from django.core.validators import MinLengthValidator
@@ -10,12 +10,70 @@ from d8b.fields import RatingField
 from d8b.models import CommonInfo, ValidationMixin
 from users.models import User
 
-from .managers import (MessageManager, ReviewCommentManager, ReviewManager,
+from .managers import (AbstractRemindersManager, MessageManager,
+                       ReviewCommentManager, ReviewManager,
                        SuggestedMessageManager)
 from .services import (notify_new_message, notify_new_review,
                        notify_new_review_comment)
 from .validators import (validate_message_parent, validate_message_recipient,
+                         validate_reminder_remind_before,
                          validate_review_comment_user, validate_review_user)
+
+
+class AbstractReminder(CommonInfo, ValidationMixin):
+    """The abstract reminder class."""
+
+    subject: str = ""
+    template: str = ""
+    validators: List[Callable[["AbstractReminder"], None]] = []
+
+    objects: AbstractRemindersManager = AbstractRemindersManager()
+
+    remind_before = models.PositiveIntegerField(
+        _("remind"),
+        help_text=_("number of minutes for a reminder before the event"),
+        db_index=True,
+        validators=[validate_reminder_remind_before],
+    )
+    remind_before_datetime = models.DateTimeField(
+        verbose_name=_("remind before datetime"),
+        db_index=True,
+        editable=False,
+    )
+    is_reminded = models.BooleanField(
+        default=False,
+        verbose_name=_("is reminded?"),
+        db_index=True,
+        editable=False,
+    )
+    recipient: User = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="%(app_label)s_%(class)s_reminders",
+        verbose_name=_("recipient"),
+    )
+
+    def __str__(self) -> str:
+        """Return the string representation."""
+        return f"reminder #{self.pk}: {self.recipient}"
+
+    def get_data(self) -> Dict[str, Any]:
+        """Return the data."""
+        raise NotImplementedError()
+
+    def set_remind_before_datetime(self):
+        """Set the remind_before_datetime field."""
+        raise NotImplementedError()
+
+    def save(self, **kwargs):
+        """Save the object."""
+        self.set_remind_before_datetime()
+        super().save(**kwargs)
+
+    class Meta():
+        """The metainformation."""
+
+        abstract = True
 
 
 class SuggestedMessage(CommonInfo):

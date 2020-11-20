@@ -3,6 +3,7 @@ from decimal import Decimal
 from operator import attrgetter
 from typing import TYPE_CHECKING, List, Optional
 
+import arrow
 from django.db import models
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -11,7 +12,26 @@ from users.models import User
 
 if TYPE_CHECKING:
     from professionals.models import Professional
-    from .models import Message
+    from .models import Message, AbstractReminder
+
+
+class AbstractRemindersManager(models.Manager):
+    """The abstract reminder manager."""
+
+    def get_list(self) -> "QuerySet[AbstractReminder]":
+        """Return a list of reminders."""
+        return self.all().select_related(
+            "recipient",
+            "created_by",
+            "modified_by",
+        )
+
+    def get_for_notification(self) -> "QuerySet[AbstractReminder]":
+        """Return a list of reminders to notify."""
+        return self.get_list().filter(
+            is_reminded=False,
+            remind_before_datetime__lte=arrow.utcnow().datetime,
+        )
 
 
 class SuggestedMessageManager(models.Manager):

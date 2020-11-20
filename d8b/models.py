@@ -38,7 +38,8 @@ class CommonInfo(TimeStampedModel):
         db_index=True,
         on_delete=models.SET_NULL,
         verbose_name=_("created by"),
-        related_name="%(app_label)s_%(class)s_created_by")
+        related_name="%(app_label)s_%(class)s_created_by",
+    )
 
     modified_by = models.ForeignKey(
         "users.User",
@@ -48,7 +49,8 @@ class CommonInfo(TimeStampedModel):
         on_delete=models.SET_NULL,
         editable=False,
         verbose_name=_("modified by"),
-        related_name="%(app_label)s_%(class)s_modified_by")
+        related_name="%(app_label)s_%(class)s_modified_by",
+    )
 
     @staticmethod
     def get_current_user() -> Optional["User"]:

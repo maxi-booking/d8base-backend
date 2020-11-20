@@ -5,10 +5,20 @@ import arrow
 from django.db import models
 from django.db.models.query import QuerySet
 
+from communication.managers import AbstractRemindersManager
+
 if TYPE_CHECKING:
     from .models import Order
     from professionals.models import Professional
     from services.models import Service
+
+
+class OrderRemindersManager(AbstractRemindersManager):
+    """The orders slot manager."""
+
+    def get_list(self) -> "QuerySet[Order]":
+        """Return a list of reminders."""
+        return super().get_list().select_related("order", )
 
 
 class OrdersManager(models.Manager):

@@ -3,7 +3,19 @@ from django.contrib import admin
 from reversion.admin import VersionAdmin
 
 from .admin_fiters import ClientFilter, ServiceFilter
-from .models import Order
+from .models import Order, OrderReminder
+
+
+class OrderReminderInlineAdmin(admin.StackedInline):
+    """The order reminder inline admin class."""
+
+    model = OrderReminder
+    fields = ("id", "remind_before", "remind_before_datetime", "is_reminded",
+              "recipient", "created", "modified", "created_by", "modified_by")
+    readonly_fields = ("remind_before_datetime", "is_reminded", "created",
+                       "modified", "created_by", "modified_by")
+    autocomplete_fields = ("recipient", )
+    extra = 0
 
 
 @admin.register(Order)
@@ -25,6 +37,8 @@ class OrderAdmin(VersionAdmin):
         ServiceFilter,
     )
 
+    inlines = (OrderReminderInlineAdmin, )
+
     search_fields = ("=id", "note", "first_name", "last_name", "phone",
                      "client__email", "service__name", "service__description")
 
@@ -38,8 +52,7 @@ class OrderAdmin(VersionAdmin):
                        "last_name", "phone", "client_location")
         }),
         ("Options", {
-            "fields": ("remind_before", "created", "modified", "created_by",
-                       "modified_by")
+            "fields": ("created", "modified", "created_by", "modified_by")
         }),
     )
     list_select_related = (

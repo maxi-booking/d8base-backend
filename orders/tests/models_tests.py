@@ -5,10 +5,41 @@ import pytest
 from django.db.models import QuerySet
 from pytest_mock import MockFixture
 
-from orders.models import Order
+from orders.models import Order, OrderReminder
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_order_reminder_save(orders: "QuerySet[Order]"):
+    """Should set the remind_before_datetime field."""
+    order: Order = orders.first()
+    reminder = OrderReminder()
+    reminder.order = order
+    reminder.recipient = order.client
+    reminder.remind_before = 30
+    reminder.save()
+
+    assert reminder.remind_before_datetime == arrow.get(
+        order.start_datetime).shift(minutes=-30).datetime
+    assert reminder.is_reminded is False
+
+
+def test_order_reminder_get_data(orders: "QuerySet[Order]"):
+    """Should return the order data."""
+    order: Order = orders.first()
+    reminder = OrderReminder()
+    reminder.order = order
+
+    assert reminder.get_data() == {
+        "id": order.pk,
+        "note": order.note,
+        "price": str(order.price),
+        "first_name": order.first_name,
+        "last_name": order.last_name,
+        "phone": str(order.phone),
+        "service": order.service.name,
+    }
 
 
 def test_order_duration():

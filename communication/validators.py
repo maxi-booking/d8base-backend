@@ -1,11 +1,20 @@
 """The communication validators module."""
 from typing import TYPE_CHECKING
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 if TYPE_CHECKING:
     from .models import Message, Review, ReviewComment
+
+
+def validate_reminder_remind_before(remind_before: int):
+    """Validate the remind_before field."""
+    step: int = settings.D8B_REMINDER_INTERVAL
+    if remind_before % step != 0:
+        raise ValidationError(
+            _("The value must be a multiple of ") + str(step))
 
 
 def validate_message_recipient(obj: "Message"):
