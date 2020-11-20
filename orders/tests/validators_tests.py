@@ -104,7 +104,7 @@ def test_validate_order_client_location(
     order.client_location = user_locations.filter(user=user).first()
     validate_order_service_location(order)
 
-    order.service = None
+    order.service = None  # type: ignore
     with pytest.raises(ValidationError) as error:
         validate_order_client_location(order)
     assert "The service, client, or client location is empty" in str(error)
@@ -136,7 +136,7 @@ def test_validate_order_service_location(user: User, services: QuerySet):
     order.service_location = service.locations.first()
     validate_order_service_location(order)
 
-    order.service = None
+    order.service = None  # type: ignore
     with pytest.raises(ValidationError) as error:
         validate_order_service_location(order)
     assert "The service or service location is empty" in str(error)

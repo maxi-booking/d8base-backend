@@ -1,0 +1,20 @@
+{% extends 'emails/base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+
+    {% if is_created %}
+        <p>A new order notification.</p>
+    {% else %}
+        <p>An updated order notification.</p>
+    {% endif %}
+
+    <p>id: {{ id }}</p>
+    <p>service: {{ service }}</p>
+    <p>note: {{ note }}</p>
+    <p>price: {{ price }}</p>
+    <p>first_name: {{ first_name }}</p>
+    <p>last_name: {{ last_name }}</p>
+    <p>phone: {{ phone }}</p>
+{% endblock %}

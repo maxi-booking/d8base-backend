@@ -35,7 +35,7 @@ class Service(CommonInfo):
         (TYPE_CLIENT_LOCATION, _("at the client's location")),
     ]
 
-    professional = models.ForeignKey(
+    professional: Professional = models.ForeignKey(
         Professional,
         on_delete=models.CASCADE,
         related_name="services",

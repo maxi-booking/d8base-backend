@@ -1,11 +1,13 @@
 """The orders services module."""
 from datetime import timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 import arrow
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
 
+from communication.notifications import Messenger
 from d8b.settings import get_settings
 
 from .calc import AbstractCalculator
@@ -13,6 +15,43 @@ from .calc import AbstractCalculator
 if TYPE_CHECKING:
     from users.models import User
     from .models import Order
+
+
+def notify_order_update(order: "Order", is_created: bool = False) -> None:
+    """Notify the users about the order update."""
+    professional_user = order.service.professional.user
+    client = order.client
+    if is_created:
+        subject = _("A new order has been created")
+    else:
+        subject = _("Order has been updated")
+    subject += f" #{order.pk}"
+
+    users: List["User"] = []
+
+    updater = order.modified_by if order.modified_by else order.created_by
+
+    if professional_user != updater:
+        users.append(professional_user)
+    if client != updater:
+        users.append(client)
+
+    for user in users:
+        Messenger().send(
+            user=user,
+            subject=subject,
+            template="order_update_notification",
+            context={
+                "id": order.pk,
+                "is_created": is_created,
+                "note": order.note,
+                "price": str(order.price),
+                "first_name": order.first_name,
+                "last_name": order.last_name,
+                "phone": str(order.phone),
+                "service": order.service.name,
+            },
+        )
 
 
 def copy_contacts_from_order_to_user(order: "Order") -> None:

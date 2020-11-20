@@ -1,5 +1,5 @@
 """The orders models module."""
-from typing import Callable, Type
+from typing import TYPE_CHECKING, Callable, List, Type
 
 from django.conf import settings
 from django.db import models
@@ -12,11 +12,16 @@ from d8b.models import CommonInfo, ValidationMixin
 from schedule.models import AbstractPeriod
 
 from .managers import OrdersManager
-from .services import OrderAutoFiller, copy_contacts_from_order_to_user
+from .services import (OrderAutoFiller, copy_contacts_from_order_to_user,
+                       notify_order_update)
 from .validators import (validate_order_availability, validate_order_client,
                          validate_order_client_location, validate_order_dates,
                          validate_order_service_location,
                          validate_order_status)
+
+if TYPE_CHECKING:
+    from users.models import User, UserLocation
+    from services.models import Service, ServiceLocation
 
 
 class Order(AbstractPeriod, CommonInfo, ValidationMixin):
@@ -24,8 +29,9 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
 
     filler: Type = OrderAutoFiller
     copy_contacts: Callable[["Order"], None] = copy_contacts_from_order_to_user
+    notifier: Callable[["Order", bool], None] = notify_order_update
 
-    validators = [
+    validators: List[Callable[["Order"], None]] = [
         validate_order_dates,
         validate_order_status,
         validate_order_client,
@@ -49,13 +55,13 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         (STATUS_CANCELED, _("canceled")),
     ]
 
-    service = models.ForeignKey(
+    service: "Service" = models.ForeignKey(
         "services.Service",
         on_delete=models.PROTECT,
         related_name="orders",
         verbose_name=_("service"),
     )
-    service_location = models.ForeignKey(
+    service_location: "ServiceLocation" = models.ForeignKey(
         "services.ServiceLocation",
         on_delete=models.PROTECT,
         related_name="orders",
@@ -63,7 +69,7 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         null=True,
         blank=True,
     )
-    client_location = models.ForeignKey(
+    client_location: "UserLocation" = models.ForeignKey(
         "users.UserLocation",
         on_delete=models.SET_NULL,
         related_name="orders",
@@ -71,9 +77,9 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
         null=True,
         blank=True,
     )
-    client = models.ForeignKey(
+    client: "User" = models.ForeignKey(
         "users.User",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="orders",
         verbose_name=_("user"),
     )
@@ -141,9 +147,11 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
 
     def save(self, **kwargs):
         """Save the object."""
+        is_created = not bool(self.pk)
         self.filler(self).fill()
         super().save(**kwargs)
         self.copy_contacts()
+        self.notifier(is_created)
 
     @property
     def duration(self) -> float:

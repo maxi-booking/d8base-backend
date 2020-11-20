@@ -1,20 +1,57 @@
 """The services test module."""
 
+from typing import TYPE_CHECKING, List
+
 import arrow
 import pytest
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMultiAlternatives
 from django.db.models import QuerySet
 from djmoney.money import Money
 from pytest_mock import MockFixture
 
 from orders.calc import AbstractCalculator
 from orders.models import Order
-from orders.services import OrderAutoFiller, is_sent_order_updatable
+from orders.services import (OrderAutoFiller, is_sent_order_updatable,
+                             notify_order_update)
 from users.models import User
 
 pytestmark = pytest.mark.django_db
 
+if TYPE_CHECKING:
+    from services.models import Service
+
 # pylint: disable=protected-access
+
+
+def test_notify_order_update(
+    user: User,
+    admin: User,
+    services: "QuerySet[Service]",
+    mailoutbox: List[EmailMultiAlternatives],
+):
+    """Should notify about a new review."""
+    order = Order()
+    order.service = services.filter(professional__user=admin).first()
+    order.client = user
+    order.price = Money(1, "EUR")
+
+    notify_order_update(order, is_created=True)
+    assert len(mailoutbox) == 2
+    assert admin.email in mailoutbox[0].recipients()
+    assert user.email in mailoutbox[1].recipients()
+    assert "new order" in mailoutbox[1].subject
+
+    order.created_by = admin
+    notify_order_update(order, is_created=False)
+    assert len(mailoutbox) == 3
+    assert user.email in mailoutbox[2].recipients()
+    assert "updated" in mailoutbox[2].subject
+
+    order.modified_by = user
+    notify_order_update(order, is_created=False)
+    assert len(mailoutbox) == 4
+    assert admin.email in mailoutbox[3].recipients()
 
 
 def test_copy_contacts_from_order_to_user(orders: "QuerySet[Order]"):

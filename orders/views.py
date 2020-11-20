@@ -74,13 +74,11 @@ class SentOrdersViewSet(
     def update(self, request, *args, **kwargs):
         """Update the object."""
         # pylint: disable=no-member
-        print(request.data)
         return self._check_update_permission() or \
             super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
         """Partial update the object."""
         # pylint: disable=no-member
-        print(request.data)
         return self._check_update_permission() or \
             super().partial_update(request, *args, **kwargs)

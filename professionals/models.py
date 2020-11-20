@@ -214,7 +214,7 @@ class Professional(CommonInfo):
         related_name="professionals",
         verbose_name=_("subcategory"),
     )
-    user = models.ForeignKey(
+    user: User = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="professionals",
