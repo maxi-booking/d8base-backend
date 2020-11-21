@@ -1,14 +1,146 @@
 """The views tests module."""
 import arrow
 import pytest
+from django.conf import settings
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
 
-from orders.models import Order
+from orders.models import Order, OrderReminder
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_user_order_reminders_list(
+    user: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should return a order reminders list."""
+    query = order_reminders.filter(recipient=user)
+    obj: OrderReminder = query.first()
+    response = client_with_token.get(reverse("user-order-reminders-list"))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["count"] == query.count()
+    assert data["results"][0]["remind_before"] == obj.remind_before
+    assert data["results"][0]["is_reminded"] == obj.is_reminded
+
+
+def test_user_order_reminders_detail(
+    user: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should return a user order reminder."""
+    obj: OrderReminder = order_reminders.filter(recipient=user).first()
+    response = client_with_token.get(
+        reverse("user-order-reminders-detail", args=[obj.pk]))
+    data = response.json()
+    assert response.status_code == 200
+    assert data["remind_before"] == obj.remind_before
+
+
+def test_user_order_reminders_detail_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should deny access to someone else"s record."""
+    obj: OrderReminder = order_reminders.filter(recipient=admin).first()
+    response = client_with_token.get(
+        reverse("user-order-reminders-detail", args=[obj.pk]))
+    assert response.status_code == 404
+
+
+def test_user_order_reminders_create(
+    user: User,
+    client_with_token: Client,
+    orders: QuerySet,
+):
+    """Should be able to create a user professional tag object."""
+    step: int = settings.D8B_REMINDER_INTERVAL
+    orders.update(client=user)
+    order: Order = orders.first()
+    order.reminders.all().delete()
+    response = client_with_token.post(
+        reverse("user-order-reminders-list"),
+        {
+            "remind_before": step * 2,
+            "order": order.pk,
+        },
+    )
+    assert response.status_code == 201
+    order.refresh_from_db()
+
+    reminder: OrderReminder = order.reminders.first()
+    assert not reminder.is_reminded
+    assert reminder.remind_before == step * 2
+    assert reminder.recipient == user
+
+
+def test_user_order_reminders_update(
+    user: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should be able to update a user order reminder."""
+    obj: OrderReminder = order_reminders.filter(recipient=user).first()
+    obj.order.client = user
+    obj.order.save()
+    step: int = settings.D8B_REMINDER_INTERVAL
+    response = client_with_token.patch(
+        reverse("user-order-reminders-detail", args=[obj.pk]),
+        {
+            "remind_before": step * 5,
+        },
+    )
+    obj.refresh_from_db()
+    assert response.status_code == 200
+    assert obj.remind_before == step * 5
+    assert obj.recipient == user
+    assert obj.modified_by == user
+
+
+def test_user_order_reminders_update_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should deny access to someone else"s record."""
+    obj: OrderReminder = order_reminders.filter(recipient=admin).first()
+    response = client_with_token.post(
+        reverse("user-order-reminders-detail", args=[obj.pk]),
+        {"remind_before": 10},
+    )
+    assert response.status_code == 405
+
+
+def test_user_order_reminders_delete(
+    user: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should be able to delete a user professional tag."""
+    obj: OrderReminder = order_reminders.filter(recipient=user).first()
+    response = client_with_token.delete(
+        reverse("user-order-reminders-detail", args=[obj.pk]))
+    assert response.status_code == 204
+
+    assert not order_reminders.filter(pk=obj.pk).count()
+
+
+def test_user_service_order_reminder_restricted_entry(
+    admin: User,
+    client_with_token: Client,
+    order_reminders: QuerySet,
+):
+    """Should deny access to someone else"s record."""
+    obj: OrderReminder = order_reminders.filter(recipient=admin).first()
+    response = client_with_token.delete(
+        reverse("user-order-reminders-detail", args=[obj.pk]))
+    assert response.status_code == 404
 
 
 def test_user_received_order_list(

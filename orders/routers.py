@@ -1,7 +1,8 @@
 """The orders routers module."""
 from rest_framework.routers import SimpleRouter
 
-from .views import ReceivedOrdersViewSet, SentOrdersViewSet
+from .views import (OrderReminderViewSet, ReceivedOrdersViewSet,
+                    SentOrdersViewSet)
 
 
 def get_router() -> SimpleRouter:
@@ -16,5 +17,10 @@ def get_router() -> SimpleRouter:
         r"accounts/orders/received",
         ReceivedOrdersViewSet,
         "user-orders-received",
+    )
+    router.register(
+        r"accounts/order-reminders",
+        OrderReminderViewSet,
+        "user-order-reminders",
     )
     return router

@@ -9,7 +9,29 @@ from users.models import UserLocation
 from users.serializers import (UserExtendedSerializer,
                                UserLocationInlineSerializer)
 
-from .models import Order
+from .models import Order, OrderReminder
+
+
+class OrderReminderSerializer(ModelCleanFieldsSerializer):
+    """The order reminder serializer."""
+
+    recipient = serializers.HiddenField(
+        default=serializers.CurrentUserDefault())
+    order = serializers.PrimaryKeyRelatedField(
+        many=False,
+        queryset=Order.objects.get_list(),
+    )
+
+    class Meta:
+        """The metainformation."""
+
+        model = OrderReminder
+        fields = ("id", "recipient", "order", "remind_before",
+                  "remind_before_datetime", "is_reminded", "created",
+                  "modified")
+        read_only_fields = ("recipient", "remind_before_datetime",
+                            "is_reminded", "created", "modified", "created_by",
+                            "modified_by")
 
 
 class ReceivedOrderSerializer(ModelCleanFieldsSerializer):

@@ -83,6 +83,11 @@ GROUP_USER_PERMISSIONS: List[str] = [
     "add_order",
     "change_order",
 
+    # orders reminders
+    "add_orderreminder",
+    "change_orderreminder",
+    "delete_orderreminder",
+
     # contact
     "change_contact",
 

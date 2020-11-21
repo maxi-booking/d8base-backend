@@ -24,6 +24,11 @@ def validate_order_reminder_recipient(reminder: "OrderReminder"):
             _("The recipient must be either the client or the professional"))
 
 
+def validate_order_reminder_order(reminder: "OrderReminder"):
+    """Validate the order reminder order field."""
+    validate_datetime_in_future(reminder.order.start_datetime)
+
+
 def validate_order_dates(order: "Order"):
     """Validate the order dates."""
     model = apps.get_model("orders", "Order")

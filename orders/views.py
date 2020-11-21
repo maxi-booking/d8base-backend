@@ -6,9 +6,24 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
 from .filtersets import ReceivedOrdersFilterSet
-from .models import Order
-from .serializers import ReceivedOrderSerializer, SentOrderSerializer
+from .models import Order, OrderReminder
+from .serializers import (OrderReminderSerializer, ReceivedOrderSerializer,
+                          SentOrderSerializer)
 from .services import is_sent_order_updatable
+
+
+class OrderReminderViewSet(viewsets.ModelViewSet):
+    """The order reminders viewset."""
+
+    is_owner_filter_enabled = True
+    owner_filter_field = "recipient"
+    serializer_class = OrderReminderSerializer
+    queryset = OrderReminder.objects.get_list()
+    filterset_fields = {
+        "remind_before_datetime": ["gte", "lte", "exact", "gt", "lt"],
+        "remind_before": ["gte", "lte", "exact", "gt", "lt"],
+        "is_reminded": ["exact"],
+    }
 
 
 class ReceivedOrdersViewSet(

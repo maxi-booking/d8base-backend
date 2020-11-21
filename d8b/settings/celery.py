@@ -17,6 +17,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "d8b.tasks.update_rates",
         "schedule": 60 * 60 * 24
     },
+    "notify_order_reminders": {
+        "task": "orders.tasks.notify_order_reminders",
+        "schedule": 60 * 5
+    },
     "remove_expired_availability_slots_task": {
         "task": "schedule.tasks.remove_expired_availability_slots",
         "schedule": crontab(minute="0", hour="1", day_of_week="*")

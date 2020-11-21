@@ -7,7 +7,21 @@ from django.utils.translation import gettext_lazy as _
 from communication.notifications import Messenger
 
 if TYPE_CHECKING:
-    from .models import Message, Review, ReviewComment
+    from typing import Type
+    from .models import Message, Review, ReviewComment, AbstractReminder
+
+
+def notify_reminders(model: "Type[AbstractReminder]"):
+    """Notify reminders."""
+    for reminder in model.objects.get_for_notification():
+        Messenger().send(
+            user=reminder.recipient,
+            subject=_(reminder.subject),
+            template=reminder.template,
+            context=reminder.get_data(),
+        )
+        reminder.is_reminded = True
+        reminder.save()
 
 
 def notify_new_review_comment(comment: "ReviewComment") -> None:

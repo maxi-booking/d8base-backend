@@ -170,7 +170,8 @@ class OrderReminder(AbstractReminder):
     objects: OrderRemindersManager = OrderRemindersManager()
 
     validators: List[Callable[["OrderReminder"], None]] = [
-        orders_validators.validate_order_reminder_recipient
+        orders_validators.validate_order_reminder_recipient,
+        orders_validators.validate_order_reminder_order
     ]
 
     order = models.ForeignKey(

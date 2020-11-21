@@ -612,7 +612,7 @@ def test_user_service_photos_list(
     client_with_token: Client,
     services: QuerySet,
 ):
-    """Should return a professional tags list."""
+    """Should return a service photos list."""
     obj = services.filter(professional__user=user).first().photos.first()
     response = client_with_token.get(reverse("user-service-photos-list"))
     data = response.json()
@@ -626,7 +626,7 @@ def test_user_service_photos_detail(
     client_with_token: Client,
     services: QuerySet,
 ):
-    """Should return a user professional tag."""
+    """Should return a user service photo."""
     obj = services.filter(professional__user=user).first().photos.first()
     response = client_with_token.get(
         reverse("user-service-photos-detail", args=[obj.pk]))
@@ -652,7 +652,7 @@ def test_user_service_photos_create(
     client_with_token: Client,
     services: QuerySet,
 ):
-    """Should be able to create a user professional tag object."""
+    """Should be able to create a user service photo object."""
     obj = services.filter(professional__user=user).first()
     obj.photos.all().delete()
     response = client_with_token.post(
@@ -688,7 +688,7 @@ def test_user_service_photos_update(
     client_with_token: Client,
     services: QuerySet,
 ):
-    """Should be able to update a user professional tag."""
+    """Should be able to update a user service photo."""
     obj = services.filter(professional__user=user).first().photos.first()
     response = client_with_token.patch(
         reverse("user-service-photos-detail", args=[obj.pk]),
@@ -722,7 +722,7 @@ def test_user_service_photos_delete(
     client_with_token: Client,
     services: QuerySet,
 ):
-    """Should be able to delete a user professional tag."""
+    """Should be able to delete a user service photo."""
     obj = services.filter(professional__user=user).first().photos.first()
     response = client_with_token.delete(
         reverse("user-service-photos-detail", args=[obj.pk]))

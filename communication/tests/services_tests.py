@@ -5,16 +5,49 @@ import arrow
 import pytest
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
+from django.utils.translation import gettext_lazy as _
+from pytest_mock import MockFixture
 
 from communication.models import Message, Review, ReviewComment
 from communication.services import (delete_message_from_recipient,
                                     delete_message_from_sender,
                                     mark_message_read, notify_new_message,
                                     notify_new_review,
-                                    notify_new_review_comment)
+                                    notify_new_review_comment,
+                                    notify_reminders)
+from orders.models import OrderReminder
 from users.models import User
 
 pytestmark = pytest.mark.django_db
+
+
+def test_notify_reminders(
+    order_reminders: QuerySet,
+    mocker: MockFixture,
+):
+    """Should notify reminders."""
+    send = mocker.patch("communication.services.Messenger.send")
+    reminder: OrderReminder = order_reminders.first()
+    reminder.order.start_datetime = arrow.utcnow().shift(hours=-1).datetime
+    reminder.order.save()
+    reminder.is_reminded = False
+    reminder.save()
+
+    reminder = order_reminders.last()
+    reminder.order.start_datetime = arrow.utcnow().shift(hours=-1).datetime
+    reminder.order.save()
+    reminder.is_reminded = False
+    reminder.save()
+    assert OrderReminder.objects.get_for_notification().count() == 2
+    notify_reminders(OrderReminder)
+
+    send.assert_called_with(
+        user=reminder.recipient,
+        subject=_(reminder.subject),
+        template=reminder.template,
+        context=reminder.get_data(),
+    )
+    send.call_count = 2
 
 
 def test_notify_new_review_comment(
