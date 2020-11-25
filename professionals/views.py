@@ -70,7 +70,10 @@ class ProfessionalPhotoViewSet(viewsets.ModelViewSet):
     filterset_class = ProfessionalPhotoFilterSet
 
 
-class ProfessionalPhotoListViewSet(viewsets.ReadOnlyModelViewSet):
+class ProfessionalPhotoListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The professional photo list viewset."""
 
     serializer_class = ProfessionalPhotoListSerializer
@@ -112,7 +115,10 @@ class ProfessionalTagViewSet(viewsets.ModelViewSet):
     filterset_class = ProfessionalTagFilterSet
 
 
-class ProfessionalTagListViewSet(viewsets.ReadOnlyModelViewSet):
+class ProfessionalTagListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The professional tag list viewset."""
 
     serializer_class = ProfessionalTagListSerializer
@@ -120,7 +126,10 @@ class ProfessionalTagListViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ("name", )
 
 
-class ProfessionalListViewSet(viewsets.ReadOnlyModelViewSet):
+class ProfessionalListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The professional list viewset."""
 
     serializer_class = ProfessionalListSerializer

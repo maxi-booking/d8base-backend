@@ -2,12 +2,15 @@
 from rest_framework import viewsets
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
+from d8b.viewsets import AllowAnyViewSetMixin
+
 from .filtersets import ContactFilterSet
 from .models import Contact
 from .serializers import ContactSerializer
 
 
 class ContactViewSet(
+        AllowAnyViewSetMixin,
         CacheResponseMixin,
         viewsets.ReadOnlyModelViewSet,
 ):

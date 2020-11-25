@@ -27,7 +27,10 @@ class ServiceViewSet(viewsets.ModelViewSet):
     filterset_class = ServiceFilterSet
 
 
-class ServiceListViewSet(viewsets.ReadOnlyModelViewSet):
+class ServiceListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The service viewset."""
 
     serializer_class = ServiceListSerializer
@@ -68,7 +71,10 @@ class ServiceLocationViewSet(viewsets.ModelViewSet):
     filterset_class = ServiceLocationFilterSet
 
 
-class ServiceTagListViewSet(viewsets.ReadOnlyModelViewSet):
+class ServiceTagListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The service tag list viewset."""
 
     serializer_class = ServiceTagListSerializer
@@ -87,7 +93,10 @@ class ServicePhotoViewSet(viewsets.ModelViewSet):
     filterset_class = ServicePhotoFilterSet
 
 
-class ServicePhotoListViewSet(viewsets.ReadOnlyModelViewSet):
+class ServicePhotoListViewSet(
+        AllowAnyViewSetMixin,
+        viewsets.ReadOnlyModelViewSet,
+):
     """The service photo list viewset."""
 
     serializer_class = ServicePhotoListSerializer

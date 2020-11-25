@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from d8b.viewsets import AllowAnyViewSetMixin
+
 from .filtersets import (MessagesListFilterSet, ReciviedMessagesFilterSet,
                          ReviewCommentFilterSet, SentMessagesFilterSet)
 from .models import Message, Review, ReviewComment, SuggestedMessage
@@ -39,7 +41,7 @@ class UserReviewCommentViewSet(viewsets.ModelViewSet):
                      "description", "review__user__last_name")
 
 
-class ReviewListViewSet(viewsets.ReadOnlyModelViewSet):
+class ReviewListViewSet(AllowAnyViewSetMixin, viewsets.ReadOnlyModelViewSet):
     """The review list viewset."""
 
     serializer_class = ReviewListSerializer
