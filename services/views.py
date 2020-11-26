@@ -1,4 +1,5 @@
 """The services views module."""
+from django.conf import settings
 from djmoney.contrib.exchange.models import Rate
 from rest_framework import viewsets
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
@@ -113,6 +114,7 @@ class RateViewSet(
     """The rate viewset."""
 
     pagination_class = None
-    queryset = Rate.objects.all().order_by("currency")
+    queryset = Rate.objects.filter(
+        currency__in=settings.CURRENCIES).order_by("currency")
     serializer_class = RateSerializer
     filterset_fields = ("currency", )
