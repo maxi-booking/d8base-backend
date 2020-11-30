@@ -81,8 +81,8 @@ class SearchRequest():
     """The search request class."""
 
     query: Optional[str] = None
-    start_datetime: Optional[arrow.Arrow]
-    end_datetime: Optional[arrow.Arrow]
+    start_datetime: Optional[arrow.Arrow] = None
+    end_datetime: Optional[arrow.Arrow] = None
     tags: List[str]
 
     professional: SearchProfessionalRequest
@@ -124,7 +124,7 @@ class AbstractHTTPConverter(ABC):
         """Get a list param form the query params."""
         value = self._get_query_param(name)
         if value:
-            return value.split(",")
+            return list(set(value.split(",")))
         return []
 
     def _get_int_param(self, name: str) -> Optional[int]:
@@ -194,7 +194,10 @@ class HTTPToSearchLocationRequestConverter(AbstractHTTPConverter):
         x = self._get_query_param(self.COORDINATE_X_PARAM)
         y = self._get_query_param(self.COORDINATE_Y_PARAM)
         if x and y:
-            self.search_request.location.coordinate = Point(x, y)
+            try:
+                self.search_request.location.coordinate = Point(x, y)
+            except TypeError:
+                pass
 
     def _set_max_distance(self):
         """Set a max distance to the search request."""
