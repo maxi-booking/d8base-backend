@@ -26,7 +26,7 @@ def test_notify_reminders(
     mocker: MockFixture,
 ):
     """Should notify reminders."""
-    send = mocker.patch("communication.services.Messenger.send")
+    send = mocker.patch("orders.services.Messenger.send")
     reminder: OrderReminder = order_reminders.first()
     reminder.order.start_datetime = arrow.utcnow().shift(hours=-1).datetime
     reminder.order.save()

@@ -13,6 +13,7 @@ class SearchEngine():
 
     def get(self, request: SearchRequest) -> List[SearchResponse]:
         """Return the search results."""
+        # pylint: disable=no-self-use
         # remove!!
         result = []
         for professional in Professional.objects.get_extended_list()[0:10]:
