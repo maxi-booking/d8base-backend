@@ -53,6 +53,7 @@ setup(
         "django-admin-autocomplete-filter==0.6.1",
         "django-imagekit==4.0.2",
         "django-push-notifications==2.0.0",
+        "django-elasticsearch-dsl==7.1.4",
         "drf-yasg==1.17.1",
         "celery==4.4.6",
         "Werkzeug==1.0.1",

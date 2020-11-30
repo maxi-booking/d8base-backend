@@ -400,3 +400,10 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     "UPDATE_ON_DUPLICATE_REG_ID": True,
     "UNIQUE_REG_ID": True,
 }
+
+# Elasticsearch
+ELASTICSEARCH_DSL = {
+    "default": {
+        "hosts": ENV.str("ELASTICSEARCH_URL")
+    },
+}
