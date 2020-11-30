@@ -7,6 +7,7 @@ from location.routers import get_router as get_location_router
 from orders.routers import get_router as get_orders_router
 from professionals.routers import get_router as get_professionals_router
 from schedule.routers import get_router as get_schedule_router
+from search.routers import get_router as get_search_router
 from services.routers import get_router as get_services_router
 from users.routers import get_router as get_users_router
 
@@ -31,4 +32,5 @@ def get_router_urls() -> list:
     router.extend(get_services_router())
     router.extend(get_schedule_router())
     router.extend(get_orders_router())
+    router.extend(get_search_router())
     return router.urls

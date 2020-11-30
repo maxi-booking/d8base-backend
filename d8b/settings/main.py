@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "services",
     "schedule",
     "orders",
+    "search",
 ]
 
 SITE_ID = 1

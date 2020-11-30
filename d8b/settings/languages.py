@@ -107,4 +107,6 @@ LANGUAGES = (
     ("zu", _("Zulu")),
 )
 
+LANGUAGES_LIST = [x[0] for x in LANGUAGES]
+
 APP_LANGUAGES = [x for x in LANGUAGES if x[0] in MODELTRANSLATION_LANGUAGES]

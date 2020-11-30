@@ -1,0 +1,1 @@
+"""The search initialization module."""
