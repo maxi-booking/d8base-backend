@@ -84,6 +84,7 @@ class SearchRequest():
     start_datetime: Optional[arrow.Arrow] = None
     end_datetime: Optional[arrow.Arrow] = None
     tags: List[str]
+    page: int = 1
 
     professional: SearchProfessionalRequest
     service: SearchServiceRequest
@@ -395,6 +396,7 @@ class HTTPToSearchRequestConverter(AbstractHTTPConverter):
     START_DATETIME_PARAM: str = "start_datetime"
     END_DATETIME_PARAM: str = "end_datetime"
     TAGS_PARAM: str = "tags"
+    PAGE_PARAM: str = "page"
 
     converters: List[Type] = [
         HTTPToSearchProfessionalRequestConverter,
@@ -409,6 +411,12 @@ class HTTPToSearchRequestConverter(AbstractHTTPConverter):
     def _set_tags(self):
         """Set tags to the request."""
         self.search_request.tags = self._get_list_param(self.TAGS_PARAM)
+
+    def _set_page(self):
+        """Set a page to the request."""
+        page = self._get_int_param(self.PAGE_PARAM)
+        if page and page < settings.D8B_SEARCH_MAX_PAGE:
+            self.search_request.page = page
 
     def _set_datetime(self, name: str):
         """Set a datetime to the calendart request."""
@@ -426,6 +434,7 @@ class HTTPToSearchRequestConverter(AbstractHTTPConverter):
         self._set_query()
         self._set_datetime(self.START_DATETIME_PARAM)
         self._set_datetime(self.END_DATETIME_PARAM)
+        self._set_page()
 
         for converter_class in self.converters:
             converter = converter_class(

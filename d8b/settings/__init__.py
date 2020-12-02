@@ -9,6 +9,7 @@ from .messenger import *
 from .orders import *
 from .permissions import *
 from .schedule import *
+from .search import *
 from .units import *
 
 __all__ = ["get_settings"]

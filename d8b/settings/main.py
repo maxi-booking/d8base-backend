@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "djmoney",
     "djmoney.contrib.exchange",
     "push_notifications",
+    "django_elasticsearch_dsl",
 
     # d8base apps
     "d8b",
@@ -368,7 +369,7 @@ REST_REGISTRATION = {
 JWT_APPLICATION_NAME = "JWT"
 OAUTH2_PROVIDER = {
     "OAUTH2_BACKEND_CLASS": "oauth2_provider.oauth2_backends.JSONOAuthLibCore",
-    "ACCESS_TOKEN_EXPIRE_SECONDS": 3600,
+    "ACCESS_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 7,
     "SCOPES": {
         "read": "Read scope",
         "write": "Write scope",
@@ -407,3 +408,4 @@ ELASTICSEARCH_DSL = {
         "hosts": ENV.str("ELASTICSEARCH_URL")
     },
 }
+ELASTICSEARCH_DSL_PARALLEL = True
