@@ -27,7 +27,15 @@ class ServiceSearchGetter(AbstractSearchGetter):
     @staticmethod
     def _get_filters() -> filters.Handler:
         """Return the filters."""
-        return filters.CountryHandler().set_next(filters.RegionHandler())
+        country = filters.CountryHandler()
+
+        country.set_next(filters.RegionHandler()). \
+            set_next(filters.SubregionHandler()). \
+            set_next(filters.CityHandler()). \
+            set_next(filters.DistrictHandler()). \
+            set_next(filters.PostalCodeHandler())
+
+        return country
 
     def _get_base_query(self) -> QuerySet:
         """Return the getter result query."""

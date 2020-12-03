@@ -8,7 +8,7 @@ from .abstract import AbstractHandler
 
 
 class CountryHandler(AbstractHandler):
-    """The default handler interface."""
+    """The country handler."""
 
     def _check_request(self, request: SearchRequest) -> bool:
         """Check whether the handler is applicable to the request."""
