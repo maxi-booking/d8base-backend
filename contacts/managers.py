@@ -16,7 +16,7 @@ class ContactsManager(models.Manager):
         queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
         """Return a list of contacts available for the specified country."""
-        if not queryset:
+        if queryset is None:
             queryset = self.get_list()
         return queryset.\
             filter(Q(countries=None) | Q(countries=country)).\

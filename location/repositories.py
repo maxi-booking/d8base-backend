@@ -110,11 +110,16 @@ class CityRepository(BaseRepository):
         queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
         """Find cities by the name."""
-        if not queryset:
+        if queryset is None:
             queryset = self.get_list()
-        return queryset.filter(
+
+        ids = queryset.filter(
             Q(name__istartswith=name) | Q(name_std__istartswith=name)
-            | Q(alt_names__name__istartswith=name)).distinct()
+            | Q(alt_names__name__istartswith=name)).values_list(
+                "pk",
+                flat=True,
+            )
+        return queryset.filter(pk__in=ids)
 
 
 class DistrictRepository(BaseRepository):

@@ -111,7 +111,7 @@ class MessageManager(models.Manager):
         queryset: Optional[QuerySet] = None,
     ) -> QuerySet:
         """Get the interlocutor queryset."""
-        if not queryset:
+        if queryset is None:
             queryset = self.get_list()
         return queryset.filter(
             Q(recipient=interlocutor, is_deleted_from_recipient=False)
@@ -177,7 +177,7 @@ class MessageManager(models.Manager):
         query: Optional[QuerySet] = None,
     ):
         """Mark messages as read."""
-        if not query:
+        if query is None:
             query = self.all()
         query.filter(
             recipient=recipient,
