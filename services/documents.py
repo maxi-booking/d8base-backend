@@ -1,5 +1,7 @@
 """The services documents module."""
 
+from typing import Union
+
 from django.db.models.query import QuerySet
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
@@ -87,8 +89,8 @@ class ServiceDocument(Document):
 
     def get_instances_from_related(
         self,
-        related_instance: ServiceTag,
-    ) -> Service:
+        related_instance: Union[ServiceTag, Professional, ProfessionalTag],
+    ) -> Union[Service, QuerySet]:
         """Get a service from the tag."""
         # pylint: disable=no-self-use
         if isinstance(related_instance, Professional):

@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db.models.query import QuerySet
 
+from .documents import CityDocument
 from .models import Language
 
 
@@ -112,13 +113,10 @@ class CityRepository(BaseRepository):
         """Find cities by the name."""
         if queryset is None:
             queryset = self.get_list()
+        result = CityDocument.search().query(
+            "query_string", query=f"{name}*")[:settings.D8B_SEARCH_MAX_ENTRIES]
+        ids = {r.meta.id for r in result}
 
-        ids = queryset.filter(
-            Q(name__istartswith=name) | Q(name_std__istartswith=name)
-            | Q(alt_names__name__istartswith=name)).values_list(
-                "pk",
-                flat=True,
-            )
         return queryset.filter(pk__in=ids)
 
 
