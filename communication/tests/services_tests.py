@@ -7,7 +7,6 @@ import pytest
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.query import QuerySet
 from django.utils.translation import gettext_lazy as _
-from pytest_mock import MockFixture
 
 from communication.models import Message, Review, ReviewComment
 from communication.services import (delete_message_from_recipient,
