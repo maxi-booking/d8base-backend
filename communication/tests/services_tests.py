@@ -38,7 +38,7 @@ def test_notify_reminders(order_reminders: QuerySet):
         assert OrderReminder.objects.get_for_notification().count() == 2
         notify_reminders(OrderReminder)
 
-        send.assert_called_with(
+        send.assert_any_call(
             user=reminder.recipient,
             subject=_(reminder.subject),
             template=reminder.template,

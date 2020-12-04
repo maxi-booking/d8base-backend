@@ -70,7 +70,7 @@ class AbstractReminder(CommonInfo, ValidationMixin):
         self.set_remind_before_datetime()
         super().save(**kwargs)
 
-    class Meta():
+    class Meta(CommonInfo.Meta):
         """The metainformation."""
 
         abstract = True

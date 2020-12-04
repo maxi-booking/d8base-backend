@@ -3,6 +3,7 @@
 collect_ignore_glob = ["*/migrations/*"]
 
 pytest_plugins = [
+    "tests.fixtures.elasticsearch",
     "tests.fixtures.auth",
     "tests.fixtures.locations",
     "tests.fixtures.users",

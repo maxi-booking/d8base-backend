@@ -14,6 +14,7 @@ pytest-mypy
 pytest-mccabe
 pytest-xdist
 pytest-lazy-fixture
+pytest-elasticsearch
 yapf
 twine
 jedi
