@@ -1,6 +1,7 @@
 """The search schemes module."""
 from drf_yasg import openapi
 
+from d8b.pagination import StandardPagination
 from professionals.models import Professional
 from search.engine.request import (HTTPToSearchLocationRequestConverter,
                                    HTTPToSearchProfessionalRequestConverter,
@@ -231,6 +232,6 @@ class SearchSchema():
             ),
         ],
         "responses": {
-            200: SearchSerializer(many=True)
+            200: StandardPagination.get_schema_serializer(SearchSerializer)
         },
     }

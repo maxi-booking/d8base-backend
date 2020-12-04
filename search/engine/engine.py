@@ -1,6 +1,6 @@
 """The search engine module."""
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 from django.db.models.query import QuerySet
 from django.utils.module_loading import import_string
@@ -18,7 +18,7 @@ class AbstractSearchEngine(ABC):
     """The abstract search engine class."""
 
     @abstractmethod
-    def get(self, request: SearchRequest) -> List[SearchResponse]:
+    def get(self, request: SearchRequest) -> Tuple[List[SearchResponse], int]:
         """Return the search results."""
 
 
@@ -62,7 +62,7 @@ class SearchEngine(AbstractSearchEngine):
             self.offset = self.page_size * (self.request.page - 1)
         self.limit = self.offset + self.page_size
 
-    def get(self, request: SearchRequest) -> List[SearchResponse]:
+    def get(self, request: SearchRequest) -> Tuple[List[SearchResponse], int]:
         """Return the search results."""
         self.request = request
         self.set_offset_and_limit()
@@ -77,7 +77,7 @@ class SearchEngine(AbstractSearchEngine):
                 ids=service_ids,
             )
             result.append(response)
-        return result
+        return result, len(service_ids)
 
 
 def get_search_engine() -> SearchEngine:

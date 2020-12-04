@@ -3,8 +3,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
-from rest_framework.response import Response
 
+from d8b.pagination import StandardPagination
 from d8b.viewsets import AllowAnyViewSetMixin
 from search.engine import get_search_engine
 from search.engine.exceptions import SearchError
@@ -26,7 +26,7 @@ class SearchViewSet(AllowAnyViewSetMixin, viewsets.ViewSet):
             converter = HTTPToSearchRequestConverter(request)
             search_request = converter.get()
             engine = get_search_engine()
-            response = engine.get(search_request)
+            response, count = engine.get(search_request)
             serializer = self.serializer_class(
                 instance=response,
                 many=True,
@@ -35,4 +35,6 @@ class SearchViewSet(AllowAnyViewSetMixin, viewsets.ViewSet):
         except SearchError as error:
             raise ValidationError({"error": str(error)}) from error
 
-        return Response(serializer.data)
+        paginator = StandardPagination()
+        paginator.paginate_queryset(range(0, count), request)
+        return paginator.get_paginated_response(serializer.data)
