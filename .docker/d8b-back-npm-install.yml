@@ -1,0 +1,13 @@
+version: "3"
+services:
+  d8b-front-npm-install:
+    image: node:12
+    working_dir: /usr/src/app
+    volumes:
+      - ../:/usr/src/app
+    command: 'npm install'
+    networks:
+      - d8b-network
+
+networks:
+  d8b-network:

@@ -73,8 +73,23 @@ services:
     networks:
       - d8b-network
 
+  es:
+    build:
+      context: ..
+      dockerfile: ./.docker/es/Dockerfile
+    hostname: es
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - d8b-network
+
 volumes:
   pgdata:
+  esdata:
 
 networks:
   d8b-network:
