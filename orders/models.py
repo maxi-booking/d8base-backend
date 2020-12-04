@@ -117,7 +117,7 @@ class Order(AbstractPeriod, CommonInfo, ValidationMixin):
     last_name = models.CharField(
         _("last name"),
         max_length=150,
-        null=False,
+        null=True,
         blank=True,
     )
     phone = PhoneNumberField(

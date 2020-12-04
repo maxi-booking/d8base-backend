@@ -95,10 +95,8 @@ def validate_order_client(order: "Order"):
         if order.service.professional.user == order.client:
             raise ValidationError(
                 "The client and the professional are identical.")
-        if not order.first_name or not order.last_name:
+        if not order.first_name:
             raise ValidationError(_("The name is empty"))
-        if not order.phone:
-            raise ValidationError(_("The phone is empty"))
 
     except ObjectDoesNotExist as error:
         raise ValidationError(_("The service or client is empty")) from error
