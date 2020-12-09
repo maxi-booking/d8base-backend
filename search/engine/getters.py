@@ -33,7 +33,9 @@ class ServiceSearchGetter(AbstractSearchGetter):
             set_next(filters.SubregionHandler()). \
             set_next(filters.CityHandler()). \
             set_next(filters.DistrictHandler()). \
-            set_next(filters.PostalCodeHandler())
+            set_next(filters.PostalCodeHandler()). \
+            set_next(filters.DatesHandler()). \
+            set_next(filters.TagsHandler())
 
         return country
 

@@ -434,6 +434,7 @@ class HTTPToSearchRequestConverter(AbstractHTTPConverter):
         self._set_query()
         self._set_datetime(self.START_DATETIME_PARAM)
         self._set_datetime(self.END_DATETIME_PARAM)
+        self._set_tags()
         self._set_page()
 
         for converter_class in self.converters:

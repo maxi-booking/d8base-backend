@@ -66,7 +66,7 @@ class SearchEngine(AbstractSearchEngine):
         """Return the search results."""
         self.request = request
         self.set_offset_and_limit()
-        service_ids = self._get_services_ids()
+        service_ids = list(set(self._get_services_ids()))
 
         result = []
         for professional in self._get_professionals(service_ids):
