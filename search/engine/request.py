@@ -267,7 +267,7 @@ class HTTPToSearchProfessionalRequestConverter(AbstractHTTPConverter):
 
     def _set_professional_level(self):
         """Set a professional level to the search request."""
-        level = self._get_query_param(self.GENDER_PARAM)
+        level = self._get_query_param(self.PROFESSIONAL_LEVEL_PARAM)
         if level in (
                 Professional.LEVEL_JUNIOR,
                 Professional.LEVEL_MIDDLE,
@@ -333,17 +333,19 @@ class HTTPToSearchServiceRequestConverter(AbstractHTTPConverter):
     PAYMENT_METHODS_PARAM: str = "payment_methods"
     ONLY_WITH_PHOTOS_PARAM: str = "only_with_photos"
 
-    def _set_service_type(self):
+    def _set_service_types(self):
         """Set service types to the search request."""
         types = self._get_list_param(self.SERVICE_TYPES_PARAM)
         allowed = [t[0] for t in Service.TYPE_CHOICES]
-        return list(set(types) & set(allowed))
+        self.search_request.service.service_types = list(
+            set(types) & set(allowed))
 
     def _set_payment_methods(self):
         """Set payment_methods to the search request."""
         types = self._get_list_param(self.PAYMENT_METHODS_PARAM)
         allowed = [m[0] for m in Price.PAYMENT_METHODS_CHOICES]
-        return list(set(types) & set(allowed))
+        self.search_request.service.payment_methods = list(
+            set(types) & set(allowed))
 
     def _set_price(self, attr: str, param: str):
         """Set a price to the search request."""
@@ -374,7 +376,7 @@ class HTTPToSearchServiceRequestConverter(AbstractHTTPConverter):
         self.search_request.service.only_with_auto_order_confirmation = \
             self._get_bool_param(self.ONLY_WITH_AUTO_ORDER_CONFIRMATION_PARAM)
 
-        self._set_service_type()
+        self._set_service_types()
 
         self.search_request.service.only_with_fixed_price = \
             self._get_bool_param(self.ONLY_WITH_FIXED_PRICE_PARAM)

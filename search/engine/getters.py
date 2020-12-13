@@ -35,7 +35,24 @@ class ServiceSearchGetter(AbstractSearchGetter):
             set_next(filters.DistrictHandler()). \
             set_next(filters.PostalCodeHandler()). \
             set_next(filters.DatesHandler()). \
-            set_next(filters.TagsHandler())
+            set_next(filters.TagsHandler()). \
+            set_next(filters.RatingHandler()). \
+            set_next(filters.OnlyWithReviewsHandler()). \
+            set_next(filters.OnlyWithCertificatesHandler()). \
+            set_next(filters.GenderHandler()). \
+            set_next(filters.AgeHandler()). \
+            set_next(filters.ProfessionalLevelHandler()). \
+            set_next(filters.LanguagesHandler()). \
+            set_next(filters.NationalitiesHandler()). \
+            set_next(filters.ExperienceHandler()). \
+            set_next(filters.CategoriesHandler()). \
+            set_next(filters.SubcategoriesHandler()). \
+            set_next(filters.OnlyWithAutoOrderConfirmationHandler()). \
+            set_next(filters.OnlyWithFixedPriceHandler()). \
+            set_next(filters.PaymentMethodsHandler()). \
+            set_next(filters.ServiceTypesHandler()). \
+            set_next(filters.OnlyWithPhotosHandler()). \
+            set_next(filters.PriceHandler())
 
         return country
 
