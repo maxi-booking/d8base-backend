@@ -48,7 +48,7 @@ jobs:
           username: mb
           passphrase: ${{ secrets.STAGEDEPLPASS }}
           key: ${{ secrets.STAGEDEPLKEY }}
-          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py makemigrations
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py makemigrations --no-input
 
       - name: Run migrations
         uses: appleboy/ssh-action@master
