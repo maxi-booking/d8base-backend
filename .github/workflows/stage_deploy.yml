@@ -3,12 +3,12 @@ on:
   workflow_run:
     workflows: ["tests"]
     types:
-      - completed  
+      - completed
   workflow_dispatch:
 
 jobs:
   stage_deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}   
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Stage deploy
     runs-on: ubuntu-latest
     steps:
@@ -20,9 +20,9 @@ jobs:
           passphrase: ${{ secrets.STAGEDEPLPASS }}
           key: ${{ secrets.STAGEDEPLKEY }}
           script: |
-              cd ${{ secrets.BACKDIR }}
-              git pull
-              
+            cd ${{ secrets.BACKDIR }}
+            git pull
+
       - name: Install nmp dependencies
         uses: appleboy/ssh-action@master
         with:
@@ -67,6 +67,15 @@ jobs:
           passphrase: ${{ secrets.STAGEDEPLPASS }}
           key: ${{ secrets.STAGEDEPLKEY }}
           script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py compilemessages -f
+
+      - name: Update translations
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.STAGEHOST }}
+          username: mb
+          passphrase: ${{ secrets.STAGEDEPLPASS }}
+          key: ${{ secrets.STAGEDEPLKEY }}
+          script: docker-compose -f /var/maxibooking/d8b-back-django-cli.yml run --rm d8b-back-django-cli ./manage.py update_translation_fields
 
       - name: Stop d8b-back-uwsgi container
         uses: appleboy/ssh-action@master
@@ -184,12 +193,12 @@ jobs:
           server_port: 465
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: Failure - ${{github.repository}} - staging deploy on push 
+          subject: Failure - ${{github.repository}} - staging deploy on push
           body: Staging deploy on push are failure - ${{github.repository}}
           to: ${{secrets.FAIL_MAIL_RECEPIENTS}}
           from: Github actions
           content_type: text/html
-              
+
       - name: Send email if staging deploy is successful
         uses: dawidd6/action-send-mail@v2
         if: ${{ success() }}
@@ -205,7 +214,7 @@ jobs:
           content_type: text/html
 
   error_email:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}   
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     name: Send error email
     runs-on: ubuntu-latest
     steps:

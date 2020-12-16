@@ -2,6 +2,7 @@
 from cities import admin as base_admin
 from cities import models as base_models
 from django.contrib import admin
+from modeltranslation.admin import TabbedTranslationAdmin
 from reversion.admin import VersionAdmin
 
 from d8b.admin import SearchFieldsUpdateMixin
@@ -26,6 +27,7 @@ class CountryAdmin(
         VersionAdmin,
         base_admin.CountryAdmin,
         SearchFieldsUpdateMixin,
+        TabbedTranslationAdmin,
 ):
     """The country admin."""
 
@@ -39,6 +41,7 @@ class RegionAdmin(
         VersionAdmin,
         base_admin.RegionAdmin,
         SearchFieldsUpdateMixin,
+        TabbedTranslationAdmin,
 ):
     """The region admin."""
 
@@ -52,6 +55,7 @@ class SubregionAdmin(
         VersionAdmin,
         base_admin.SubregionAdmin,
         SearchFieldsUpdateMixin,
+        TabbedTranslationAdmin,
 ):
     """The subregion admin."""
 
@@ -61,7 +65,12 @@ class SubregionAdmin(
 
 
 @admin.register(base_models.City)
-class CitiesAdmin(VersionAdmin, base_admin.CityAdmin, SearchFieldsUpdateMixin):
+class CitiesAdmin(
+        VersionAdmin,
+        base_admin.CityAdmin,
+        SearchFieldsUpdateMixin,
+        TabbedTranslationAdmin,
+):
     """The cities admin."""
 
     list_filter = ("country", )
@@ -75,6 +84,7 @@ class DistrictAdmin(
         VersionAdmin,
         base_admin.DistrictAdmin,
         SearchFieldsUpdateMixin,
+        TabbedTranslationAdmin,
 ):
     """The district admin."""
 
