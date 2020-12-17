@@ -6,12 +6,21 @@ from typing import List
 import arrow
 import pytest
 from django.db.models.query import QuerySet
+from pytest_mock.plugin import MockerFixture
 
 from schedule.models import (AvailabilitySlot, ProfessionalClosedPeriod,
                              ProfessionalSchedule, ServiceClosedPeriod,
                              ServiceSchedule)
 
 # pylint: disable=redefined-outer-name
+
+
+@pytest.fixture
+def disable_slots_signals(mocker: MockerFixture):
+    """Disable the slots signals."""
+    mocker.patch("orders.signals.generate_for_order")
+    mocker.patch("schedule.signals.generate_for_service")
+    mocker.patch("schedule.signals.generate_for_professional")
 
 
 @pytest.fixture

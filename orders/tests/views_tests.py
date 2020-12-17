@@ -287,8 +287,10 @@ def test_user_sent_order_create(
     client_with_token: Client,
     services: QuerySet,
     availability_slots: QuerySet,
+    disable_slots_signals: None,
 ):
     """Should be able to create a sent order object."""
+    # pylint: disable=unused-argument
     service = services.exclude(professional__user=user).first()
     service.service_type = service.TYPE_PROFESSIONAL_LOCATION
     service.is_enabled = True

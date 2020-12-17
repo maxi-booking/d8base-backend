@@ -185,9 +185,10 @@ def test_validate_order_client(user: User, services: QuerySet):
 def test_validate_order_availability(
     user: User,
     availability_slots: QuerySet,
+    disable_slots_signals: None,
 ):
     """Should validate orders availability."""
-    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-statements,unused-argument
     service = availability_slots.exclude(service__isnull=True).first().service
     service.is_base_schedule = False
     service.is_enabled = False

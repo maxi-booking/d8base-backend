@@ -9,9 +9,11 @@ from django.db.models.query import QuerySet
 if TYPE_CHECKING:
     from professionals.models import Professional
     from services.models import Service
-    from .models import (ProfessionalSchedule, ServiceSchedule,
-                         AvailabilitySlot, ProfessionalClosedPeriod,
-                         ServiceClosedPeriod)
+    from users.models import User
+
+    from .models import (AvailabilitySlot, ProfessionalClosedPeriod,
+                         ProfessionalSchedule, ServiceClosedPeriod,
+                         ServiceSchedule)
 
 
 class AvailabilitySlotManager(models.Manager):
@@ -172,6 +174,10 @@ class ProfessionalScheduleManager(models.Manager):
             query = query.exclude(pk=schedule.pk)
         return query
 
+    def delete_for_user(self, user: "User", **kwargs):
+        """Delete the entries filtered by the user."""
+        self.filter(professional__user=user).filter(**kwargs).delete()
+
 
 class ServiceScheduleManager(models.Manager):
     """The service schedule manager."""
@@ -214,6 +220,10 @@ class ServiceScheduleManager(models.Manager):
         for entry in schedules:
             result[entry.day_of_week].append(entry)
         return result
+
+    def delete_for_user(self, user: "User", **kwargs):
+        """Delete the entries filtered by the user."""
+        self.filter(service__professional__user=user).filter(**kwargs).delete()
 
 
 class ServiceClosedPeriodManager(models.Manager):

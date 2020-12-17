@@ -4,6 +4,7 @@ import pytest
 from django.db.models.query import QuerySet
 from django.test.client import Client
 from django.urls import reverse
+from pytest_mock.plugin import MockerFixture
 
 from users.models import User
 
@@ -148,6 +149,127 @@ def test_user_professional_schedule_create(
     assert str(schedule.end_time) == "14:00:00"
 
 
+def test_user_professional_schedule_set(
+    user: User,
+    admin: User,
+    client_with_token: Client,
+    professionals: QuerySet,
+    mocker: MockerFixture,
+):
+    """Should be able to set professional schedule objects."""
+    signal = mocker.patch("schedule.signals.generate_for_professional")
+    professional = professionals.filter(user=user).first()
+    professional_last = professionals.filter(user=user).last()
+    admin_professional = professionals.filter(user=admin).first()
+    response = client_with_token.post(
+        reverse("user-professional-schedule-set"),
+        {
+            "day_of_week": 0,
+            "start_time": "09:00",
+            "end_time": "14:00",
+            "professional": professional.pk,
+        },
+        format="json",
+    )
+    assert response.status_code == 400
+
+    response = client_with_token.post(
+        reverse("user-professional-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+            {
+                "day_of_week": 2,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": admin_professional.pk,
+            },
+        ],
+        format="json",
+    )
+
+    assert response.status_code == 400
+
+    response = client_with_token.post(
+        reverse("user-professional-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+            {
+                "day_of_week": 2,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert professional.schedule.count() == 3
+    assert signal.call_count == 4
+
+    response = client_with_token.post(
+        reverse("user-professional-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert professional.schedule.count() == 2
+    assert professional_last.schedule.count() == 0
+
+    assert signal.call_count == 4 + 5
+
+    response = client_with_token.post(
+        reverse("user-professional-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional_last.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "professional": professional_last.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert professional.schedule.count() == 2
+    assert professional_last.schedule.count() == 2
+    assert signal.call_count == 4 + 5 + 2
+
+
 def test_user_professional_schedule_update(
     user: User,
     client_with_token: Client,
@@ -276,6 +398,131 @@ def test_user_service_schedule_create(
     assert schedule.day_of_week == 2
     assert str(schedule.start_time) == "09:00:00"
     assert str(schedule.end_time) == "14:00:00"
+
+
+def test_user_service_schedule_set(
+    user: User,
+    admin: User,
+    client_with_token: Client,
+    services: QuerySet,
+    mocker: MockerFixture,
+):
+    """Should be able to set service schedule objects."""
+    signal = mocker.patch("schedule.signals.generate_for_service")
+    service = services.filter(professional__user=user).first()
+    service.is_base_schedule = False
+    service.save()
+    service_last = services.filter(professional__user=user).last()
+    service_last.is_base_schedule = False
+    service_last.save()
+    admin_service = services.filter(professional__user=admin).first()
+    response = client_with_token.post(
+        reverse("user-service-schedule-set"),
+        {
+            "day_of_week": 0,
+            "start_time": "09:00",
+            "end_time": "14:00",
+            "service": service.pk,
+        },
+        format="json",
+    )
+    assert response.status_code == 400
+
+    response = client_with_token.post(
+        reverse("user-service-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+            {
+                "day_of_week": 2,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": admin_service.pk,
+            },
+        ],
+        format="json",
+    )
+
+    assert response.status_code == 400
+
+    response = client_with_token.post(
+        reverse("user-service-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+            {
+                "day_of_week": 2,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert service.schedule.count() == 3
+    assert signal.call_count == 6
+
+    response = client_with_token.post(
+        reverse("user-service-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert service.schedule.count() == 2
+    assert service_last.schedule.count() == 0
+
+    assert signal.call_count == 6 + 5
+
+    response = client_with_token.post(
+        reverse("user-service-schedule-set"),
+        [
+            {
+                "day_of_week": 0,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service_last.pk,
+            },
+            {
+                "day_of_week": 1,
+                "start_time": "09:00",
+                "end_time": "14:00",
+                "service": service_last.pk,
+            },
+        ],
+        format="json",
+    )
+    assert response.status_code == 201
+    assert service.schedule.count() == 2
+    assert service_last.schedule.count() == 2
+    assert signal.call_count == 6 + 5 + 2
 
 
 def test_user_service_schedule_update(

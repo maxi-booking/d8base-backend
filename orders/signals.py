@@ -18,7 +18,7 @@ from .models import Order
     sender=Order,
     dispatch_uid="order_post_delete",
 )
-def professional_schedule_receiver(
+def order_receiver(
     sender,
     instance: Order,
     **kwargs,

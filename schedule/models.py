@@ -59,8 +59,7 @@ class Schedule(CommonInfo, ValidationMixin):
 
     def save(self, **kwargs):
         """Save the object."""
-        if not self.pk:
-            self.timezone = get_current_timezone()
+        self.timezone = get_current_timezone()
         super().save(**kwargs)
 
     class Meta(CommonInfo.Meta):

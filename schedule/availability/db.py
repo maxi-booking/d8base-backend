@@ -19,8 +19,6 @@ class AbstractSaver(ABC, RequestSlotsSetterMixin):
     def save(self) -> None:
         """Save the availability slots."""
         self._check_request()
-        if not self._slots:
-            return None
         return self._save()
 
 
@@ -30,8 +28,8 @@ class DeleteSaver(AbstractSaver):
     def _delete_old_entries(self) -> None:
         """Delete the old entries before saving the new ones."""
         AvailabilitySlot.objects.get_between_dates(
-            professional=self._slots[0].professional,
-            service=self._slots[0].service,
+            professional=self._request.professional,
+            service=self._request.service,
             start=self._request.start_datetime,
             end=self._request.end_datetime.shift(days=1),  # type: ignore
         ).delete()

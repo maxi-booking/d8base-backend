@@ -10,9 +10,9 @@ from .generator import get_availability_generator
 from .request import Request
 
 if TYPE_CHECKING:
+    from orders.models import Order
     from professionals.models import Professional
     from services.models import Service
-    from orders.models import Order
 
 
 def delete_expired_availability_slots():

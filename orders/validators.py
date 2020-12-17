@@ -11,8 +11,9 @@ from d8b.validators import validate_datetime_in_future
 from schedule.models import AvailabilitySlot
 
 if TYPE_CHECKING:
-    from .models import Order, OrderReminder
     from services.models import Service
+
+    from .models import Order, OrderReminder
 
 
 def validate_order_reminder_recipient(reminder: "OrderReminder"):

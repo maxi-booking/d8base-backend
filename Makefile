@@ -74,6 +74,10 @@ test:
 	@echo 'Start tests'
 	pytest --pydocstyle --mccabe --flakes --mypy --pylint --cov=./
 
+test_first:
+	@echo 'Start tests'
+	pytest --pydocstyle --mccabe --flakes --mypy --pylint --cov=./ -x
+
 quick_test:
 	@echo 'Start tests in parallel'
 	pytest -n auto --cov=./
