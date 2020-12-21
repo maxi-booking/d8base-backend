@@ -10,6 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db.models.query import QuerySet
 
+from d8b.trans import translate
+
 from .documents import CityDocument
 from .models import Language
 
@@ -50,6 +52,18 @@ class BaseRepository(ABC):
         return self.get_all().order_by(self.order_by).\
             select_related(*self.select_related).\
             prefetch_related(*self.prefetch_related)
+
+    def get_to_translate(self, lang: str) -> QuerySet:
+        """Return a list of objects to translate."""
+        return self.get_list().filter(**{f"name_{lang}__isnull": True})
+
+    @staticmethod
+    def translate(obj, lang: str):
+        """Translate the cities object."""
+        translation = translate(obj.name, src="en", dest=lang)
+        if translation:
+            setattr(obj, f"name_{lang}", translation)
+        obj.save()
 
 
 class ContinentRepository(BaseRepository):

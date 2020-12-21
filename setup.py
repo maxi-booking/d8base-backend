@@ -66,5 +66,6 @@ setup(
         "python-memcached==1.59",
         "Pillow==7.2.0",
         "pytz==2020.1",
+        "translate==3.5.0",
     ],
 )

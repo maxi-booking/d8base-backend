@@ -143,7 +143,7 @@ class ServiceLocation(CommonInfo, ValidationMixin):
         null=True,
         blank=True,
         help_text=_("maximum travel distance from the location"),
-        validators=[MinValueValidator(0.1)],
+        validators=[MinValueValidator(0)],
     )
 
     def __str__(self) -> str:

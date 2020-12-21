@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+from django.conf import settings
 from django.http.request import HttpRequest
 from django.utils import timezone
 from pytz import UnknownTimeZoneError
@@ -12,7 +13,8 @@ from .models import User, UserLocation
 class UserTimezoneMiddleware:
     """The user timezone middleware."""
 
-    TIME_ZONE_HEADER = "HTTP_X_TIMEZONE"
+    TIME_ZONE_HEADER: str = "HTTP_" + settings.USER_TIME_ZONE_HEADER.upper().\
+        replace("-", "_")
 
     def __init__(self, get_response):
         """Construct the object."""

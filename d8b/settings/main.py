@@ -3,6 +3,7 @@
 # import datetime
 import os
 
+from corsheaders.defaults import default_headers
 from kombu import Queue
 
 from .env import ROOT, get_env
@@ -28,6 +29,7 @@ TEMPLATE_DEBUG = ENV.bool("TEMPLATE_DEBUG")
 TESTS = ENV.bool("TESTS", default=False)
 
 AUTH_USER_MODEL = "users.User"
+USER_TIME_ZONE_HEADER = "x-timezone"
 
 # Django-cors
 CORS_ORIGIN_ALLOW_ALL = ENV.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
@@ -35,6 +37,10 @@ CORS_ORIGIN_REGEX_WHITELIST = []
 for domain in ENV.list("CORS_ORIGIN_REGEX_WHITELIST", default=[]):
     CORS_ORIGIN_REGEX_WHITELIST.append(
         r"^(https?:\/\/)?([a-zA-Z0-9\-]+\.)?{}$".format(domain))
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    USER_TIME_ZONE_HEADER.lower(),
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -290,8 +296,8 @@ REST_FRAMEWORK = {
 
 # sentry
 if not DEBUG and not TESTS:  # pragma: no cover
-    from sentry_sdk.integrations.django import DjangoIntegration
     import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
     sentry_sdk.init(
         dsn=ENV.str("SENTRY"),
         integrations=[DjangoIntegration()],
