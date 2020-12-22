@@ -61,7 +61,7 @@ class Command(BaseCommand):
                     try:
                         repository.translate(obj, self.lang)
                     except Exception as error:  # pylint: disable=broad-except
-                        self.stdout.write(self.style.ERROR(error))
+                        self.stderr.write(self.style.ERROR(str(error)))
                     progress.update(1)
                     sleep(self.sleep)
 

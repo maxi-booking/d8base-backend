@@ -11,8 +11,6 @@ def translate(text: str, src: str, dest: str) -> str:
     clean["ru"] = ("г.", )
     translator = Translator(from_lang=src, to_lang=dest)
     result = translator.translate(text)
-    if result == text:
-        return ""
     for i in clean[dest]:
         result = result.replace(i, "")
     return result.strip()

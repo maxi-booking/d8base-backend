@@ -66,10 +66,81 @@ def test_repositories_get_list(
     expected_count: int,
     entries: List[Place],
 ):
-    """Should return the a JSON response."""
+    """Should return a query."""
     query = repo.get_list()
     assert query.count() == expected_count
     assert all(e in query for e in entries)
+
+
+# pylint: disable=no-member
+@pytest.mark.parametrize(
+    "repo,expected_count,entries",
+    [
+        (
+            ContinentRepository(),
+            OBJECTS_TO_CREATE + 7,
+            pytest.lazy_fixture("continents"),  # type: ignore
+        ),
+        (
+            CountryRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("countries"),  # type: ignore
+        ),
+        (
+            RegionRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("regions"),  # type: ignore
+        ),
+        (
+            SubregionRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("subregions"),  # type: ignore
+        ),
+        (
+            CityRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("cities"),  # type: ignore
+        ),
+        (
+            DistrictRepository(),
+            OBJECTS_TO_CREATE,
+            pytest.lazy_fixture("districts"),  # type: ignore
+        ),
+    ])
+def test_repositories_get_to_translate(
+    repo: BaseRepository,
+    expected_count: int,
+    entries: List[Place],
+):
+    """Should return the a query."""
+    query = repo.get_to_translate("de")
+    assert query.count() == expected_count
+    assert all(e in query for e in entries)
+
+    obj = query.first()
+    obj.name_de = "test"
+    obj.save()
+
+    assert repo.get_to_translate("de").count() == expected_count - 1
+
+
+def test_repositories_translate(cities: List[City]):
+    """Should translate an object name."""
+    repo = CityRepository()
+    city = cities[0]
+    city.name = "aaabbbccc"
+    city.save()
+
+    repo.translate(city, "ru")
+    city.refresh_from_db()
+    assert city.name_ru == "aaabbbccc"
+
+    city.name = "Toronto"
+    city.save()
+
+    repo.translate(city, "ru")
+    city.refresh_from_db()
+    assert city.name_ru == "Торонто"
 
 
 def test_language_repository_get_list():
