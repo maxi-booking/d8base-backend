@@ -37,11 +37,19 @@ class Command(BaseCommand):
 
     def _generate_for_professional(self, professional: Professional) -> None:
         """Generate for the professional."""
-        generate_for_professional(professional, start=self.start, end=self.end)
+        generate_for_professional(
+            professional=professional,
+            start=self.start,
+            end=self.end,
+        )
 
     def _generate_for_service(self, service: Service) -> None:
         """Generate for the service."""
-        generate_for_service(service, start=self.start, end=self.end)
+        generate_for_service(
+            service=service,
+            start=self.start,
+            end=self.end,
+        )
 
     def handle(self, *args, **options):
         """Run the command."""

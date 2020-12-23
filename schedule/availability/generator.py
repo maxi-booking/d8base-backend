@@ -35,8 +35,9 @@ class AbstractGenerator(ABC):
     def _set_service(self) -> None:
         """Set the service."""
         self._service = None
-        if self._request.service and not\
-                self._request.service.is_base_schedule:
+        if self._request.service:
+            if self._request.service.is_base_schedule:
+                raise AvailabilityValueError("The service is invalid")
             self._service = self._request.service
 
     def _check_request(self):

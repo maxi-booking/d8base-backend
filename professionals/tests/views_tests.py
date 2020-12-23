@@ -96,7 +96,7 @@ def test_user_professionals_generate_calendar(
     data = response.json()
     assert response.status_code == 200
     assert data["status"] == "ok"
-    mock.assert_called_once_with(obj)
+    mock.assert_called_once_with(professional=obj)
 
 
 def test_user_professionals_detail_restricted_entry(

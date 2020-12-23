@@ -150,7 +150,7 @@ class ProfessionalViewSet(viewsets.ModelViewSet):
     def generate_calendar(self, request, pk=None):
         # pylint: disable=unused-argument
         """Generate the professional calendar."""
-        generate_for_professional(self.get_object())
+        generate_for_professional(professional=self.get_object())
         return Response({"status": "ok"})
 
 

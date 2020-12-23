@@ -1,7 +1,22 @@
 """The celery settings module."""
 from celery.schedules import crontab
+from kombu import Queue
 
 from .main import ENV
+
+# Celery
+CELERY_SEND_TASK_ERROR_EMAILS = True
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+CELERY_APP = "d8b"
+CELERY_QUEUES = (
+    Queue("default"),
+    Queue("priority_high"),
+)
+CELERY_DEFAULT_QUEUE = "default"
+CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 CELERY_LOGLEVEL = ENV.str("CELERY_LOGLEVEL")
 BROKER_URL = ENV.str("BROKER_URL")

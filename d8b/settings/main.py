@@ -4,7 +4,6 @@
 import os
 
 from corsheaders.defaults import default_headers
-from kombu import Queue
 
 from .env import ROOT, get_env
 
@@ -30,6 +29,11 @@ TESTS = ENV.bool("TESTS", default=False)
 
 AUTH_USER_MODEL = "users.User"
 USER_TIME_ZONE_HEADER = "x-timezone"
+
+# Redis
+REDIS_HOST = ENV.str("REDIS_HOST", default="localhost")
+REDIS_PORT = ENV.int("REDIS_PORT", 6379)
+REDIS_DB = ENV.int("REDIS_DB", 0)
 
 # Django-cors
 CORS_ORIGIN_ALLOW_ALL = ENV.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
@@ -246,20 +250,6 @@ LOGGING = {
         },
     }
 }
-
-# Celery
-CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TIMEZONE = "UTC"
-CELERY_APP = "d8b"
-CELERY_QUEUES = (
-    Queue("default"),
-    Queue("priority_high"),
-)
-CELERY_DEFAULT_QUEUE = "default"
-CELERYD_TASK_SOFT_TIME_LIMIT = 60 * 5
 
 # Django restframework
 REST_FRAMEWORK = {

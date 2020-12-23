@@ -40,7 +40,7 @@ def professional_schedule_receiver(
 ):
     """Generate the professional schedule."""
     # pylint: disable=unused-argument
-    generate_for_professional(instance.professional)
+    generate_for_professional(professional=instance.professional)
 
 
 @receiver(
@@ -70,7 +70,7 @@ def service_schedule_receiver(
 ):
     """Run the update availability tasks."""
     # pylint: disable=unused-argument
-    generate_for_service(instance.service)
+    generate_for_service(service=instance.service)
 
 
 @receiver(
@@ -86,4 +86,4 @@ def service_receiver(
     """Run the update availability tasks."""
     # pylint: disable=unused-argument
     if not instance.is_base_schedule:
-        generate_for_service(instance)
+        generate_for_service(service=instance)

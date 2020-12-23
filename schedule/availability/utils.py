@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional
 
 import arrow
 
+from d8b.lock import distributed_lock
 from schedule.models import AvailabilitySlot
 
 from .generator import get_availability_generator
@@ -20,7 +21,13 @@ def delete_expired_availability_slots():
     AvailabilitySlot.objects.get_expired_entries().delete()
 
 
+@distributed_lock(
+    prefix="generate_for_professional",
+    keys=["professional"],
+    timeout=60 * 5,
+)
 def generate_for_professional(
+    *,
     professional: "Professional",
     append_days: bool = False,
     start: Optional[arrow.Arrow] = None,
@@ -35,7 +42,13 @@ def generate_for_professional(
     get_availability_generator(request).generate()
 
 
+@distributed_lock(
+    prefix="generate_for_professional",
+    keys=["service"],
+    timeout=60 * 5,
+)
 def generate_for_service(
+    *,
     service: "Service",
     append_days: bool = False,
     start: Optional[arrow.Arrow] = None,
@@ -53,6 +66,6 @@ def generate_for_service(
 
 def generate_for_order(order: "Order"):
     """Generate slots form the order for the year."""
-    generate_for_professional(order.service.professional)
+    generate_for_professional(professional=order.service.professional)
     if not order.service.is_base_schedule:
-        generate_for_service(order.service)
+        generate_for_service(service=order.service)

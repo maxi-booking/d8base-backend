@@ -41,10 +41,12 @@ def test_abstract_generator_set_request(
     service.save()
     request.service = service
     request.professional = service.professional
-    generator.set_request(request)
+    with pytest.raises(AvailabilityValueError) as error:
+        generator.set_request(request)
 
     assert generator._request.professional == request.professional
     assert generator._service is None
+    assert "service is invalid" in str(error)
 
     service.is_base_schedule = False
     service.save()

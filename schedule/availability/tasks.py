@@ -20,7 +20,7 @@ def generate_future_availability_slots_task():
     services = Service.objects.get_for_avaliability_generation()
 
     for professional in professionals.iterator():
-        generate_for_professional(professional, append_days=True)
+        generate_for_professional(professional=professional, append_days=True)
 
     for service in services.iterator():
-        generate_for_service(service, append_days=True)
+        generate_for_service(service=service, append_days=True)

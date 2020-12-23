@@ -17,7 +17,7 @@ def test_professional_schedule_post_save(
     schedule.save()
 
     assert generator.call_count == 1
-    generator.assert_called_with(schedule.professional)
+    generator.assert_called_with(professional=schedule.professional)
 
 
 def test_professional_schedule_post_delete(
@@ -30,7 +30,7 @@ def test_professional_schedule_post_delete(
     schedule.delete()
 
     assert generator.call_count == 1
-    generator.assert_called_with(schedule.professional)
+    generator.assert_called_with(professional=schedule.professional)
 
 
 def test_service_schedule_post_save(
@@ -44,7 +44,7 @@ def test_service_schedule_post_save(
     schedule.save()
 
     assert generator.call_count == 1
-    generator.assert_called_with(schedule.service)
+    generator.assert_called_with(service=schedule.service)
 
 
 def test_service_schedule_post_delete(
@@ -57,7 +57,7 @@ def test_service_schedule_post_delete(
     schedule.delete()
 
     assert generator.call_count == 1
-    generator.assert_called_with(schedule.service)
+    generator.assert_called_with(service=schedule.service)
 
 
 def test_service_closed_period_post_save(
@@ -71,7 +71,7 @@ def test_service_closed_period_post_save(
     closed_period.save()
 
     assert generator.call_count == 1
-    generator.assert_called_with(closed_period.service)
+    generator.assert_called_with(service=closed_period.service)
 
 
 def test_service_closed_period_post_delete(
@@ -84,7 +84,7 @@ def test_service_closed_period_post_delete(
     closed_period.delete()
 
     assert generator.call_count == 1
-    generator.assert_called_with(closed_period.service)
+    generator.assert_called_with(service=closed_period.service)
 
 
 def test_professional_closed_period_post_save(
@@ -98,7 +98,7 @@ def test_professional_closed_period_post_save(
     closed_period.save()
 
     assert generator.call_count == 1
-    generator.assert_called_with(closed_period.professional)
+    generator.assert_called_with(professional=closed_period.professional)
 
 
 def test_professional_closed_period_post_delete(
@@ -111,7 +111,7 @@ def test_professional_closed_period_post_delete(
     closed_period.delete()
 
     assert generator.call_count == 1
-    generator.assert_called_with(closed_period.professional)
+    generator.assert_called_with(professional=closed_period.professional)
 
 
 def test_service_post_delete(
@@ -130,4 +130,4 @@ def test_service_post_delete(
     service.save()
 
     assert generator.call_count == 1
-    generator.assert_called_with(service)
+    generator.assert_called_with(service=service)

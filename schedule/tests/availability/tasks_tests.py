@@ -36,10 +36,10 @@ def test_generate_future_availability_slots_task(
         is_base_schedule=False).count()
 
     professionals_generator.assert_called_with(
-        professionals.last(),
+        professional=professionals.last(),
         append_days=True,
     )
     services_generator.assert_called_with(
-        services.filter(is_base_schedule=False).last(),
+        service=services.filter(is_base_schedule=False).last(),
         append_days=True,
     )

@@ -27,8 +27,9 @@ def test_generate_for_order(
     service_generator = mocker.patch(
         "schedule.availability.utils.generate_for_service")
     generate_for_order(order)
-    professional_generator.assert_called_once_with(order.service.professional)
-    service_generator.assert_called_once_with(order.service)
+    professional_generator.assert_called_once_with(
+        professional=order.service.professional)
+    service_generator.assert_called_once_with(service=order.service)
 
 
 def test_generate_for_professional(
