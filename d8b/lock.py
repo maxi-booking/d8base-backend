@@ -23,12 +23,12 @@ def distributed_lock(
             """Run the function."""
             key = prefix if prefix else func.__name__
             if not keys:
-                key += f"args_{args}_kwargs_{kwargs}"
+                key += f"_args_{args}_kwargs_{kwargs}"
             else:
                 keys_values = {k: v for (k, v) in kwargs.items() if k in keys}
                 if not keys_values:
                     raise ValueError("Keys are empty")
-                key += f"keys_{keys_values}"
+                key += f"_keys_{keys_values}"
             func_result = None
             lock = redis.lock(key, timeout=timeout)
             try:
