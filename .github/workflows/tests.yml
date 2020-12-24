@@ -67,9 +67,6 @@ jobs:
       - name: Test the app
         run: |
           tox
-        env:
-          REDIS_HOST: redis
-          REDIS_PORT: 6379
 
       - name: Codecov
         run: |
