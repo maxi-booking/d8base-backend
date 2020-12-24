@@ -9,6 +9,12 @@ jobs:
     services:
       redis:
         image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5     redis:
+
       memcached:
         image: memcached
 
@@ -67,6 +73,9 @@ jobs:
       - name: Test the app
         run: |
           tox
+        env:
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
 
       - name: Codecov
         run: |
