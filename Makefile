@@ -65,7 +65,7 @@ django_superuser:
 	@$(dockerc) exec web python ${manage} changepassword --no-input  -email ${DJANGO_SUPERUSER_EMAIL}
 
 coverage:
-	pytest -n auto  --cov=./ --cov-report html
+	pytest --cov=./ --cov-report html
 	${BROWSER} htmlcov/index.html
 tox:
 	@echo 'Start tests'

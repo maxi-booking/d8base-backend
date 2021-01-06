@@ -119,13 +119,14 @@ class AbstractHTTPConverter(ABC):
 
     def _get_query_param(self, name: str) -> Optional[str]:
         """Get a param form the query params."""
-        return self.request.query_params.get(name, None)
+        param = self.request.query_params.get(name, None)
+        return str(param) if param else None
 
     def _get_list_param(self, name: str) -> List[str]:
         """Get a list param form the query params."""
         value = self._get_query_param(name)
         if value:
-            return list(set(value.split(",")))
+            return list(map(str.strip, set(value.split(","))))
         return []
 
     def _get_int_param(self, name: str) -> Optional[int]:
@@ -196,15 +197,12 @@ class HTTPToSearchLocationRequestConverter(AbstractHTTPConverter):
         y = self._get_query_param(self.COORDINATE_Y_PARAM)
         if x and y:
             try:
-                self.search_request.location.coordinate = Point(x, y)
-            except TypeError:
+                self.search_request.location.coordinate = Point(
+                    float(x),
+                    float(y),
+                )
+            except (ValueError, TypeError):
                 pass
-
-    def _set_max_distance(self):
-        """Set a max distance to the search request."""
-        distance = self._get_query_param(self.MAX_DISTANCE_PARAM)
-        if distance.isnumeric():
-            self.search_request.location.max_distance = int(distance)
 
     def get(self) -> SearchRequest:
         """Return the request."""
