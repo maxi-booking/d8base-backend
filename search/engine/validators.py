@@ -9,8 +9,8 @@ from d8b.validators import validate_datetime_in_future
 from .exceptions import SearchValidationError
 
 if TYPE_CHECKING:
-    from .request import (SearchRequest, SearchLocationRequest,
-                          SearchProfessionalRequest, SearchServiceRequest)
+    from .request import (SearchLocationRequest, SearchProfessionalRequest,
+                          SearchRequest, SearchServiceRequest)
 
 
 def validate_search_request_dates(request: "SearchRequest"):
