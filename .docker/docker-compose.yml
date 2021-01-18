@@ -73,6 +73,22 @@ services:
     networks:
       - d8b-network
 
+  test:
+      build:
+        context: ..
+        dockerfile: ./.docker/Dockerfile-test
+      hostname: test
+      env_file:
+        - ./.env
+      volumes:
+        - ..:/usr/src/app
+      depends_on:
+        - postgres
+        - rabbitmq
+        - memcached
+      networks:
+        - d8b-network
+
   es:
     build:
       context: ..
