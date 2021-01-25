@@ -31,7 +31,7 @@ def validate_search_request_dates(request: "SearchRequest"):
 
 def validate_search_request_location(request: "SearchLocationRequest"):
     """Validate the calendar request location."""
-    if request.max_distance and request.max_distance < 1:
+    if request.max_distance is not None and request.max_distance < 1:
         raise SearchValidationError(
             "The maximum distance must be greater than 1")
 

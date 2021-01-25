@@ -1,4 +1,4 @@
-"""The search engine request tests module."""
+"""The search engine validators tests module."""
 
 from unittest.mock import call
 
