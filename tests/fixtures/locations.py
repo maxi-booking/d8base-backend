@@ -107,7 +107,7 @@ def districts(cities) -> List[District]:
 
 
 @pytest.fixture
-def postal_codes(cities) -> List[PostalCode]:
+def postal_codes(cities, districts) -> List[PostalCode]:
     """Return a list of postal codes."""
     return _create_location_objects(
         repo=PostalCodeRepository(),
@@ -118,6 +118,7 @@ def postal_codes(cities) -> List[PostalCode]:
         region=cities[0].region,
         subregion=cities[0].subregion,
         city=cities[0],
+        district=districts[0],
     )
 
 

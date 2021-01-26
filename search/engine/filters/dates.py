@@ -10,6 +10,8 @@ from .abstract import AbstractHandler
 class DatesHandler(AbstractHandler):
     """The dates handler."""
 
+    # pylint: disable=inconsistent-return-statements
+
     def _check_request(self, request: SearchRequest) -> bool:
         """Check whether the handler is applicable to the request."""
         return bool(request.start_datetime or request.end_datetime)
@@ -50,4 +52,3 @@ class DatesHandler(AbstractHandler):
                     is_base_schedule=False,
                     slots__start_datetime__lte=end.datetime,
                 ))
-        return query

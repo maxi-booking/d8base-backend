@@ -17,7 +17,7 @@ pytest-lazy-fixture
 pytest-elasticsearch
 yapf
 twine
-jedi
+jedi==0.17.2
 pyflakes
 coverage
 flake8
